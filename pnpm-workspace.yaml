@@ -1,6 +1,0 @@
-onlyBuiltDependencies:
-  - '@firebase/util'
-  - '@vercel/speed-insights'
-  - esbuild
-  - protobufjs
-  - sharp

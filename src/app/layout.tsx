@@ -14,6 +14,47 @@ export const metadata: Metadata = {
   title: 'Sagyam Thapa | Cloud & DevOps Engineer',
   description:
     'A personal portfolio showcasing DevOps and Cloud Engineering projects and skills.',
+    icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+    },
+    openGraph: {
+    title: 'Sagyam Thapa | Cloud & DevOps Engineer',
+    description:
+      'A personal portfolio showcasing DevOps and Cloud Engineering projects and skills.',
+    url: 'https://sagyamthapa.com.np',
+    siteName: 'Sagyam Thapa',
+    images: [
+      {
+        url: 'https://sagyamthapa.com.np/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Sagyam Thapa',
+      },
+    ],
+    locale: 'en-US',
+    type: 'website',
+  },
+    twitter: {
+    card: 'summary_large_image',
+    title: 'Sagyam Thapa | Cloud & DevOps Engineer',
+    description:
+      'A personal portfolio showcasing DevOps and Cloud Engineering projects and skills.',
+    images: ['https://sagyamthapa.com.np/og-image.png'],
+    creator: '@sagyam21',
+  },
+    robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+    }
 };
 
 const XIcon = (props: React.SVGProps<SVGSVGElement>) => (
