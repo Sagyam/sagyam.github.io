@@ -1,0 +1,70 @@
+name: Lighthouse Performance Audit
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  lighthouse-audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+
+      - name: Wait for Vercel Preview Deployment
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.2
+        id: waitForVercel
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 300
+        if: github.event_name == 'pull_request'
+
+      - name: Install Unlighthouse
+        run: npm install -g @unlighthouse/cli puppeteer
+
+      - name: Run Lighthouse Audit on Preview
+        if: github.event_name == 'pull_request'
+        run: |
+          unlighthouse-ci --site ${{ steps.waitForVercel.outputs.url }} \
+            --budget 75 \
+            --build-static
+        continue-on-error: false
+
+      - name: Run Lighthouse Audit on Production
+        if: github.event_name == 'push'
+        run: |
+          unlighthouse-ci --site https://sagyamthapa.com.np \
+            --budget 75 \
+            --build-static
+        continue-on-error: false
+
+      - name: Upload Lighthouse Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-report
+          path: .unlighthouse
+          retention-days: 30
+
+      - name: Comment PR with Report Link
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request' && always()
+        with:
+          script: |
+            const fs = require('fs');
+            const reportPath = '.unlighthouse';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## Lighthouse Performance Audit Complete\n\nThe Lighthouse audit report has been generated. Download the artifact to view the full report.\n\n**Threshold:** All categories must score >= 75/100'
+            });
