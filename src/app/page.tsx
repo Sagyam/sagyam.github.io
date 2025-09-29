@@ -21,7 +21,7 @@ export default async function Home() {
             I am currently preparing for the Azure and AWS DevOps and Developer Associate exams, as well as the CKS and CKAD certifications to deepen my expertise in cloud-native technologies. I thrive on tackling complex challenges and am always eager to explore new technologies that drive efficiency and resilience.
           </p>
           <p>
-            When I'm not coding, I enjoy collecting books, catching up on my favorite TV series, and hunting for the best coffee in town.
+            When I&apos;m not coding, I enjoy collecting books, catching up on my favorite TV series, and hunting for the best coffee in town.
           </p>
         </div>
       </section>
