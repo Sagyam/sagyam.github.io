@@ -41,9 +41,7 @@ jobs:
       - name: Run Lighthouse Audit on Production
         if: github.event_name == 'push'
         run: |
-          unlighthouse-ci --site https://sagyamthapa.com.np \
-            --budget 75 \
-            --build-static
+          unlighthouse-ci --build-static
         continue-on-error: false
 
       - name: Upload Lighthouse Report
