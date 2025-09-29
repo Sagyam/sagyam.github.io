@@ -1,0 +1,80 @@
+
+{
+  "experiences": [
+    {
+      "id": "0",
+      "date": "2025 — Present",
+      "title": "DevOps Engineer",
+      "company": "Ascend Cloud Services",
+      "companyLink": "https://ascendcloudservices.com/",
+      "description": "Leveraging expertise in AWS, Azure, and Kubernetes to build and maintain scalable cloud solutions. Focusing on data platform optimization with Databricks.",
+      "tech": ["AWS", "Azure", "Kubernetes", "Databricks"]
+    },
+    {
+      "id": "1",
+      "date": "2024",
+      "title": "Backend Developer",
+      "company": "Bitmosys",
+      "companyLink": "https://bitmosys.com",
+      "description": "Led the design and deployment of a high-availability ERP infrastructure, including a self-managed observability stack (Loki, Grafana, Prometheus), a replicated Postgres cluster, and an Nginx API gateway. Implemented a Linkerd service mesh for enhanced security and monitoring.",
+      "tech": ["Grafana", "Prometheus", "PostgreSQL", "Redis", "Linkerd", "NestJS"]
+    },
+    {
+      "id": "2",
+      "date": "2023 — 2024",
+      "title": "Fullstack Developer",
+      "company": "Cango",
+      "companyLink": "https://cangoapp.ca",
+      "description": "Developed a reusable component library and built dynamic, permission-based dashboards for a political survey platform. Created interactive data visualizations with Apache ECharts and refactored the legacy codebase to TypeScript, optimizing state management with React Query.",
+      "tech": ["TypeScript", "React Query", "ECharts", "React"]
+    },
+    {
+      "id": "3",
+      "date": "2022 — 2023",
+      "title": "Frontend Developer",
+      "company": "Matrice AI",
+      "companyLink": "https://matrice.ai",
+      "description": "Developed and deployed the backend for an image annotation platform on AWS. Optimized a high-traffic landing page using Next.js, achieving a page load time under 200ms, and refactored the data annotation dashboard to align with new UI designs.",
+      "tech": ["Next.js", "AWS", "TypeScript", "React"]
+    }
+  ],
+  "projects": [
+    {
+      "id": "7",
+      "title": "Tools",
+      "description": "A comprehensive collection of interactive educational tools for learning computer science algorithms, data structures, and system design concepts.",
+      "tech": ["Data Structures", "Algorithms", "Rate Limiting", "System Design", "Networking"],
+      "imageId": "",
+      "imageUrl": "https://tools.sagyamthapa.com.np/og-image.png",
+      "link": "https://tools.sagyamthapa.com.np"
+    },
+    {
+      "id": "8",
+      "title": "InfraWise",
+      "description": "A financial modeling tool for comparing Total Cost of Ownership (TCO) between cloud and on-premise infrastructure solutions. Make informed infrastructure decisions with detailed cost breakdowns and breakeven analysis.",
+      "tech": ["TCO Analysis", "Cloud Cost", "Financial Modeling", "TypeScript"],
+      "imageId": "",
+      "imageUrl": "https://infrawise.sagyamthapa.com.np/og-image.png",
+      "link": "https://infrawise.sagyamthapa.com.np"
+    }
+  ],
+  "certifications": [
+    {
+      "id": "1",
+      "name": "Deep Learning Specialization",
+      "issuer": "DeepLearning.AI",
+      "issueDate": "2020-06-01",
+      "verificationLink": "https://coursera.org/share/35c12254d159375faf42e64195933b48",
+      "icon": "aws"
+    },
+    {
+      "id": "2",
+      "name": "AWS Fundamentals Specialization",
+      "issuer": "Amazon Web Services",
+      "issueDate": "2020-06-01",
+      "verificationLink": "https://coursera.org/share/35c12254d159375faf42e64195933b48",
+      "icon": "aws"
+    }
+  ],
+  "blogPosts": []
+}

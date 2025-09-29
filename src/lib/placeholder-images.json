@@ -1,0 +1,58 @@
+{
+  "placeholderImages": [
+    {
+      "id": "project-1",
+      "description": "CI/CD Pipeline Visualization",
+      "imageUrl": "https://images.unsplash.com/photo-1746988043334-b8677f2ec74c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwaXBlbGluZSUyMGF1dG9tYXRpb258ZW58MHx8fHwxNzU5MTQ3NTY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pipeline automation"
+    },
+    {
+      "id": "project-2",
+      "description": "Serverless API on AWS Lambda",
+      "imageUrl": "https://images.unsplash.com/photo-1618156702250-b1ca0589b5d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjbG91ZCUyMGNvZGV8ZW58MHx8fHwxNzU5MTQ3NTY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cloud code"
+    },
+    {
+      "id": "project-3",
+      "description": "Kubernetes Cluster Monitoring Dashboard",
+      "imageUrl": "https://images.unsplash.com/photo-1758876202980-0a28b744fb24?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxkYXNoYm9hcmQlMjBjaGFydHxlbnwwfHx8fDE3NTkxMjI5MDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dashboard chart"
+    },
+    {
+      "id": "project-4",
+      "description": "Infrastructure as Code with Terraform",
+      "imageUrl": "https://images.unsplash.com/photo-1649451844931-57e22fc82de3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb2RlJTIwaW5mcmFzdHJ1Y3R1cmV8ZW58MHx8fHwxNzU5MTQ3NTY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "code infrastructure"
+    },
+    {
+      "id": "project-5",
+      "description": "Automated Backup Solution for Azure Blobs",
+      "imageUrl": "https://images.unsplash.com/photo-1735715606137-b1f47142f7b4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjbG91ZCUyMHN0b3JhZ2V8ZW58MHx8fHwxNzU5MTEyNjk3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cloud storage"
+    },
+    {
+      "id": "project-6",
+      "description": "Containerized Microservices with Docker",
+      "imageUrl": "https://images.unsplash.com/photo-1703227373720-cff89520dd31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxkb2NrZXIlMjBjb250YWluZXJzfGVufDB8fHx8MTc1OTA0MjgyOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "docker containers"
+    },
+    {
+      "id": "blog-1",
+      "description": "Kubernetes Ingress concepts",
+      "imageUrl": "https://images.unsplash.com/photo-1664526936810-ec0856d31b92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxrdWJlcm5ldGVzJTIwbmV0d29ya3xlbnwwfHx8fDE3NTkxNTAxMzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "kubernetes network"
+    },
+    {
+      "id": "blog-2",
+      "description": "Terraform code for AWS",
+      "imageUrl": "https://images.unsplash.com/photo-1692606743169-e1ae2f0a960f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8dGVycmFmb3JtJTIwYXdzfGVufDB8fHx8MTc1OTE1MDEzOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "terraform aws"
+    },
+    {
+      "id": "blog-3",
+      "description": "AWS Lambda serverless architecture",
+      "imageUrl": "https://images.unsplash.com/photo-1625843885692-41347d77bdce?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxhd3MlMjBsYW1iZGF8ZW58MHx8fHwxNzU5MTUwMTM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "aws lambda"
+    }
+  ]
+}
