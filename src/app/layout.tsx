@@ -1,7 +1,7 @@
 import {SpeedInsights} from "@vercel/speed-insights/next";
 import type { Metadata } from 'next';
 import './globals.css';
-import {Github, Linkedin, Mail, Rss, FileText, GithubIcon} from 'lucide-react';
+import {Linkedin, Mail, Rss, FileText, GithubIcon} from 'lucide-react';
 import {
   TooltipProvider,
   Tooltip,
@@ -25,30 +25,29 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
+import { metadata as siteMetadata, profile, navigation, socialLinks } from '@/lib/data';
+
 export const metadata: Metadata = {
-  title: 'Sagyam Thapa | Cloud & DevOps Engineer',
-  description:
-    'A personal portfolio showcasing DevOps and Cloud Engineering projects and skills.',
+  title: siteMetadata.siteTitle,
+  description: siteMetadata.siteDescription,
     icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
     apple: '/favicon.svg',
     },
     openGraph: {
-    title: 'Sagyam Thapa | Cloud & DevOps Engineer',
-    description:
-      'A personal portfolio showcasing DevOps and Cloud Engineering projects and skills.',
-    url: 'https://sagyamthapa.com.np',
-    siteName: 'Sagyam Thapa',
-    locale: 'en-US',
+    title: siteMetadata.siteTitle,
+    description: siteMetadata.siteDescription,
+    url: siteMetadata.siteUrl,
+    siteName: siteMetadata.siteName,
+    locale: siteMetadata.locale,
     type: 'website',
   },
     twitter: {
     card: 'summary_large_image',
-    title: 'Sagyam Thapa | Cloud & DevOps Engineer',
-    description:
-      'A personal portfolio showcasing DevOps and Cloud Engineering projects and skills.',
-    creator: '@sagyam21',
+    title: siteMetadata.siteTitle,
+    description: siteMetadata.siteDescription,
+    creator: siteMetadata.twitterHandle,
   },
     robots: {
     index: true,
@@ -74,6 +73,15 @@ const XIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  'github': GithubIcon,
+  'linkedin': Linkedin,
+  'mail': Mail,
+  'file-text': FileText,
+  'x': XIcon,
+  'rss': Rss,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -88,13 +96,13 @@ export default function RootLayout({
               <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-5/12 lg:flex-col lg:justify-between lg:py-24">
                 <div>
                   <h1 className="font-headline text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-                    Sagyam Thapa
+                    {profile.name}
                   </h1>
                   <h2 className="mt-3 font-headline text-lg font-medium tracking-tight text-foreground sm:text-xl">
-                    Cloud & DevOps Engineer
+                    {profile.title}
                   </h2>
                   <p className="mt-4 max-w-xs leading-normal text-muted-foreground">
-                    I build and automate robust, scalable cloud infrastructure.
+                    {profile.tagline}
                   </p>
 
                   <nav
@@ -102,149 +110,42 @@ export default function RootLayout({
                     aria-label="In-page navigation"
                   >
                     <ul className="w-max space-y-4">
-                      <li>
-                        <a
-                          className="group flex items-center gap-x-3"
-                          href="#about"
-                        >
-                          <span className="h-px w-8 bg-muted-foreground transition-all duration-300 group-hover:w-16 group-hover:bg-foreground"></span>
-                          <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
-                            About
-                          </span>
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="group flex items-center gap-x-3"
-                          href="#experience"
-                        >
-                          <span className="h-px w-8 bg-muted-foreground transition-all duration-300 group-hover:w-16 group-hover:bg-foreground"></span>
-                          <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
-                            Experience
-                          </span>
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="group flex items-center gap-x-3"
-                          href="#writing"
-                        >
-                          <span className="h-px w-8 bg-muted-foreground transition-all duration-300 group-hover:w-16 group-hover:bg-foreground"></span>
-                          <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
-                            Writing
-                          </span>
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="group flex items-center gap-x-3"
-                          href="#projects"
-                        >
-                          <span className="h-px w-8 bg-muted-foreground transition-all duration-300 group-hover:w-16 group-hover:bg-foreground"></span>
-                          <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
-                            Projects
-                          </span>
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="group flex items-center gap-x-3"
-                          href="#certifications"
-                        >
-                          <span className="h-px w-8 bg-muted-foreground transition-all duration-300 group-hover:w-16 group-hover:bg-foreground"></span>
-                          <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
-                            Certifications
-                          </span>
-                        </a>
-                      </li>
+                      {navigation.map((item) => (
+                        <li key={item.id}>
+                          <a
+                            className="group flex items-center gap-x-3"
+                            href={`#${item.id}`}
+                          >
+                            <span className="h-px w-8 bg-muted-foreground transition-all duration-300 group-hover:w-16 group-hover:bg-foreground"></span>
+                            <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
+                              {item.label}
+                            </span>
+                          </a>
+                        </li>
+                      ))}
                     </ul>
                   </nav>
                 </div>
                 <div className="mt-8 flex items-center gap-x-4 text-muted-foreground">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <a
-                        href="https://github.com/Sagyam"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        aria-label="GitHub"
-                        className="transition-colors hover:text-foreground"
-                      >
-                        <GithubIcon className="size-6" />
-                      </a>
-                    </TooltipTrigger>
-                    <TooltipContent>GitHub</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <a
-                        href="https://www.linkedin.com/in/sagyam"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        aria-label="LinkedIn"
-                        className="transition-colors hover:text-foreground"
-                      >
-                        <Linkedin className="size-6" />
-                      </a>
-                    </TooltipTrigger>
-                    <TooltipContent>LinkedIn</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <a
-                        href="mailto:sagymathpa32@gmail.com"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        aria-label="Email"
-                        className="transition-colors hover:text-foreground"
-                      >
-                        <Mail className="size-6" />
-                      </a>
-                    </TooltipTrigger>
-                    <TooltipContent>Email</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <a
-                        href="/sagyam-thapa.pdf"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        aria-label="Resume"
-                        className="transition-colors hover:text-foreground"
-                      >
-                        <FileText className="size-6" />
-                      </a>
-                    </TooltipTrigger>
-                    <TooltipContent>Resume</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <a
-                        href="https://twitter.com/sagyam21"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        aria-label="X"
-                        className="transition-colors hover:text-foreground"
-                      >
-                        <XIcon className="size-6" />
-                      </a>
-                    </TooltipTrigger>
-                    <TooltipContent>X</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <a
-                        href="https://blog.sagyamthapa.com.np"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        aria-label="Blog"
-                        className="transition-colors hover:text-foreground"
-                      >
-                        <Rss className="size-6" />
-                      </a>
-                    </TooltipTrigger>
-                    <TooltipContent>Blog</TooltipContent>
-                  </Tooltip>
+                  {socialLinks.map((link) => {
+                    const Icon = iconMap[link.icon];
+                    return (
+                      <Tooltip key={link.id}>
+                        <TooltipTrigger asChild>
+                          <a
+                            href={link.url}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            aria-label={link.label}
+                            className="transition-colors hover:text-foreground"
+                          >
+                            <Icon className="size-6" />
+                          </a>
+                        </TooltipTrigger>
+                        <TooltipContent>{link.label}</TooltipContent>
+                      </Tooltip>
+                    );
+                  })}
                 </div>
               </header>
               <main className="pt-16 lg:w-7/12 lg:py-24">{children}</main>

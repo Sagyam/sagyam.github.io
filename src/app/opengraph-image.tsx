@@ -1,9 +1,10 @@
 import { ImageResponse } from 'next/og';
+import { profile, navigation } from '@/lib/data';
 
 export const runtime = 'edge';
 export const revalidate = 86400; // Cache for 1 day (86400 seconds)
 
-export const alt = 'Sagyam Thapa | Cloud & DevOps Engineer';
+export const alt = `${profile.name} | ${profile.title}`;
 export const size = {
   width: 1200,
   height: 630,
@@ -27,7 +28,8 @@ async function loadGoogleFont(font: string, text: string) {
 }
 
 export default async function Image() {
-  const text = 'Sagyam Thapa Cloud & DevOps Engineer I build and automate robust, scalable cloud infrastructure. ABOUT EXPERIENCE WRITING PROJECTS CERTIFICATIONS';
+  const navLabels = navigation.map(n => n.label.toUpperCase()).join(' ');
+  const text = `${profile.name} ${profile.title} ${profile.tagline} ${navLabels}`;
 
   const fontData = await loadGoogleFont('Space+Grotesk:wght@500;700', text);
 
@@ -63,7 +65,7 @@ export default async function Image() {
                 lineHeight: 1.2,
               }}
             >
-              Sagyam Thapa
+              {profile.name}
             </h1>
             <h2
               style={{
@@ -75,7 +77,7 @@ export default async function Image() {
                 lineHeight: 1.2,
               }}
             >
-              Cloud & DevOps Engineer
+              {profile.title}
             </h2>
             <p
               style={{
@@ -86,7 +88,7 @@ export default async function Image() {
                 lineHeight: 1.5,
               }}
             >
-              I build and automate robust, scalable cloud infrastructure.
+              {profile.tagline}
             </p>
           </div>
 
@@ -98,37 +100,35 @@ export default async function Image() {
               marginTop: '40px',
             }}
           >
-            {['ABOUT', 'EXPERIENCE', 'WRITING', 'PROJECTS', 'CERTIFICATIONS'].map(
-              (item) => (
+            {navigation.map((item) => (
+              <div
+                key={item.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '16px',
+                }}
+              >
                 <div
-                  key={item}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '16px',
+                    width: '32px',
+                    height: '1px',
+                    backgroundColor: 'hsl(215, 20%, 65%)',
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 700,
+                    fontFamily: 'Space Grotesk',
+                    color: 'hsl(215, 20%, 65%)',
+                    letterSpacing: '0.1em',
                   }}
                 >
-                  <div
-                    style={{
-                      width: '32px',
-                      height: '1px',
-                      backgroundColor: 'hsl(215, 20%, 65%)',
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontSize: '14px',
-                      fontWeight: 700,
-                      fontFamily: 'Space Grotesk',
-                      color: 'hsl(215, 20%, 65%)',
-                      letterSpacing: '0.1em',
-                    }}
-                  >
-                    {item}
-                  </span>
-                </div>
-              )
-            )}
+                  {item.label.toUpperCase()}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

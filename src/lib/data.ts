@@ -1,4 +1,41 @@
 import data from './data.json';
+
+export type Profile = {
+  name: string;
+  title: string;
+  tagline: string;
+  about: string[];
+};
+
+export type Metadata = {
+  siteTitle: string;
+  siteDescription: string;
+  siteUrl: string;
+  siteName: string;
+  locale: string;
+  twitterHandle: string;
+};
+
+export type NavigationItem = {
+  id: string;
+  label: string;
+};
+
+export type SocialLink = {
+  id: string;
+  label: string;
+  url: string;
+  icon: string;
+};
+
+export type SectionConfig = {
+  title: string;
+  resumeLink?: string;
+  resumeText?: string;
+  blogLink?: string;
+  blogText?: string;
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -39,6 +76,11 @@ export type BlogPost = {
   tech?: string[];
 };
 
+export const profile: Profile = data.profile;
+export const metadata: Metadata = data.metadata;
+export const navigation: NavigationItem[] = data.navigation;
+export const socialLinks: SocialLink[] = data.socialLinks;
+export const sections: Record<string, SectionConfig> = data.sections;
 export const experiences: Experience[] = data.experiences;
 export const projects: Project[] = data.projects;
 export const certifications: Certification[] = data.certifications;

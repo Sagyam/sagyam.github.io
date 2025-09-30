@@ -1,5 +1,101 @@
 
 {
+  "profile": {
+    "name": "Sagyam Thapa",
+    "title": "Cloud & DevOps Engineer",
+    "tagline": "I build and automate robust, scalable cloud infrastructure.",
+    "about": [
+      "As a backend developer, I specialize in building robust and scalable systems. My experience includes designing database schemas, architecting ERP applications, and deploying high-availability infrastructure. I have a passion for creating self-managed observability stacks with tools like Grafana, Prometheus, and Loki to ensure system health and performance.",
+      "I am currently preparing for the Azure and AWS DevOps and Developer Associate exams, as well as the CKS and CKAD certifications to deepen my expertise in cloud-native technologies. I thrive on tackling complex challenges and am always eager to explore new technologies that drive efficiency and resilience.",
+      "When I'm not coding, I enjoy collecting books, catching up on my favorite TV series, and hunting for the best coffee in town."
+    ]
+  },
+  "metadata": {
+    "siteTitle": "Sagyam Thapa | Cloud & DevOps Engineer",
+    "siteDescription": "A personal portfolio showcasing DevOps and Cloud Engineering projects and skills.",
+    "siteUrl": "https://sagyamthapa.com.np",
+    "siteName": "Sagyam Thapa",
+    "locale": "en-US",
+    "twitterHandle": "@sagyam21"
+  },
+  "navigation": [
+    {
+      "id": "about",
+      "label": "About"
+    },
+    {
+      "id": "experience",
+      "label": "Experience"
+    },
+    {
+      "id": "writing",
+      "label": "Writing"
+    },
+    {
+      "id": "projects",
+      "label": "Projects"
+    },
+    {
+      "id": "certifications",
+      "label": "Certifications"
+    }
+  ],
+  "socialLinks": [
+    {
+      "id": "github",
+      "label": "GitHub",
+      "url": "https://github.com/Sagyam",
+      "icon": "github"
+    },
+    {
+      "id": "linkedin",
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/sagyam",
+      "icon": "linkedin"
+    },
+    {
+      "id": "email",
+      "label": "Email",
+      "url": "mailto:sagymathpa32@gmail.com",
+      "icon": "mail"
+    },
+    {
+      "id": "resume",
+      "label": "Resume",
+      "url": "/sagyam-thapa.pdf",
+      "icon": "file-text"
+    },
+    {
+      "id": "twitter",
+      "label": "X",
+      "url": "https://twitter.com/sagyam21",
+      "icon": "x"
+    },
+    {
+      "id": "blog",
+      "label": "Blog",
+      "url": "https://blog.sagyamthapa.com.np",
+      "icon": "rss"
+    }
+  ],
+  "sections": {
+    "experience": {
+      "title": "Experience",
+      "resumeLink": "/sagyam-thapa.pdf",
+      "resumeText": "View full resume"
+    },
+    "writing": {
+      "title": "Writing",
+      "blogLink": "https://blog.sagyamthapa.com.np",
+      "blogText": "View all posts"
+    },
+    "projects": {
+      "title": "Projects"
+    },
+    "certifications": {
+      "title": "Certifications"
+    }
+  },
   "experiences": [
     {
       "id": "0",
