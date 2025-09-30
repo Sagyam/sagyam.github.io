@@ -1,6 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
+export const revalidate = 86400; // Cache for 1 day (86400 seconds)
 
 export const alt = 'Sagyam Thapa | Cloud & DevOps Engineer';
 export const size = {
@@ -10,14 +11,25 @@ export const size = {
 
 export const contentType = 'image/png';
 
-export default async function Image() {
-  const spaceGroteskBold = await fetch(
-    'https://fonts.gstatic.com/s/spacegrotesk/v16/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXsjNsFjTDJK.woff'
-  ).then((res) => res.arrayBuffer());
+async function loadGoogleFont(font: string, text: string) {
+  const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(text)}`;
+  const css = await (await fetch(url)).text();
+  const resource = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/);
 
-  const spaceGroteskMedium = await fetch(
-    'https://fonts.gstatic.com/s/spacegrotesk/v16/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj62UXsjNsFjTDJK.woff'
-  ).then((res) => res.arrayBuffer());
+  if (resource) {
+    const response = await fetch(resource[1]);
+    if (response.status == 200) {
+      return await response.arrayBuffer();
+    }
+  }
+
+  throw new Error('failed to load font data');
+}
+
+export default async function Image() {
+  const text = 'Sagyam Thapa Cloud & DevOps Engineer I build and automate robust, scalable cloud infrastructure. ABOUT EXPERIENCE WRITING PROJECTS CERTIFICATIONS';
+
+  const fontData = await loadGoogleFont('Space+Grotesk:wght@500;700', text);
 
   return new ImageResponse(
     (
@@ -126,14 +138,7 @@ export default async function Image() {
       fonts: [
         {
           name: 'Space Grotesk',
-          data: spaceGroteskBold,
-          weight: 700,
-          style: 'normal',
-        },
-        {
-          name: 'Space Grotesk',
-          data: spaceGroteskMedium,
-          weight: 500,
+          data: fontData,
           style: 'normal',
         },
       ],
