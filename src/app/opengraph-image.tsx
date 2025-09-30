@@ -11,6 +11,14 @@ export const size = {
 export const contentType = 'image/png';
 
 export default async function Image() {
+  const spaceGroteskBold = await fetch(
+    new URL('https://fonts.gstatic.com/s/spacegrotesk/v16/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXsjNsFjTDJK.woff', import.meta.url)
+  ).then((res) => res.arrayBuffer());
+
+  const spaceGroteskMedium = await fetch(
+    new URL('https://fonts.gstatic.com/s/spacegrotesk/v16/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj62UXsjNsFjTDJK.woff', import.meta.url)
+  ).then((res) => res.arrayBuffer());
+
   return new ImageResponse(
     (
       <div
@@ -21,7 +29,7 @@ export default async function Image() {
           flexDirection: 'column',
           alignItems: 'flex-start',
           justifyContent: 'center',
-          backgroundColor: '#0a192f',
+          backgroundColor: 'hsl(222, 84%, 5%)',
           padding: '80px',
         }}
       >
@@ -37,7 +45,8 @@ export default async function Image() {
               style={{
                 fontSize: '72px',
                 fontWeight: 700,
-                color: '#ffffff',
+                fontFamily: 'Space Grotesk',
+                color: 'hsl(210, 40%, 96%)',
                 margin: 0,
                 lineHeight: 1.2,
               }}
@@ -48,7 +57,8 @@ export default async function Image() {
               style={{
                 fontSize: '36px',
                 fontWeight: 500,
-                color: '#ffffff',
+                fontFamily: 'Space Grotesk',
+                color: 'hsl(210, 40%, 96%)',
                 margin: 0,
                 lineHeight: 1.2,
               }}
@@ -58,7 +68,8 @@ export default async function Image() {
             <p
               style={{
                 fontSize: '24px',
-                color: '#94a3b8',
+                fontFamily: 'Space Grotesk',
+                color: 'hsl(215, 20%, 65%)',
                 margin: 0,
                 lineHeight: 1.5,
               }}
@@ -89,14 +100,15 @@ export default async function Image() {
                     style={{
                       width: '32px',
                       height: '1px',
-                      backgroundColor: '#94a3b8',
+                      backgroundColor: 'hsl(215, 20%, 65%)',
                     }}
                   />
                   <span
                     style={{
                       fontSize: '14px',
                       fontWeight: 700,
-                      color: '#94a3b8',
+                      fontFamily: 'Space Grotesk',
+                      color: 'hsl(215, 20%, 65%)',
                       letterSpacing: '0.1em',
                     }}
                   >
@@ -111,6 +123,20 @@ export default async function Image() {
     ),
     {
       ...size,
+      fonts: [
+        {
+          name: 'Space Grotesk',
+          data: spaceGroteskBold,
+          weight: 700,
+          style: 'normal',
+        },
+        {
+          name: 'Space Grotesk',
+          data: spaceGroteskMedium,
+          weight: 500,
+          style: 'normal',
+        },
+      ],
     }
   );
 }
