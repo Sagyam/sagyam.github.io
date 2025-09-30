@@ -12,11 +12,11 @@ export const contentType = 'image/png';
 
 export default async function Image() {
   const spaceGroteskBold = await fetch(
-    new URL('https://fonts.gstatic.com/s/spacegrotesk/v16/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXsjNsFjTDJK.woff', import.meta.url)
+    'https://fonts.gstatic.com/s/spacegrotesk/v16/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXsjNsFjTDJK.woff'
   ).then((res) => res.arrayBuffer());
 
   const spaceGroteskMedium = await fetch(
-    new URL('https://fonts.gstatic.com/s/spacegrotesk/v16/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj62UXsjNsFjTDJK.woff', import.meta.url)
+    'https://fonts.gstatic.com/s/spacegrotesk/v16/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj62UXsjNsFjTDJK.woff'
   ).then((res) => res.arrayBuffer());
 
   return new ImageResponse(
