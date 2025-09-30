@@ -1,7 +1,7 @@
 import {SpeedInsights} from "@vercel/speed-insights/next";
 import type { Metadata } from 'next';
 import './globals.css';
-import { Github, Linkedin, Mail, Rss, FileText } from 'lucide-react';
+import {Github, Linkedin, Mail, Rss, FileText, GithubIcon} from 'lucide-react';
 import {
   TooltipProvider,
   Tooltip,
@@ -40,14 +40,6 @@ export const metadata: Metadata = {
       'A personal portfolio showcasing DevOps and Cloud Engineering projects and skills.',
     url: 'https://sagyamthapa.com.np',
     siteName: 'Sagyam Thapa',
-    images: [
-      {
-        url: 'https://sagyamthapa.com.np/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Sagyam Thapa',
-      },
-    ],
     locale: 'en-US',
     type: 'website',
   },
@@ -56,7 +48,6 @@ export const metadata: Metadata = {
     title: 'Sagyam Thapa | Cloud & DevOps Engineer',
     description:
       'A personal portfolio showcasing DevOps and Cloud Engineering projects and skills.',
-    images: ['https://sagyamthapa.com.np/og-image.png'],
     creator: '@sagyam21',
   },
     robots: {
@@ -179,7 +170,7 @@ export default function RootLayout({
                         aria-label="GitHub"
                         className="transition-colors hover:text-foreground"
                       >
-                        <Github className="size-6" />
+                        <GithubIcon className="size-6" />
                       </a>
                     </TooltipTrigger>
                     <TooltipContent>GitHub</TooltipContent>

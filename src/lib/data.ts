@@ -25,7 +25,7 @@ export type Certification = {
   issuer: string;
   issueDate: string;
   verificationLink: string;
-  icon: 'aws' | 'azure';
+  icon: 'aws' | 'azure' | 'cncf' | 'coursera' | 'databricks' | 'gcp' | 'hashicorp' | 'ibm' | 'linkedin' | 'oracle' | 'pmi' | 'redhat' | 'salesforce' | 'vmware' | 'other';
 };
 
 export type BlogPost = {

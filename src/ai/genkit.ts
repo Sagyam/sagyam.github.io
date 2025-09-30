@@ -1,7 +1,7 @@
 import {genkit} from 'genkit';
-import {googleAI} from '@genkit-ai/googleai';
+import {anthropic} from 'genkitx-anthropic';
 
 export const ai = genkit({
-  plugins: [googleAI()],
-  model: 'googleai/gemini-2.5-flash',
+  plugins: [anthropic({apiKey: process.env.ANTHROPIC_API_KEY})],
+  model: 'anthropic/claude-3-5-sonnet',
 });
