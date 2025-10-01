@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import type { Experience } from '@/lib/data';
-import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight } from 'lucide-react';
+import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
+import type { Experience } from '@/lib/data';
 
 interface ExperienceCardProps {
   experience: Experience;

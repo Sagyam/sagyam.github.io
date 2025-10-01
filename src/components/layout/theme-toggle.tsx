@@ -1,28 +1,32 @@
 'use client';
 
-import * as React from 'react';
 import { Moon, Sun } from 'lucide-react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 
 export function ThemeToggle() {
-  const [theme, setThemeState] = React.useState<'theme-light' | 'dark' | 'system'>('system')
+  const [theme, setThemeState] = React.useState<
+    'theme-light' | 'dark' | 'system'
+  >('system');
 
   React.useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains('dark')
-    setThemeState(isDarkMode ? 'dark' : 'theme-light')
-  }, [])
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    setThemeState(isDarkMode ? 'dark' : 'theme-light');
+  }, []);
 
   React.useEffect(() => {
     const isDark =
       theme === 'dark' ||
       (theme === 'system' &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches)
-    document.documentElement.classList[isDark ? 'add' : 'remove']('dark')
-  }, [theme])
+        window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
+  }, [theme]);
 
   const toggleTheme = () => {
-    setThemeState(prevTheme => prevTheme === 'dark' ? 'theme-light' : 'dark')
-  }
+    setThemeState((prevTheme) =>
+      prevTheme === 'dark' ? 'theme-light' : 'dark'
+    );
+  };
 
   return (
     <Button variant="outline" size="icon" onClick={toggleTheme}>

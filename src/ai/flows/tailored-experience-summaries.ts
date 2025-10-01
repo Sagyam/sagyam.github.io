@@ -8,8 +8,8 @@
  * - TailoredExperienceSummariesOutput - The return type for the generateTailoredExperienceSummaries function.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { z } from 'genkit';
+import { ai } from '@/ai/genkit';
 
 const TailoredExperienceSummariesInputSchema = z.object({
   resumeDataUri: z
@@ -18,14 +18,20 @@ const TailoredExperienceSummariesInputSchema = z.object({
       "A resume file as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
 });
-export type TailoredExperienceSummariesInput = z.infer<typeof TailoredExperienceSummariesInputSchema>;
+export type TailoredExperienceSummariesInput = z.infer<
+  typeof TailoredExperienceSummariesInputSchema
+>;
 
 const TailoredExperienceSummariesOutputSchema = z.object({
   summaries: z
     .string()
-    .describe('Summarized job experiences tailored for DevOps/Cloud Engineer roles.'),
+    .describe(
+      'Summarized job experiences tailored for DevOps/Cloud Engineer roles.'
+    ),
 });
-export type TailoredExperienceSummariesOutput = z.infer<typeof TailoredExperienceSummariesOutputSchema>;
+export type TailoredExperienceSummariesOutput = z.infer<
+  typeof TailoredExperienceSummariesOutputSchema
+>;
 
 export async function generateTailoredExperienceSummaries(
   input: TailoredExperienceSummariesInput
@@ -35,8 +41,8 @@ export async function generateTailoredExperienceSummaries(
 
 const prompt = ai.definePrompt({
   name: 'tailoredExperienceSummariesPrompt',
-  input: {schema: TailoredExperienceSummariesInputSchema},
-  output: {schema: TailoredExperienceSummariesOutputSchema},
+  input: { schema: TailoredExperienceSummariesInputSchema },
+  output: { schema: TailoredExperienceSummariesOutputSchema },
   prompt: `You are a career advisor specializing in tailoring resumes for DevOps and Cloud Engineering roles.  A candidate will provide their resume, and you will provide a summary of their job experiences focusing on aspects of the experience relevant to DevOps and Cloud Engineering. Exclude any irrelevant information.
 
 Resume: {{media url=resumeDataUri}}`,
@@ -48,8 +54,8 @@ const tailoredExperienceSummariesFlow = ai.defineFlow(
     inputSchema: TailoredExperienceSummariesInputSchema,
     outputSchema: TailoredExperienceSummariesOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
+  async (input) => {
+    const { output } = await prompt(input);
     return output!;
   }
 );

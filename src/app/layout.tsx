@@ -1,15 +1,15 @@
-import {SpeedInsights} from "@vercel/speed-insights/next";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import './globals.css';
-import {Linkedin, Mail, Rss, FileText, GithubIcon} from 'lucide-react';
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from '@/components/ui/tooltip';
 import { Analytics } from '@vercel/analytics/react';
-import { Work_Sans, Space_Grotesk } from 'next/font/google';
+import { FileText, GithubIcon, Linkedin, Mail, Rss } from 'lucide-react';
+import { Space_Grotesk, Work_Sans } from 'next/font/google';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const workSans = Work_Sans({
   subsets: ['latin'],
@@ -25,17 +25,22 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
-import { metadata as siteMetadata, profile, navigation, socialLinks } from '@/lib/data';
+import {
+  navigation,
+  profile,
+  metadata as siteMetadata,
+  socialLinks,
+} from '@/lib/data';
 
 export const metadata: Metadata = {
   title: siteMetadata.siteTitle,
   description: siteMetadata.siteDescription,
-    icons: {
+  icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
     apple: '/favicon.svg',
-    },
-    openGraph: {
+  },
+  openGraph: {
     title: siteMetadata.siteTitle,
     description: siteMetadata.siteDescription,
     url: siteMetadata.siteUrl,
@@ -43,13 +48,13 @@ export const metadata: Metadata = {
     locale: siteMetadata.locale,
     type: 'website',
   },
-    twitter: {
+  twitter: {
     card: 'summary_large_image',
     title: siteMetadata.siteTitle,
     description: siteMetadata.siteDescription,
     creator: siteMetadata.twitterHandle,
   },
-    robots: {
+  robots: {
     index: true,
     follow: true,
     googleBot: {
@@ -59,27 +64,22 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
-    }
+  },
 };
 
 const XIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    aria-hidden="true"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-    {...props}
-  >
+  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 24 24" {...props}>
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
   </svg>
 );
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  'github': GithubIcon,
-  'linkedin': Linkedin,
-  'mail': Mail,
+  github: GithubIcon,
+  linkedin: Linkedin,
+  mail: Mail,
   'file-text': FileText,
-  'x': XIcon,
-  'rss': Rss,
+  x: XIcon,
+  rss: Rss,
 };
 
 export default function RootLayout({
@@ -88,7 +88,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`dark ${workSans.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`dark ${workSans.variable} ${spaceGrotesk.variable}`}
+      suppressHydrationWarning
+    >
       <body className="font-body antialiased bg-background text-foreground">
         <TooltipProvider>
           <div className="mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
@@ -153,7 +157,7 @@ export default function RootLayout({
           </div>
         </TooltipProvider>
         <Analytics />
-        <SpeedInsights/>
+        <SpeedInsights />
       </body>
     </html>
   );

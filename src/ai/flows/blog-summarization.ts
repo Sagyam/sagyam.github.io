@@ -8,8 +8,8 @@
  * - SummarizeBlogOutput - The return type for the summarizeBlog function.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { z } from 'genkit';
+import { ai } from '@/ai/genkit';
 
 const SummarizeBlogInputSchema = z.object({
   url: z.string().url().describe('The URL of the blog post to summarize.'),
@@ -21,31 +21,35 @@ const SummarizeBlogOutputSchema = z.object({
 });
 export type SummarizeBlogOutput = z.infer<typeof SummarizeBlogOutputSchema>;
 
-export async function summarizeBlog(input: SummarizeBlogInput): Promise<SummarizeBlogOutput> {
+export async function summarizeBlog(
+  input: SummarizeBlogInput
+): Promise<SummarizeBlogOutput> {
   return summarizeBlogFlow(input);
 }
 
-const contentExtractor = ai.defineTool({
-  name: 'contentExtractor',
-  description: 'Extracts the main content from a given URL.',
-  inputSchema: z.object({
-    url: z.string().url().describe('The URL to extract content from.'),
-  }),
-  outputSchema: z.string(),
-},
-async (input) => {
-  const response = await fetch(input.url);
-  const html = await response.text();
+const contentExtractor = ai.defineTool(
+  {
+    name: 'contentExtractor',
+    description: 'Extracts the main content from a given URL.',
+    inputSchema: z.object({
+      url: z.string().url().describe('The URL to extract content from.'),
+    }),
+    outputSchema: z.string(),
+  },
+  async (input) => {
+    const response = await fetch(input.url);
+    const html = await response.text();
 
-  // Basic content extraction (replace with a more robust solution if needed)
-  const textContent = html.replace(/<[^>]*>/g, ''); // Remove HTML tags
-  return textContent.substring(0, 1000); // Return first 1000 characters
-});
+    // Basic content extraction (replace with a more robust solution if needed)
+    const textContent = html.replace(/<[^>]*>/g, ''); // Remove HTML tags
+    return textContent.substring(0, 1000); // Return first 1000 characters
+  }
+);
 
 const prompt = ai.definePrompt({
   name: 'summarizeBlogPrompt',
-  input: {schema: SummarizeBlogInputSchema},
-  output: {schema: SummarizeBlogOutputSchema},
+  input: { schema: SummarizeBlogInputSchema },
+  output: { schema: SummarizeBlogOutputSchema },
   tools: [contentExtractor],
   prompt: `Summarize the content extracted from the following URL in a concise manner:\n\nURL: {{{url}}}\nExtracted Content: {{await contentExtractor url=url}}\n\nSummary:`, //A tool call
 });
@@ -56,8 +60,8 @@ const summarizeBlogFlow = ai.defineFlow(
     inputSchema: SummarizeBlogInputSchema,
     outputSchema: SummarizeBlogOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
+  async (input) => {
+    const { output } = await prompt(input);
     return output!;
   }
 );
