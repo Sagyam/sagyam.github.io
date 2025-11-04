@@ -60,7 +60,3 @@ pnpm typecheck
 - **AI:** Google Genkit
 - **Backend:** Firebase
 - **Analytics:** Vercel Analytics & Speed Insights
-
-## License
-
-Private project

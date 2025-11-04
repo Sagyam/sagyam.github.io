@@ -37,3 +37,4 @@ yarn-error.log*
 next-env.d.ts
 
 /.unlighthouse/
+/.genkit/traces_idx/genkit.metadata
