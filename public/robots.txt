@@ -1,0 +1,10 @@
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.sagyamthapa.com.np/sitemap.xml
+
+# Disallow crawling of API routes and build artifacts
+Disallow: /api/
+Disallow: /_next/

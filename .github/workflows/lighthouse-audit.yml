@@ -44,12 +44,24 @@ jobs:
           unlighthouse-ci --build-static
         continue-on-error: false
 
+      - name: Check if report directory exists
+        if: always()
+        run: |
+          echo "Checking for .unlighthouse directory..."
+          if [ -d ".unlighthouse" ]; then
+            echo "Directory exists, listing contents:"
+            ls -la .unlighthouse
+          else
+            echo "Directory does not exist!"
+            exit 1
+          fi
+
       - name: Upload Lighthouse Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: lighthouse-report
-          path: .unlighthouse
+          path: ./.unlighthouse
           retention-days: 30
 
       - name: Comment PR with Report Link
