@@ -40,6 +40,7 @@ export default async function BlogPage() {
               description: post.description || '',
               link: `/blog/${post.slugAsParams}`,
               tech: post.tech,
+              imageId: post.slug,
               imageUrl: post.coverImage,
             }}
           />
