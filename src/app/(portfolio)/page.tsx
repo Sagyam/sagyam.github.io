@@ -14,8 +14,8 @@ export default async function Home() {
     <div className="flex flex-col gap-24">
       <section id="about" className="scroll-mt-16 lg:scroll-mt-24">
         <div className="prose prose-invert max-w-none space-y-4 text-muted-foreground">
-          {profile.about.map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
+          {profile.about.map((paragraph) => (
+            <p key={paragraph.substring(0, 50)}>{paragraph}</p>
           ))}
         </div>
       </section>
@@ -29,16 +29,18 @@ export default async function Home() {
             <ExperienceCard key={exp.id} experience={exp} />
           ))}
         </div>
-        <div className="mt-8">
-          <Link
-            href={sections.experience.resumeLink!}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center font-medium text-foreground hover:text-primary"
-          >
-            {sections.experience.resumeText} <ArrowUpRight className="ml-1 size-4" />
-          </Link>
-        </div>
+        {sections.experience.resumeLink && (
+          <div className="mt-8">
+            <Link
+              href={sections.experience.resumeLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center font-medium text-foreground hover:text-primary"
+            >
+              {sections.experience.resumeText} <ArrowUpRight className="ml-1 size-4" />
+            </Link>
+          </div>
+        )}
       </section>
 
       <section id="writing" className="scroll-mt-16 lg:scroll-mt-24">
@@ -63,16 +65,18 @@ export default async function Home() {
             );
           })}
         </div>
-        <div className="mt-8">
-          <Link
-            href={sections.writing.blogLink!}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center font-medium text-foreground hover:text-primary"
-          >
-            {sections.writing.blogText} <Rss className="ml-2 size-4" />
-          </Link>
-        </div>
+        {sections.writing.blogLink && (
+          <div className="mt-8">
+            <Link
+              href={sections.writing.blogLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center font-medium text-foreground hover:text-primary"
+            >
+              {sections.writing.blogText} <Rss className="ml-2 size-4" />
+            </Link>
+          </div>
+        )}
       </section>
 
       <section id="projects" className="scroll-mt-16 lg:scroll-mt-24">

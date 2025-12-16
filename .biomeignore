@@ -3,6 +3,9 @@ node_modules
 .pnp
 .pnp.js
 
+# Shadcn UI components
+src/components/ui
+
 # Build outputs
 .next
 out

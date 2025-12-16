@@ -6,9 +6,9 @@ import { MDXContent } from '@/components/blog/mdx-components';
 import { Badge } from '@/components/ui/badge';
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Generate static params for all blog posts
@@ -20,7 +20,8 @@ export async function generateStaticParams() {
 
 // Generate metadata for each blog post
 export async function generateMetadata({ params }: BlogPostPageProps) {
-  const post = posts.find((post) => post.slugAsParams === params.slug);
+  const { slug } = await params;
+  const post = posts.find((post) => post.slugAsParams === slug);
 
   if (!post) {
     return {};
@@ -39,7 +40,8 @@ function getReadingTime(content: string): number {
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = posts.find((post) => post.slugAsParams === params.slug);
+  const { slug } = await params;
+  const post = posts.find((post) => post.slugAsParams === slug);
 
   if (!post || !post.published) {
     notFound();
@@ -103,10 +105,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   );
 }
 
-// ISR Configuration: Revalidate every hour (3600 seconds)
+// ISR Configuration: Revalidate every day
 // This enables Incremental Static Regeneration for posts marked with renderStrategy: "isr"
 // SSG posts will still be fully static, but ISR posts will regenerate periodically
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 // Note: All posts share this revalidate time. For true per-post revalidation,
 // you would need separate route files or use the pages directory with getStaticProps
