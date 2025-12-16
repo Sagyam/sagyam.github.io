@@ -3,13 +3,7 @@ import Link from 'next/link';
 import { CertificationCard } from '@/components/certification-card';
 import { ExperienceCard } from '@/components/experience-card';
 import { ProjectCard } from '@/components/project-card';
-import {
-  certifications,
-  experiences,
-  profile,
-  projects,
-  sections,
-} from '@/lib/data';
+import { certifications, experiences, profile, projects, sections } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { getBlogPosts } from '@/lib/rss';
 
@@ -42,8 +36,7 @@ export default async function Home() {
             rel="noopener noreferrer"
             className="inline-flex items-center font-medium text-foreground hover:text-primary"
           >
-            {sections.experience.resumeText}{' '}
-            <ArrowUpRight className="ml-1 size-4" />
+            {sections.experience.resumeText} <ArrowUpRight className="ml-1 size-4" />
           </Link>
         </div>
       </section>
@@ -88,12 +81,8 @@ export default async function Home() {
         </h2>
         <div className="mt-8 grid grid-cols-1 gap-4">
           {projects.map((project) => {
-            const image = PlaceHolderImages.find(
-              (img) => img.id === project.imageId
-            );
-            return (
-              <ProjectCard key={project.id} project={project} image={image} />
-            );
+            const image = PlaceHolderImages.find((img) => img.id === project.imageId);
+            return <ProjectCard key={project.id} project={project} image={image} />;
           })}
         </div>
       </section>

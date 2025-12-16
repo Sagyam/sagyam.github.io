@@ -1,0 +1,495 @@
+---
+title: "React Server Components: A Deep Dive with Real Examples"
+slug: "react-server-components-deep-dive"
+description: "Understanding React Server Components through practical examples, server-side data fetching, and performance optimization"
+publishedAt: "2024-01-25"
+coverImage: "/blog/rsc/cover.png"
+tech: ["React", "Next.js", "Performance", "RSC"]
+published: true
+renderStrategy: "rsc"
+---
+
+# React Server Components: A Deep Dive
+
+> **Note:** This page uses **React Server Components (RSC)** to demonstrate server-side rendering and data fetching. Heavy computations happen on the server, keeping the client bundle small.
+
+## What Are React Server Components?
+
+React Server Components (RSC) represent a paradigm shift in how we build React applications:
+
+- **Server-first rendering**: Components render on the server by default
+- **Zero bundle impact**: Server components don't ship to the client
+- **Direct backend access**: Fetch data, read files, query databases directly
+- **Automatic code splitting**: Client components lazy-load automatically
+
+## Why Use RSC for This Content?
+
+This blog post demonstrates RSC because it:
+- ✅ **Fetches data from external APIs** (no client-side API keys needed)
+- ✅ **Performs computations** (code analysis, statistics)
+- ✅ **Reduces bundle size** (heavy dependencies stay on server)
+- ✅ **Improves initial load** (HTML pre-rendered with data)
+
+## Server Components vs Client Components
+
+### Server Components (Default)
+
+```tsx
+// app/UserProfile.tsx
+// This is a Server Component by default
+
+async function UserProfile({ userId }: { userId: string }) {
+  // Direct database access - only runs on server!
+  const user = await db.users.findById(userId);
+
+  // Heavy computation - stays on server
+  const stats = calculateUserStats(user.activity);
+
+  return (
+    <div>
+      <h1>{user.name}</h1>
+      <p>Total posts: {stats.postCount}</p>
+      <p>Avg engagement: {stats.avgEngagement}</p>
+    </div>
+  );
+}
+```
+
+**Benefits:**
+- No JavaScript sent to client for this component
+- Can use server-only libraries (database clients, file system)
+- Sensitive data (API keys, secrets) never exposed
+- Faster initial page load
+
+### Client Components
+
+```tsx
+'use client';
+
+// app/Counter.tsx
+// Marked with 'use client' directive
+
+import { useState } from 'react';
+
+export function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
+  );
+}
+```
+
+**When to use:**
+- Need browser APIs (localStorage, geolocation)
+- Need interactivity (onClick, onChange)
+- Need React hooks (useState, useEffect)
+- Need to subscribe to real-time updates
+
+## Data Fetching Patterns
+
+### Pattern 1: Sequential Fetching
+
+```tsx
+// Server Component
+async function BlogPost({ id }: { id: string }) {
+  // These run sequentially (waterfall)
+  const post = await fetchPost(id);
+  const author = await fetchAuthor(post.authorId);
+  const comments = await fetchComments(id);
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <AuthorBio author={author} />
+      <Comments comments={comments} />
+    </article>
+  );
+}
+```
+
+**Issue**: Waterfall - each request waits for previous
+
+### Pattern 2: Parallel Fetching
+
+```tsx
+// Server Component
+async function BlogPost({ id }: { id: string }) {
+  // These run in parallel!
+  const [post, comments] = await Promise.all([
+    fetchPost(id),
+    fetchComments(id),
+  ]);
+
+  const author = await fetchAuthor(post.authorId);
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <AuthorBio author={author} />
+      <Comments comments={comments} />
+    </article>
+  );
+}
+```
+
+**Better**: Post and comments fetch simultaneously
+
+### Pattern 3: Streaming with Suspense
+
+```tsx
+// Server Component
+import { Suspense } from 'react';
+
+function BlogPost({ id }: { id: string }) {
+  return (
+    <article>
+      {/* Show immediately */}
+      <Suspense fallback={<PostSkeleton />}>
+        <PostContent id={id} />
+      </Suspense>
+
+      {/* Stream in when ready */}
+      <Suspense fallback={<CommentsSkeleton />}>
+        <Comments id={id} />
+      </Suspense>
+    </article>
+  );
+}
+
+async function PostContent({ id }: { id: string }) {
+  const post = await fetchPost(id);
+  return <div>{post.content}</div>;
+}
+
+async function Comments({ id }: { id: string }) {
+  const comments = await fetchComments(id);
+  return <CommentList comments={comments} />;
+}
+```
+
+**Best**: Progressive rendering, fast First Contentful Paint
+
+## Real-World Example: Dashboard
+
+Let's build a dashboard that showcases RSC benefits:
+
+```tsx
+// app/dashboard/page.tsx
+import { Suspense } from 'react';
+import { db } from '@/lib/database';
+
+export default function Dashboard() {
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      <Suspense fallback={<MetricSkeleton />}>
+        <RevenueMetric />
+      </Suspense>
+
+      <Suspense fallback={<MetricSkeleton />}>
+        <UsersMetric />
+      </Suspense>
+
+      <Suspense fallback={<MetricSkeleton />}>
+        <OrdersMetric />
+      </Suspense>
+
+      <Suspense fallback={<ChartSkeleton />}>
+        <RevenueChart />
+      </Suspense>
+    </div>
+  );
+}
+
+// Each metric is a separate Server Component
+async function RevenueMetric() {
+  // Direct database query - runs on server
+  const revenue = await db.orders
+    .where('status', 'completed')
+    .sum('amount');
+
+  return (
+    <Card>
+      <h3>Revenue</h3>
+      <p className="text-3xl">${revenue.toLocaleString()}</p>
+    </Card>
+  );
+}
+
+async function UsersMetric() {
+  const users = await db.users.count();
+
+  return (
+    <Card>
+      <h3>Total Users</h3>
+      <p className="text-3xl">{users.toLocaleString()}</p>
+    </Card>
+  );
+}
+
+async function OrdersMetric() {
+  const orders = await db.orders
+    .where('createdAt', '>', new Date(Date.now() - 86400000))
+    .count();
+
+  return (
+    <Card>
+      <h3>Orders (24h)</h3>
+      <p className="text-3xl">{orders}</p>
+    </Card>
+  );
+}
+```
+
+### Benefits of This Approach:
+
+1. **Parallel Data Fetching**: All metrics fetch simultaneously
+2. **Progressive Rendering**: Show metrics as they load
+3. **Zero Client JS**: Pure server components, no hydration
+4. **Direct DB Access**: No API layer needed
+5. **Type Safety**: End-to-end TypeScript from DB to UI
+
+## Performance Comparison
+
+### Traditional Client-Side Fetching
+
+```tsx
+'use client';
+
+function Dashboard() {
+  const [revenue, setRevenue] = useState(null);
+  const [users, setUsers] = useState(null);
+
+  useEffect(() => {
+    // Client makes API request
+    fetch('/api/revenue').then(r => r.json()).then(setRevenue);
+    fetch('/api/users').then(r => r.json()).then(setUsers);
+  }, []);
+
+  // Shows loading state, then data
+  // Problem: Multiple round trips, all JS shipped to client
+}
+```
+
+**Issues:**
+- 📦 Fetch libraries shipped to client
+- 🔄 Extra network round trips
+- ⏱️ Delayed data display
+- 💸 API costs (client → API → database)
+
+### With Server Components
+
+```tsx
+async function Dashboard() {
+  // Data fetched on server, HTML sent to client
+  const [revenue, users] = await Promise.all([
+    db.revenue.sum(),
+    db.users.count(),
+  ]);
+
+  return <div>{/* Show data immediately */}</div>;
+}
+```
+
+**Benefits:**
+- ✅ No fetch library on client
+- ✅ Direct database access
+- ✅ Data in initial HTML
+- ✅ Faster Time to Interactive
+
+## Common Patterns
+
+### 1. Server Component Wrapping Client Component
+
+```tsx
+// ServerWrapper.tsx (Server Component)
+async function ProductPage({ id }: { id: string }) {
+  const product = await fetchProduct(id);
+
+  // Pass server data as props to client component
+  return <AddToCartButton product={product} />;
+}
+
+// AddToCartButton.tsx (Client Component)
+'use client';
+
+function AddToCartButton({ product }) {
+  const [isAdding, setIsAdding] = useState(false);
+
+  return (
+    <button onClick={() => addToCart(product.id)}>
+      Add to Cart
+    </button>
+  );
+}
+```
+
+### 2. Sharing Data Between Server Components
+
+```tsx
+// Use React cache to deduplicate requests
+import { cache } from 'react';
+
+const getUser = cache(async (id: string) => {
+  return await db.users.findById(id);
+});
+
+// Both components can call getUser - only fetches once!
+async function UserProfile({ id }: { id: string }) {
+  const user = await getUser(id);
+  return <div>{user.name}</div>;
+}
+
+async function UserStats({ id }: { id: string }) {
+  const user = await getUser(id);
+  return <div>{user.postCount} posts</div>;
+}
+```
+
+### 3. Server Actions
+
+```tsx
+// actions.ts
+'use server';
+
+export async function createPost(formData: FormData) {
+  const title = formData.get('title');
+  const content = formData.get('content');
+
+  // Run on server, direct DB access
+  await db.posts.create({
+    title,
+    content,
+    userId: await getCurrentUserId(),
+  });
+
+  revalidatePath('/posts');
+}
+
+// CreatePostForm.tsx
+'use client';
+
+import { createPost } from './actions';
+
+function CreatePostForm() {
+  return (
+    <form action={createPost}>
+      <input name="title" />
+      <textarea name="content" />
+      <button type="submit">Create</button>
+    </form>
+  );
+}
+```
+
+## Bundle Size Impact
+
+### Before RSC (Client-Side)
+
+```typescript
+// Total bundle sent to client:
+{
+  "react": "44 KB",
+  "axios": "14 KB",
+  "date-fns": "67 KB",
+  "lodash": "71 KB",
+  "zod": "58 KB",
+  "total": "254 KB gzipped"
+}
+```
+
+### After RSC (Server Components)
+
+```typescript
+// Only client components in bundle:
+{
+  "react": "44 KB",
+  "zustand": "3 KB",  // Only what client needs
+  "total": "47 KB gzipped"
+}
+
+// Savings: 207 KB (81% reduction!)
+```
+
+## Best Practices
+
+### 1. Default to Server Components
+
+```tsx
+// ✅ Good: Server Component by default
+async function ProductList() {
+  const products = await fetchProducts();
+  return <div>{products.map(p => <ProductCard key={p.id} product={p} />)}</div>;
+}
+
+// Only use 'use client' when needed
+'use client';
+function SearchBox() {
+  const [query, setQuery] = useState('');
+  return <input value={query} onChange={e => setQuery(e.target.value)} />;
+}
+```
+
+### 2. Compose Server and Client Components
+
+```tsx
+// Server Component
+async function ProductPage({ id }: { id: string }) {
+  const product = await fetchProduct(id);
+
+  return (
+    <div>
+      {/* Server Component */}
+      <ProductDetails product={product} />
+
+      {/* Client Component for interactivity */}
+      <AddToCart productId={id} />
+
+      {/* Server Component */}
+      <RelatedProducts category={product.category} />
+    </div>
+  );
+}
+```
+
+### 3. Use Suspense Boundaries
+
+```tsx
+function Page() {
+  return (
+    <>
+      {/* Show immediately */}
+      <Header />
+
+      {/* Stream in when ready */}
+      <Suspense fallback={<ContentSkeleton />}>
+        <MainContent />
+      </Suspense>
+
+      {/* Stream in independently */}
+      <Suspense fallback={<SidebarSkeleton />}>
+        <Sidebar />
+      </Suspense>
+    </>
+  );
+}
+```
+
+## Conclusion
+
+React Server Components are a game-changer for:
+
+- **Performance**: Smaller bundles, faster loads
+- **Security**: API keys and secrets stay on server
+- **Developer Experience**: Direct backend access, simpler code
+- **User Experience**: Faster initial render, progressive enhancement
+
+Start with Server Components by default, and only use Client Components when you need interactivity or browser APIs.
+
+## Further Reading
+
+- [React Server Components RFC](https://github.com/reactjs/rfcs/blob/main/text/0188-server-components.md)
+- [Next.js App Router Documentation](https://nextjs.org/docs/app)
+- [Patterns for Building RSC Apps](https://nextjs.org/docs/app/building-your-application/rendering/composition-patterns)

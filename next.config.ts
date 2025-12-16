@@ -1,12 +1,10 @@
 import type { NextConfig } from 'next';
+import { build } from 'velite';
 
 const nextConfig: NextConfig = {
   /* config options here */
   typescript: {
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -33,6 +31,24 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Empty turbopack config to acknowledge we're using Turbopack
+  turbopack: {},
+  webpack: (config) => {
+    config.plugins.push(new VeliteWebpackPlugin());
+    return config;
+  },
 };
+
+class VeliteWebpackPlugin {
+  static started = false;
+  apply(compiler: any) {
+    compiler.hooks.beforeCompile.tapPromise('VeliteWebpackPlugin', async () => {
+      if (VeliteWebpackPlugin.started) return;
+      VeliteWebpackPlugin.started = true;
+      const dev = compiler.options.mode === 'development';
+      await build({ watch: dev, clean: !dev });
+    });
+  }
+}
 
 export default nextConfig;

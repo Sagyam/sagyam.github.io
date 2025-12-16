@@ -1,0 +1,309 @@
+---
+title: "Mastering TypeScript Utility Types: A Complete Guide"
+slug: "typescript-utility-types-guide"
+description: "A comprehensive guide to TypeScript's built-in utility types with practical examples and interactive demonstrations"
+publishedAt: "2024-01-20"
+coverImage: "/blog/typescript/cover.png"
+tech: ["TypeScript", "JavaScript", "Web Development"]
+published: true
+renderStrategy: "ssg"
+---
+
+# Mastering TypeScript Utility Types
+
+TypeScript provides several utility types to facilitate common type transformations. These utilities are available globally and can significantly improve your code's type safety and readability.
+
+## Why Use Utility Types?
+
+Utility types help you:
+
+- **Reduce code duplication** by transforming existing types
+- **Improve type safety** with precise type definitions
+- **Enhance maintainability** by deriving types from a single source of truth
+
+## Core Utility Types
+
+### 1. Partial&lt;T&gt;
+
+Makes all properties of a type optional. Perfect for update functions or configuration objects.
+
+```typescript
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  age: number;
+}
+
+// All properties become optional
+type PartialUser = Partial<User>;
+
+function updateUser(id: string, updates: Partial<User>) {
+  // Can update any subset of user properties
+  return { ...getUser(id), ...updates };
+}
+
+// Valid calls
+updateUser("123", { name: "John" });
+updateUser("123", { email: "john@example.com", age: 30 });
+```
+
+<InteractiveDemo
+  title="Try Partial<T>"
+  description="Click to see how Partial makes all properties optional"
+/>
+
+### 2. Required&lt;T&gt;
+
+The opposite of `Partial<T>` - makes all properties required.
+
+```typescript
+interface Config {
+  apiUrl?: string;
+  timeout?: number;
+  retries?: number;
+}
+
+// All properties become required
+type RequiredConfig = Required<Config>;
+
+const config: RequiredConfig = {
+  apiUrl: "https://api.example.com",
+  timeout: 5000,
+  retries: 3,
+  // Must provide all properties!
+};
+```
+
+### 3. Readonly&lt;T&gt;
+
+Makes all properties read-only, preventing reassignment after initialization.
+
+```typescript
+interface Point {
+  x: number;
+  y: number;
+}
+
+const point: Readonly<Point> = { x: 10, y: 20 };
+
+// Error: Cannot assign to 'x' because it is a read-only property
+// point.x = 30;
+```
+
+### 4. Pick&lt;T, K&gt;
+
+Constructs a type by picking specific properties from another type.
+
+```typescript
+interface Article {
+  id: string;
+  title: string;
+  content: string;
+  author: string;
+  publishedAt: Date;
+  views: number;
+}
+
+// Only pick the fields we need for the preview
+type ArticlePreview = Pick<Article, "id" | "title" | "author">;
+
+const preview: ArticlePreview = {
+  id: "1",
+  title: "TypeScript Tips",
+  author: "John Doe",
+  // content, publishedAt, views are not required
+};
+```
+
+### 5. Omit&lt;T, K&gt;
+
+Constructs a type by omitting specific properties from another type.
+
+```typescript
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+}
+
+// Remove sensitive data for public API responses
+type PublicUser = Omit<User, "password">;
+
+function getUserProfile(id: string): PublicUser {
+  const user = getUser(id);
+  // password is automatically excluded from the return type
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+  };
+}
+```
+
+## Advanced Utility Types
+
+### 6. Record&lt;K, T&gt;
+
+Constructs an object type with keys of type K and values of type T.
+
+```typescript
+type Role = "admin" | "user" | "guest";
+
+interface Permission {
+  read: boolean;
+  write: boolean;
+  delete: boolean;
+}
+
+// Create a permission map for each role
+const permissions: Record<Role, Permission> = {
+  admin: { read: true, write: true, delete: true },
+  user: { read: true, write: true, delete: false },
+  guest: { read: true, write: false, delete: false },
+};
+```
+
+### 7. Extract&lt;T, U&gt;
+
+Extracts types from T that are assignable to U.
+
+```typescript
+type Status = "pending" | "approved" | "rejected" | "cancelled";
+
+// Extract only the final states
+type FinalStatus = Extract<Status, "approved" | "rejected">;
+// Result: "approved" | "rejected"
+```
+
+### 8. Exclude&lt;T, U&gt;
+
+Excludes types from T that are assignable to U.
+
+```typescript
+type Status = "pending" | "approved" | "rejected" | "cancelled";
+
+// Exclude the cancelled state
+type ActiveStatus = Exclude<Status, "cancelled">;
+// Result: "pending" | "approved" | "rejected"
+```
+
+### 9. ReturnType&lt;T&gt;
+
+Extracts the return type of a function type.
+
+```typescript
+function createUser(name: string, email: string) {
+  return {
+    id: Math.random().toString(),
+    name,
+    email,
+    createdAt: new Date(),
+  };
+}
+
+// Automatically get the return type
+type User = ReturnType<typeof createUser>;
+// Result: { id: string; name: string; email: string; createdAt: Date }
+```
+
+### 10. Parameters&lt;T&gt;
+
+Extracts parameter types of a function type as a tuple.
+
+```typescript
+function updateUser(id: string, name: string, age: number) {
+  // implementation
+}
+
+// Get the parameter types
+type UpdateUserParams = Parameters<typeof updateUser>;
+// Result: [id: string, name: string, age: number]
+
+// Use with spread operator
+function wrappedUpdateUser(...args: UpdateUserParams) {
+  console.log("Updating user...");
+  return updateUser(...args);
+}
+```
+
+## Practical Example: Building a Type-Safe Form
+
+Here's how to combine utility types for a real-world scenario:
+
+```typescript
+interface FormData {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  age: number;
+  agreeToTerms: boolean;
+}
+
+// Form errors - all fields optional, only present if there's an error
+type FormErrors = Partial<Record<keyof FormData, string>>;
+
+// Form touched state - track which fields user has interacted with
+type FormTouched = Partial<Record<keyof FormData, boolean>>;
+
+// Public form data (excluding password fields)
+type PublicFormData = Omit<FormData, "password" | "confirmPassword">;
+
+// Initial form state - all fields except agreeToTerms are optional
+type InitialFormData = Partial<FormData> & Pick<FormData, "agreeToTerms">;
+
+class Form {
+  data: FormData;
+  errors: FormErrors = {};
+  touched: FormTouched = {};
+
+  validate(): boolean {
+    const errors: FormErrors = {};
+
+    if (this.data.password !== this.data.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+
+    if (this.data.age < 18) {
+      errors.age = "Must be 18 or older";
+    }
+
+    this.errors = errors;
+    return Object.keys(errors).length === 0;
+  }
+
+  getPublicData(): PublicFormData {
+    return {
+      username: this.data.username,
+      email: this.data.email,
+      age: this.data.age,
+      agreeToTerms: this.data.agreeToTerms,
+    };
+  }
+}
+```
+
+## Best Practices
+
+1. **Use `Pick` and `Omit` over manual type definitions** - They stay in sync with the source type
+2. **Leverage `ReturnType` and `Parameters`** - Single source of truth for function signatures
+3. **Combine utility types** - `Partial<Pick<T, K>>` is perfectly valid
+4. **Create type aliases** - Name complex utility type combinations for reusability
+
+## Conclusion
+
+TypeScript's utility types are powerful tools that help you write more maintainable and type-safe code. By mastering these utilities, you can:
+
+- Reduce boilerplate
+- Maintain consistency across your codebase
+- Catch errors at compile time
+- Improve code documentation through types
+
+Start incorporating these utility types into your TypeScript projects today!
+
+## Further Reading
+
+- [TypeScript Handbook - Utility Types](https://www.typescriptlang.org/docs/handbook/utility-types.html)
+- [Advanced TypeScript Patterns](https://www.typescriptlang.org/docs/handbook/2/types-from-types.html)

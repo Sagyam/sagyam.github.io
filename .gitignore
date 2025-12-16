@@ -36,5 +36,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# velite
+.velite
+
 /.unlighthouse/
 /.genkit/traces_idx/genkit.metadata
