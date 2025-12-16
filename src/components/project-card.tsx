@@ -41,9 +41,7 @@ export function ProjectCard({ project, image }: ProjectCardProps) {
             <ArrowUpRight className="ml-1 size-4 shrink-0 transition-transform group-hover:-translate-y-px group-hover:translate-x-px" />
           )}
         </h3>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {project.description}
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">{project.description}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {project.tech.map((tech) => (
             <Badge key={tech} variant="default">

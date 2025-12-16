@@ -6,9 +6,7 @@ const ProfileSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   title: z.string().min(1, 'Title is required'),
   tagline: z.string().min(1, 'Tagline is required'),
-  about: z
-    .array(z.string().min(1))
-    .min(1, 'At least one about paragraph is required'),
+  about: z.array(z.string().min(1)).min(1, 'At least one about paragraph is required'),
 });
 
 const MetadataSchema = z.object({
@@ -16,9 +14,7 @@ const MetadataSchema = z.object({
   siteDescription: z.string().min(1, 'Site description is required'),
   siteUrl: z.string().url('Must be a valid URL'),
   siteName: z.string().min(1, 'Site name is required'),
-  locale: z
-    .string()
-    .regex(/^[a-z]{2}-[A-Z]{2}$/, 'Locale must be in format: en-US'),
+  locale: z.string().regex(/^[a-z]{2}-[A-Z]{2}$/, 'Locale must be in format: en-US'),
   twitterHandle: z.string().regex(/^@\w+$/, 'Twitter handle must start with @'),
 });
 
@@ -76,9 +72,7 @@ const CertificationSchema = z.object({
   id: z.string().min(1, 'Certification ID is required'),
   name: z.string().min(1, 'Certification name is required'),
   issuer: z.string().min(1, 'Issuer is required'),
-  issueDate: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Issue date must be in YYYY-MM-DD format'),
+  issueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Issue date must be in YYYY-MM-DD format'),
   verificationLink: z.string().url('Verification link must be a valid URL'),
   icon: z.enum([
     'aws',

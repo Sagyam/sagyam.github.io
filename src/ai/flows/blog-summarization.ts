@@ -21,9 +21,7 @@ const SummarizeBlogOutputSchema = z.object({
 });
 export type SummarizeBlogOutput = z.infer<typeof SummarizeBlogOutputSchema>;
 
-export async function summarizeBlog(
-  input: SummarizeBlogInput
-): Promise<SummarizeBlogOutput> {
+export async function summarizeBlog(input: SummarizeBlogInput): Promise<SummarizeBlogOutput> {
   return summarizeBlogFlow(input);
 }
 

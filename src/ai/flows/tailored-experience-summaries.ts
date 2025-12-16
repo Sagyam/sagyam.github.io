@@ -25,9 +25,7 @@ export type TailoredExperienceSummariesInput = z.infer<
 const TailoredExperienceSummariesOutputSchema = z.object({
   summaries: z
     .string()
-    .describe(
-      'Summarized job experiences tailored for DevOps/Cloud Engineer roles.'
-    ),
+    .describe('Summarized job experiences tailored for DevOps/Cloud Engineer roles.'),
 });
 export type TailoredExperienceSummariesOutput = z.infer<
   typeof TailoredExperienceSummariesOutputSchema
