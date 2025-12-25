@@ -6,8 +6,6 @@ A modern portfolio website built with Next.js 15, React 18, and TypeScript.
 
 - Built with Next.js 15 with Turbopack for fast development
 - UI components powered by Radix UI and Tailwind CSS
-- AI integration with Google Genkit
-- Firebase integration
 - Form handling with React Hook Form and Zod validation
 - Analytics with Vercel Analytics and Speed Insights
 - Responsive design with Tailwind CSS
@@ -57,6 +55,4 @@ pnpm typecheck
 - **Styling:** Tailwind CSS
 - **UI Components:** Radix UI
 - **Forms:** React Hook Form + Zod
-- **AI:** Google Genkit
-- **Backend:** Firebase
 - **Analytics:** Vercel Analytics & Speed Insights

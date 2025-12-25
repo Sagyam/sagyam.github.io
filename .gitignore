@@ -40,4 +40,3 @@ next-env.d.ts
 .velite
 
 /.unlighthouse/
-/.genkit/traces_idx/genkit.metadata
