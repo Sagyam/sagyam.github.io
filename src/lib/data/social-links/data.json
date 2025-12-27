@@ -1,0 +1,38 @@
+[
+  {
+    "id": "github",
+    "label": "GitHub",
+    "url": "https://github.com/Sagyam",
+    "icon": "github"
+  },
+  {
+    "id": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/sagyam",
+    "icon": "linkedin"
+  },
+  {
+    "id": "email",
+    "label": "Email",
+    "url": "mailto:sagymathpa32@gmail.com",
+    "icon": "mail"
+  },
+  {
+    "id": "resume",
+    "label": "Resume",
+    "url": "/sagyam-thapa.pdf",
+    "icon": "file-text"
+  },
+  {
+    "id": "twitter",
+    "label": "X",
+    "url": "https://twitter.com/sagyam21",
+    "icon": "x"
+  },
+  {
+    "id": "blog",
+    "label": "Blog",
+    "url": "https://blog.sagyamthapa.com.np",
+    "icon": "rss"
+  }
+]

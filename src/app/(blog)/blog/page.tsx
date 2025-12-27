@@ -17,7 +17,7 @@ export const metadata = {
   description: 'Technical blog posts about software engineering, system design, and more.',
 };
 
-const POSTS_PER_PAGE = 2;
+const POSTS_PER_PAGE = 6;
 
 export default async function BlogPage({
   searchParams,

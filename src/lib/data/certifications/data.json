@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "name": "Deep Learning Specialization",
+    "issuer": "DeepLearning.AI",
+    "issueDate": "2020-06-01",
+    "verificationLink": "https://coursera.org/share/35c12254d159375faf42e64195933b48",
+    "icon": "aws"
+  },
+  {
+    "id": "2",
+    "name": "AWS Fundamentals Specialization",
+    "issuer": "Amazon Web Services",
+    "issueDate": "2020-06-01",
+    "verificationLink": "https://coursera.org/share/35c12254d159375faf42e64195933b48",
+    "icon": "aws"
+  }
+]

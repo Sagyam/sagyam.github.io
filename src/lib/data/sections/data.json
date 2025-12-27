@@ -1,0 +1,23 @@
+{
+  "experience": {
+    "title": "Experience",
+    "resumeLink": "/sagyam-thapa.pdf",
+    "resumeText": "View full resume"
+  },
+  "writing": {
+    "title": "Writing",
+    "blogLink": "https://blog.sagyamthapa.com.np",
+    "blogText": "View all posts"
+  },
+  "projects": {
+    "title": "Projects"
+  },
+  "certifications": {
+    "title": "Certifications"
+  },
+  "books": {
+    "title": "Reading List",
+    "booksLink": "/books",
+    "booksText": "View all books"
+  }
+}

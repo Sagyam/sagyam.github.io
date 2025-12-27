@@ -1,0 +1,18 @@
+export type { Book } from './books';
+export { books } from './books';
+export type { Certification } from './certifications';
+export { certifications } from './certifications';
+export type { Experience } from './experiences';
+export { experiences } from './experiences';
+export type { Metadata } from './metadata';
+export { metadata } from './metadata';
+export type { NavigationItem } from './navigation';
+export { navigation } from './navigation';
+export type { Profile } from './profile';
+export { profile } from './profile';
+export type { Project } from './projects';
+export { projects } from './projects';
+export type { SectionConfig } from './sections';
+export { sections } from './sections';
+export type { SocialLink } from './social-links';
+export { socialLinks } from './social-links';

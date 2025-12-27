@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "slug": "designing-data-intensive-applications",
+    "title": "Designing Data-Intensive Applications",
+    "author": "Martin Kleppmann",
+    "coverImage": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1415816873i/23463279.jpg",
+    "categories": ["Data Engineering", "Distributed Systems", "Database", "Scalability"],
+    "description": "The definitive guide to understanding the fundamental principles behind modern data systems. Covers distributed systems, data models, storage engines, replication, partitioning, transactions, and consistency models. Essential reading for anyone building reliable, scalable, and maintainable applications.",
+    "readDate": "2024-09-20",
+    "amazonLink": "https://www.amazon.com/Designing-Data-Intensive-Applications-Reliable-Maintainable/dp/1449373321",
+    "goodreadsLink": "https://www.goodreads.com/book/show/23463279-designing-data-intensive-applications"
+  },
+  {
+    "id": "2",
+    "slug": "software-engineering-at-google",
+    "title": "Software Engineering at Google",
+    "author": "Titus Winters, Tom Manshreck, Hyrum Wright",
+    "coverImage": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1576579607i/48816586.jpg",
+    "categories": ["Software Engineering", "Best Practices", "DevOps", "Culture"],
+    "description": "Learn how Google builds software at scale with insights into their engineering culture, practices, and tools. Covers code review, testing, dependency management, large-scale changes, and building sustainable software engineering organizations.",
+    "readDate": "2024-11-10",
+    "amazonLink": "https://www.amazon.com/Software-Engineering-Google-Lessons-Programming/dp/1492082791",
+    "goodreadsLink": "https://www.goodreads.com/book/show/48816586-software-engineering-at-google"
+  },
+  {
+    "id": "3",
+    "slug": "modern-software-engineering",
+    "title": "Modern Software Engineering",
+    "author": "David Farley",
+    "coverImage": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1633733111i/57345270.jpg",
+    "categories": ["DevOps", "Continuous Delivery", "Best Practices"],
+    "description": "A practical guide to modern software engineering practices from the co-author of Continuous Delivery. Focuses on empiricism, feedback, incrementalism, and experimentation as core principles for building better software. Covers topics like TDD, CI/CD, architecture, and managing complexity.",
+    "readDate": "2024-08-15",
+    "amazonLink": "https://www.amazon.com/Modern-Software-Engineering-Discipline-Development/dp/0137314914",
+    "goodreadsLink": "https://www.goodreads.com/book/show/57345270-modern-software-engineering"
+  }
+]

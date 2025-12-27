@@ -1,5 +1,5 @@
 import { parseStringPromise } from 'xml2js';
-import type { BlogPost } from './data';
+import type { BlogPost } from './types/blog';
 
 const RSS_URL = 'https://blog.sagyamthapa.com.np/rss.xml';
 

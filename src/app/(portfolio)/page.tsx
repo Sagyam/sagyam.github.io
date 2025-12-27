@@ -1,9 +1,10 @@
 import { ArrowUpRight, Rss } from 'lucide-react';
 import Link from 'next/link';
+import { BooksPreviewCard } from '@/components/books-preview-card';
 import { CertificationCard } from '@/components/certification-card';
 import { ExperienceCard } from '@/components/experience-card';
 import { ProjectCard } from '@/components/project-card';
-import { certifications, experiences, profile, projects, sections } from '@/lib/data';
+import { books, certifications, experiences, profile, projects, sections } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { getBlogPosts } from '@/lib/rss';
 
@@ -88,6 +89,15 @@ export default async function Home() {
             const image = PlaceHolderImages.find((img) => img.id === project.imageId);
             return <ProjectCard key={project.id} project={project} image={image} />;
           })}
+        </div>
+      </section>
+
+      <section id="books" className="scroll-mt-16 lg:scroll-mt-24">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-foreground">
+          {sections.books.title}
+        </h2>
+        <div className="mt-8">
+          <BooksPreviewCard bookCount={books.length} />
         </div>
       </section>
 

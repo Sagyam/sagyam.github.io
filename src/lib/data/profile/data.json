@@ -1,0 +1,10 @@
+{
+  "name": "Sagyam Thapa",
+  "title": "Cloud & DevOps Engineer",
+  "tagline": "I build and automate robust, scalable cloud infrastructure.",
+  "about": [
+    "As a backend developer, I specialize in building robust and scalable systems. My experience includes designing database schemas, architecting ERP applications, and deploying high-availability infrastructure. I have a passion for creating self-managed observability stacks with tools like Grafana, Prometheus, and Loki to ensure system health and performance.",
+    "I am currently preparing for the Azure and AWS DevOps and Developer Associate exams, as well as the CKS and CKAD certifications to deepen my expertise in cloud-native technologies. I thrive on tackling complex challenges and am always eager to explore new technologies that drive efficiency and resilience.",
+    "When I'm not coding, I enjoy collecting books, catching up on my favorite TV series, and hunting for the best coffee in town."
+  ]
+}

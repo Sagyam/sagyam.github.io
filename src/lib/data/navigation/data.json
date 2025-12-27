@@ -1,0 +1,26 @@
+[
+  {
+    "id": "about",
+    "label": "About"
+  },
+  {
+    "id": "experience",
+    "label": "Experience"
+  },
+  {
+    "id": "writing",
+    "label": "Writing"
+  },
+  {
+    "id": "projects",
+    "label": "Projects"
+  },
+  {
+    "id": "books",
+    "label": "Books"
+  },
+  {
+    "id": "certifications",
+    "label": "Certifications"
+  }
+]

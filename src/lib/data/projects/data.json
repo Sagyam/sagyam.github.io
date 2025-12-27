@@ -1,0 +1,20 @@
+[
+  {
+    "id": "7",
+    "title": "Tools",
+    "description": "A comprehensive collection of interactive educational tools for learning computer science algorithms, data structures, and system design concepts.",
+    "tech": ["Data Structures", "Algorithms", "Rate Limiting", "System Design", "Networking"],
+    "imageId": "",
+    "imageUrl": "https://tools.sagyamthapa.com.np/og-image.png",
+    "link": "https://tools.sagyamthapa.com.np"
+  },
+  {
+    "id": "8",
+    "title": "InfraWise",
+    "description": "A financial modeling tool for comparing Total Cost of Ownership (TCO) between cloud and on-premise infrastructure solutions. Make informed infrastructure decisions with detailed cost breakdowns and breakeven analysis.",
+    "tech": ["TCO Analysis", "Cloud Cost", "Financial Modeling", "TypeScript"],
+    "imageId": "",
+    "imageUrl": "https://infrawise.sagyamthapa.com.np/og-image.png",
+    "link": "https://infrawise.sagyamthapa.com.np"
+  }
+]
