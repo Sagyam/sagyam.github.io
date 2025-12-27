@@ -110,15 +110,15 @@ export default async function BookPage({ params }: BookPageProps) {
 
               {/* External Links */}
               <div className="mt-6 flex flex-wrap gap-3">
-                {book.amazonLink && (
+                {book.authorLink && (
                   <Link
-                    href={book.amazonLink}
+                    href={book.authorLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
                   >
                     <ExternalLink className="size-4" />
-                    View on Amazon
+                    Author Website
                   </Link>
                 )}
                 {book.goodreadsLink && (

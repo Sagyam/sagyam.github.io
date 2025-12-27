@@ -8,7 +8,7 @@
     "categories": ["Data Engineering", "Distributed Systems", "Database", "Scalability"],
     "description": "The definitive guide to understanding the fundamental principles behind modern data systems. Covers distributed systems, data models, storage engines, replication, partitioning, transactions, and consistency models. Essential reading for anyone building reliable, scalable, and maintainable applications.",
     "readDate": "2024-09-20",
-    "amazonLink": "https://www.amazon.com/Designing-Data-Intensive-Applications-Reliable-Maintainable/dp/1449373321",
+    "authorLink": "https://martin.kleppmann.com/",
     "goodreadsLink": "https://www.goodreads.com/book/show/23463279-designing-data-intensive-applications"
   },
   {
@@ -20,7 +20,7 @@
     "categories": ["Software Engineering", "Best Practices", "DevOps", "Culture"],
     "description": "Learn how Google builds software at scale with insights into their engineering culture, practices, and tools. Covers code review, testing, dependency management, large-scale changes, and building sustainable software engineering organizations.",
     "readDate": "2024-11-10",
-    "amazonLink": "https://www.amazon.com/Software-Engineering-Google-Lessons-Programming/dp/1492082791",
+    "authorLink": "https://twitter.com/TitusWinters",
     "goodreadsLink": "https://www.goodreads.com/book/show/48816586-software-engineering-at-google"
   },
   {
@@ -32,7 +32,79 @@
     "categories": ["DevOps", "Continuous Delivery", "Best Practices"],
     "description": "A practical guide to modern software engineering practices from the co-author of Continuous Delivery. Focuses on empiricism, feedback, incrementalism, and experimentation as core principles for building better software. Covers topics like TDD, CI/CD, architecture, and managing complexity.",
     "readDate": "2024-08-15",
-    "amazonLink": "https://www.amazon.com/Modern-Software-Engineering-Discipline-Development/dp/0137314914",
+    "authorLink": "https://www.davefarley.net/",
     "goodreadsLink": "https://www.goodreads.com/book/show/57345270-modern-software-engineering"
+  },
+  {
+    "id": "4",
+    "slug": "clean-architecture",
+    "title": "Clean Architecture",
+    "author": "Robert C. Martin",
+    "coverImage": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1471680093i/18043011.jpg",
+    "categories": ["Software Architecture", "Best Practices", "Design Patterns"],
+    "description": "Uncle Bob's guide to building maintainable software systems. Covers the principles of software architecture, component design, and how to structure applications for long-term sustainability. Essential for understanding how to build systems that are easy to change and maintain.",
+    "readDate": "2024-07-05",
+    "authorLink": "https://blog.cleancoder.com/",
+    "goodreadsLink": "https://www.goodreads.com/book/show/18043011-clean-architecture"
+  },
+  {
+    "id": "5",
+    "slug": "the-pragmatic-programmer",
+    "title": "The Pragmatic Programmer",
+    "author": "Andy Hunt, Dave Thomas",
+    "coverImage": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1401432508i/4099.jpg",
+    "categories": ["Software Engineering", "Best Practices", "Career Development"],
+    "description": "A timeless classic filled with practical advice for software developers. From code construction to career development, this book provides concrete tips for becoming a better programmer. The 20th anniversary edition includes updated examples and new topics relevant to modern development.",
+    "readDate": "2024-06-12",
+    "authorLink": "https://pragprog.com/",
+    "goodreadsLink": "https://www.goodreads.com/book/show/4099.The_Pragmatic_Programmer"
+  },
+  {
+    "id": "6",
+    "slug": "domain-driven-design",
+    "title": "Domain-Driven Design",
+    "author": "Eric Evans",
+    "coverImage": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1287493789i/179133.jpg",
+    "categories": ["Software Architecture", "Design Patterns", "Best Practices"],
+    "description": "The definitive guide to building complex software systems through domain modeling. Introduces concepts like bounded contexts, aggregates, and ubiquitous language. Essential reading for architects and developers working on complex business applications.",
+    "readDate": "2024-05-18",
+    "authorLink": "https://www.domainlanguage.com/",
+    "goodreadsLink": "https://www.goodreads.com/book/show/179133.Domain_Driven_Design"
+  },
+  {
+    "id": "7",
+    "slug": "refactoring",
+    "title": "Refactoring: Improving the Design of Existing Code",
+    "author": "Martin Fowler",
+    "coverImage": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1386925632i/44936.jpg",
+    "categories": ["Software Engineering", "Best Practices", "Code Quality"],
+    "description": "The essential guide to improving code quality through systematic refactoring. Provides a catalog of refactoring techniques with clear examples. The second edition uses JavaScript examples and reflects modern development practices.",
+    "readDate": "2024-04-22",
+    "authorLink": "https://martinfowler.com/",
+    "goodreadsLink": "https://www.goodreads.com/book/show/44936.Refactoring"
+  },
+  {
+    "id": "8",
+    "slug": "the-mythical-man-month",
+    "title": "The Mythical Man-Month",
+    "author": "Frederick P. Brooks Jr.",
+    "coverImage": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1348430512i/13629.jpg",
+    "categories": ["Software Engineering", "Project Management", "Culture"],
+    "description": "A classic text on software project management and the human factors in software engineering. Brooks' observations on team dynamics, the challenges of large projects, and the famous law 'adding manpower to a late project makes it later' remain relevant today.",
+    "readDate": "2024-01-20",
+    "authorLink": "https://en.wikipedia.org/wiki/Fred_Brooks",
+    "goodreadsLink": "https://www.goodreads.com/book/show/13629.The_Mythical_Man_Month"
+  },
+  {
+    "id": "9",
+    "slug": "team-topologies",
+    "title": "Team Topologies: Organizing Business and Technology Teams for Fast Flow",
+    "author": "Matthew Skelton, Manuel Pais",
+    "coverImage": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1563409554i/44135420.jpg",
+    "categories": ["Software Engineering", "Organization Design", "Culture"],
+    "description": "Effective software teams are essential for any organization to deliver value continuously and sustainably. Provides practical, step-by-step guidance for designing organization structures and interaction patterns to maximize team effectiveness and flow.",
+    "readDate": "2024-12-01",
+    "authorLink": "https://teamtopologies.com/",
+    "goodreadsLink": "https://www.goodreads.com/book/show/44135420-team-topologies"
   }
 ]

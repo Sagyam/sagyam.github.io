@@ -9,7 +9,7 @@ export const BookSchema = z.object({
   categories: z.array(z.string().min(1)).min(1, 'At least one category is required'),
   description: z.string().optional(),
   readDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Read date must be in YYYY-MM-DD format').optional(),
-  amazonLink: z.string().url('Amazon link must be a valid URL').optional(),
+  authorLink: z.string().url('Author link must be a valid URL').optional(),
   goodreadsLink: z.string().url('Goodreads link must be a valid URL').optional(),
 });
 
