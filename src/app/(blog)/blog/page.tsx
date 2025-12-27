@@ -2,17 +2,76 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { posts } from '#site/content';
 import { ProjectCard } from '@/components/project-card';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 
 export const metadata = {
   title: 'Blog - Sagyam Thapa',
   description: 'Technical blog posts about software engineering, system design, and more.',
 };
 
-export default async function BlogPage() {
+const POSTS_PER_PAGE = 2;
+
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page: pageParam } = await searchParams;
+  const currentPage = Number(pageParam) || 1;
+
   // Filter published posts and sort by date (newest first)
   const publishedPosts = posts
     .filter((post) => post.published)
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+
+  const totalPages = Math.ceil(publishedPosts.length / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const paginatedPosts = publishedPosts.slice(startIndex, endIndex);
+
+  // Generate page numbers to display
+  const getPageNumbers = () => {
+    const pages: (number | 'ellipsis')[] = [];
+
+    if (totalPages <= 2) {
+      // Show all pages if 7 or fewer
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Always show first page
+      pages.push(1);
+
+      if (currentPage > 3) {
+        pages.push('ellipsis');
+      }
+
+      // Show current page and surrounding pages
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+
+      if (currentPage < totalPages - 2) {
+        pages.push('ellipsis');
+      }
+
+      // Always show last page
+      pages.push(totalPages);
+    }
+
+    return pages;
+  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -31,7 +90,7 @@ export default async function BlogPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4">
-        {publishedPosts.map((post) => (
+        {paginatedPosts.map((post) => (
           <ProjectCard
             key={post.slug}
             project={{
@@ -51,6 +110,38 @@ export default async function BlogPage() {
         <div className="text-center py-12 text-muted-foreground">
           <p>No blog posts published yet.</p>
         </div>
+      )}
+
+      {totalPages > 1 && (
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href={currentPage > 1 ? `/blog?page=${currentPage - 1}` : '#'}
+                className={currentPage <= 1 ? 'pointer-events-none opacity-50' : ''}
+              />
+            </PaginationItem>
+
+            {getPageNumbers().map((pageNum, idx) => (
+              <PaginationItem key={`${pageNum}-${idx}`}>
+                {pageNum === 'ellipsis' ? (
+                  <PaginationEllipsis />
+                ) : (
+                  <PaginationLink href={`/blog?page=${pageNum}`} isActive={currentPage === pageNum}>
+                    {pageNum}
+                  </PaginationLink>
+                )}
+              </PaginationItem>
+            ))}
+
+            <PaginationItem>
+              <PaginationNext
+                href={currentPage < totalPages ? `/blog?page=${currentPage + 1}` : '#'}
+                className={currentPage >= totalPages ? 'pointer-events-none opacity-50' : ''}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       )}
     </div>
   );
