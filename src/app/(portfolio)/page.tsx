@@ -1,6 +1,6 @@
-import { ArrowUpRight, Rss } from 'lucide-react';
+import { ArrowUpRight, BookOpen, Rss } from 'lucide-react';
 import Link from 'next/link';
-import { BooksPreviewCard } from '@/components/books-preview-card';
+import { BookCard } from '@/components/book-card';
 import { CertificationCard } from '@/components/certification-card';
 import { ExperienceCard } from '@/components/experience-card';
 import { ProjectCard } from '@/components/project-card';
@@ -10,6 +10,15 @@ import { getBlogPosts } from '@/lib/rss';
 
 export default async function Home() {
   const blogPosts = await getBlogPosts(3);
+
+  // Get 3 most recently read books
+  const recentBooks = [...books]
+    .sort((a, b) => {
+      const dateA = a.readDate ? new Date(a.readDate).getTime() : 0;
+      const dateB = b.readDate ? new Date(b.readDate).getTime() : 0;
+      return dateB - dateA;
+    })
+    .slice(0, 3);
 
   return (
     <div className="flex flex-col gap-24">
@@ -96,9 +105,21 @@ export default async function Home() {
         <h2 className="text-sm font-bold uppercase tracking-widest text-foreground">
           {sections.books.title}
         </h2>
-        <div className="mt-8">
-          <BooksPreviewCard bookCount={books.length} />
+        <div className="mt-8 grid grid-cols-1 gap-4">
+          {recentBooks.map((book) => (
+            <BookCard key={book.id} book={book} />
+          ))}
         </div>
+        {sections.books.booksLink && (
+          <div className="mt-8">
+            <Link
+              href={sections.books.booksLink}
+              className="inline-flex items-center font-medium text-foreground hover:text-primary"
+            >
+              {sections.books.booksText} <BookOpen className="ml-2 size-4" />
+            </Link>
+          </div>
+        )}
       </section>
 
       <section id="certifications" className="scroll-mt-16 lg:scroll-mt-24">
