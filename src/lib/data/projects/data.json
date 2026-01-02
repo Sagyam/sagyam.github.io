@@ -5,7 +5,7 @@
     "description": "A Ninite-style bulk package installer for Linux distributions.",
     "tech": ["App Installer", "Linux", "TypeScript"],
     "imageId": "",
-    "imageUrl": "https://linite.sagyamthapa.com.np/linite-og.png",
+    "imageUrl": "https://sagyamthapa.com.np/linite-og.png",
     "link": "https://linite.sagyamthapa.com.np"
   },
   {
