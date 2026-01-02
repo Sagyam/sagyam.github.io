@@ -1,12 +1,12 @@
 [
   {
     "id": "7",
-    "title": "Tools",
-    "description": "A comprehensive collection of interactive educational tools for learning computer science algorithms, data structures, and system design concepts.",
-    "tech": ["Data Structures", "Algorithms", "Rate Limiting", "System Design", "Networking"],
+    "title": "Linite",
+    "description": "A Ninite-style bulk package installer for Linux distributions.",
+    "tech": ["App Installer", "Linux", "TypeScript"],
     "imageId": "",
-    "imageUrl": "https://tools.sagyamthapa.com.np/og-image.png",
-    "link": "https://tools.sagyamthapa.com.np"
+    "imageUrl": "https://linite.sagyamthapa.com.np/linite-og.png",
+    "link": "https://linite.sagyamthapa.com.np"
   },
   {
     "id": "8",
@@ -16,5 +16,14 @@
     "imageId": "",
     "imageUrl": "https://infrawise.sagyamthapa.com.np/og-image.png",
     "link": "https://infrawise.sagyamthapa.com.np"
+  },
+  {
+    "id": "9",
+    "title": "Tools",
+    "description": "A comprehensive collection of interactive educational tools for learning computer science algorithms, data structures, and system design concepts.",
+    "tech": ["Data Structures", "Algorithms", "Rate Limiting", "System Design", "Networking"],
+    "imageId": "",
+    "imageUrl": "https://tools.sagyamthapa.com.np/og-image.png",
+    "link": "https://tools.sagyamthapa.com.np"
   }
 ]
