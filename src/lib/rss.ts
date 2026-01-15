@@ -1,58 +1,94 @@
-import { parseStringPromise } from 'xml2js';
 import type { BlogPost } from './types/blog';
 
-const RSS_URL = 'https://blog.sagyamthapa.com.np/rss.xml';
+const GRAPHQL_API = 'https://gql.hashnode.com/';
+const PUBLICATION_HOST = 'blog.sagyamthapa.com.np';
 
-type RssItem = {
-  title: string[];
-  description: string[];
-  link: string[];
-  category: string[];
-  'hashnode:coverImage': string[];
-  pubDate: string[];
+type HashnodePost = {
+  id: string;
+  title: string;
+  brief: string;
+  url: string;
+  publishedAt: string;
+  tags?: Array<{ name: string }>;
+  coverImage?: { url: string };
+};
+
+type GraphQLResponse = {
+  data: {
+    publication: {
+      posts: {
+        edges: Array<{
+          node: HashnodePost;
+        }>;
+      };
+    };
+  };
 };
 
 export async function getBlogPosts(limit?: number): Promise<BlogPost[]> {
   try {
-    const response = await fetch(RSS_URL, {
+    const query = `
+      query Publication {
+        publication(host: "${PUBLICATION_HOST}") {
+          posts(first: ${limit || 20}) {
+            edges {
+              node {
+                id
+                title
+                brief
+                url
+                publishedAt
+                tags {
+                  name
+                }
+                coverImage {
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const response = await fetch(GRAPHQL_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
       next: { revalidate: 86400 }, // Revalidate once a day (24 * 60 * 60 seconds)
     });
 
     if (!response.ok) {
-      console.error('Failed to fetch RSS feed:', response.statusText);
+      console.error('Failed to fetch blog posts:', response.statusText);
       return [];
     }
 
-    const xml = await response.text();
-    const result = await parseStringPromise(xml);
+    const result: GraphQLResponse = await response.json();
 
-    const items: RssItem[] = result.rss.channel[0].item;
+    if (!result.data?.publication?.posts?.edges) {
+      console.error('Invalid GraphQL response structure');
+      return [];
+    }
 
-    const blogPosts = items.map((item, index) => {
-      const categories = Array.isArray(item.category)
-        ? item.category
-        : [item.category].filter(Boolean);
+    const blogPosts = result.data.publication.posts.edges.map(({ node }, index) => {
+      const tags = node.tags?.map((tag) => tag.name) || [];
       return {
-        id: item.link[0],
-        title: item.title[0],
-        summary: item.description[0],
-        link: item.link[0],
-        publication: '', // publication is no longer used
-        tech: categories,
-        imageId: `blog-${index}`, // using index for a semi-stable ID
-        imageUrl: item['hashnode:coverImage']
-          ? item['hashnode:coverImage'][0]
-          : `https://picsum.photos/seed/blog${index}/600/400`,
+        id: node.id,
+        title: node.title,
+        summary: node.brief,
+        link: node.url,
+        publication: node.publishedAt,
+        tech: tags,
+        imageId: `blog-${index}`,
+        imageUrl: node.coverImage?.url,
       };
     });
 
-    if (limit) {
-      return blogPosts.slice(0, limit);
-    }
-
     return blogPosts;
   } catch (error) {
-    console.error('Error fetching or parsing RSS feed:', error);
+    console.error('Error fetching blog posts from GraphQL API:', error);
     return [];
   }
 }

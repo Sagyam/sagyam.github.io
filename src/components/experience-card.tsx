@@ -2,6 +2,7 @@ import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import type { Experience } from '@/lib/data';
+import { highlightTechKeywords } from '@/lib/text-highlight';
 
 interface ExperienceCardProps {
   experience: Experience;
@@ -25,7 +26,9 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
             <ArrowUpRight className="ml-1 size-4 shrink-0 transition-transform group-hover:-translate-y-px group-hover:translate-x-px" />
           </Link>
         </h3>
-        <p className="mt-2 text-sm text-muted-foreground">{experience.description}</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {highlightTechKeywords(experience.description)}
+        </p>
         <div className="mt-3 flex flex-wrap gap-2">
           {experience.tech.map((tech) => (
             <Badge key={tech} variant="default">

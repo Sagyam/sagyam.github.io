@@ -32,7 +32,7 @@
     "title": "Frontend Developer",
     "company": "Matrice AI",
     "companyLink": "https://matrice.ai",
-    "description": "Developed and deployed the backend for an image annotation platform on AWS. Optimized a high-traffic landing page using Next.js, achieving a page load time under 200ms, and refactored the data annotation dashboard to align with new UI designs.",
-    "tech": ["Next.js", "AWS", "TypeScript", "React"]
+    "description": "Developed and deployed the backend for an image annotation platform on AWS. Optimized a high-traffic landing page using Next.js, refactored the data annotation dashboard to align with new UI designs.",
+    "tech": ["Next.js", "TypeScript", "React"]
   }
 ]
