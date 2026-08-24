@@ -26,9 +26,7 @@ export default async function Home() {
       <section id="about" className="scroll-mt-16 lg:scroll-mt-24">
         <div className="prose prose-invert max-w-none space-y-4 text-muted-foreground">
           {profile.about.map((paragraph) => (
-            <p key={paragraph.substring(0, 50)}>
-              {highlightTechKeywords(paragraph)}
-            </p>
+            <p key={paragraph.substring(0, 50)}>{highlightTechKeywords(paragraph)}</p>
           ))}
         </div>
       </section>
@@ -82,8 +80,6 @@ export default async function Home() {
           <div className="mt-8">
             <Link
               href={sections.writing.blogLink}
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-flex items-center font-medium text-foreground hover:text-primary"
             >
               {sections.writing.blogText} <Rss className="ml-2 size-4" />

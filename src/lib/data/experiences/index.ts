@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ExperienceSchema } from './schema';
 import experiencesData from './data.json';
+import { ExperienceSchema } from './schema';
 
 const ExperiencesArraySchema = z.array(ExperienceSchema);
 

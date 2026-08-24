@@ -1,94 +1,61 @@
+import { posts } from '#site/content';
+import { metadata as siteMetadata } from '@/lib/data';
 import type { BlogPost } from './types/blog';
 
-const GRAPHQL_API = 'https://gql.hashnode.com/';
-const PUBLICATION_HOST = 'blog.sagyamthapa.com.np';
-
-type HashnodePost = {
-  id: string;
-  title: string;
-  brief: string;
-  url: string;
-  publishedAt: string;
-  tags?: Array<{ name: string }>;
-  coverImage?: { url: string };
-};
-
-type GraphQLResponse = {
-  data: {
-    publication: {
-      posts: {
-        edges: Array<{
-          node: HashnodePost;
-        }>;
-      };
-    };
-  };
-};
-
 export async function getBlogPosts(limit?: number): Promise<BlogPost[]> {
-  try {
-    const query = `
-      query Publication {
-        publication(host: "${PUBLICATION_HOST}") {
-          posts(first: ${limit || 20}) {
-            edges {
-              node {
-                id
-                title
-                brief
-                url
-                publishedAt
-                tags {
-                  name
-                }
-                coverImage {
-                  url
-                }
-              }
-            }
-          }
-        }
-      }
-    `;
+  const publishedPosts = posts
+    .filter((post) => post.published)
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
-    const response = await fetch(GRAPHQL_API, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query }),
-      next: { revalidate: 86400 }, // Revalidate once a day (24 * 60 * 60 seconds)
-    });
+  const sliced = limit ? publishedPosts.slice(0, limit) : publishedPosts;
 
-    if (!response.ok) {
-      console.error('Failed to fetch blog posts:', response.statusText);
-      return [];
-    }
+  return sliced.map((post) => ({
+    id: post.slugAsParams,
+    title: post.title,
+    summary: post.description || '',
+    link: `/blog/${post.slugAsParams}`,
+    publication: post.publishedAt,
+    tech: post.tech,
+    imageId: post.slugAsParams,
+    imageUrl: post.coverImage,
+  }));
+}
 
-    const result: GraphQLResponse = await response.json();
+export function generateRssXml(): string {
+  const baseUrl = siteMetadata.siteUrl.replace(/\/$/, '');
+  const publishedPosts = posts
+    .filter((post) => post.published)
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
-    if (!result.data?.publication?.posts?.edges) {
-      console.error('Invalid GraphQL response structure');
-      return [];
-    }
+  const itemsXml = publishedPosts
+    .map((post) => {
+      const postUrl = `${baseUrl}/blog/${post.slugAsParams}`;
+      const pubDate = new Date(post.publishedAt).toUTCString();
+      const categoriesXml = (post.tech || [])
+        .map((tag) => `      <category><![CDATA[${tag}]]></category>`)
+        .join('\n');
 
-    const blogPosts = result.data.publication.posts.edges.map(({ node }, index) => {
-      const tags = node.tags?.map((tag) => tag.name) || [];
-      return {
-        id: node.id,
-        title: node.title,
-        summary: node.brief,
-        link: node.url,
-        publication: node.publishedAt,
-        tech: tags,
-        imageId: `blog-${index}`,
-        imageUrl: node.coverImage?.url,
-      };
-    });
+      return `    <item>
+      <title><![CDATA[${post.title}]]></title>
+      <link>${postUrl}</link>
+      <guid isPermaLink="true">${postUrl}</guid>
+      <description><![CDATA[${post.description || ''}]]></description>
+      <pubDate>${pubDate}</pubDate>
+${categoriesXml}
+    </item>`;
+    })
+    .join('\n');
 
-    return blogPosts;
-  } catch (error) {
-    console.error('Error fetching blog posts from GraphQL API:', error);
-    return [];
-  }
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title><![CDATA[${siteMetadata.siteTitle}]]></title>
+    <link>${baseUrl}/blog</link>
+    <description><![CDATA[${siteMetadata.siteDescription}]]></description>
+    <language>${siteMetadata.locale || 'en-US'}</language>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+    <atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml"/>
+${itemsXml}
+  </channel>
+</rss>`;
 }

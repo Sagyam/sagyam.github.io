@@ -32,7 +32,7 @@
   {
     "id": "blog",
     "label": "Blog",
-    "url": "https://blog.sagyamthapa.com.np",
+    "url": "/blog",
     "icon": "rss"
   }
 ]

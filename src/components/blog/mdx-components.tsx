@@ -7,6 +7,7 @@ import * as runtime from 'react/jsx-runtime';
 import { RateLimiterDemo } from './interactive/rate-limiting/RateLimiterDemo';
 import { InteractiveDemo } from './interactive/shared/InteractiveDemo';
 import { LastUpdated } from './interactive/shared/LastUpdated';
+import { ToolEmbed } from './interactive/ToolEmbed';
 
 // Custom components that can be used in MDX
 const components = {
@@ -14,7 +15,17 @@ const components = {
   InteractiveDemo,
   RateLimiterDemo,
   LastUpdated,
+  ToolEmbed,
   // HTML elements
+  img: ({ src, alt, ...props }: any) => (
+    <img
+      src={src}
+      alt={alt || ''}
+      className="my-6 rounded-lg border border-border mx-auto max-h-[500px] object-contain"
+      loading="lazy"
+      {...props}
+    />
+  ),
   Image: (props: any) => (
     <Image {...props} className="rounded-lg border border-border" loading="lazy" />
   ),

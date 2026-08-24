@@ -43,7 +43,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = posts.find((post) => post.slugAsParams === slug);
 
-  if (!post || !post.published) {
+  if (!post?.published) {
     notFound();
   }
 

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import '@/styles/blog.css';
+import 'katex/dist/katex.min.css';
 import { Space_Grotesk, Work_Sans } from 'next/font/google';
 import { metadata as siteMetadata } from '@/lib/data';
 
@@ -19,6 +20,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteMetadata.siteUrl),
   title: siteMetadata.siteTitle,
   description: siteMetadata.siteDescription,
   icons: {
@@ -58,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       className={`dark ${workSans.variable} ${spaceGrotesk.variable}`}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <body className="font-body antialiased bg-background text-foreground">{children}</body>

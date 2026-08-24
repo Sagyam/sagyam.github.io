@@ -1,0 +1,301 @@
+---
+title: "An Interactive Guide To Caching Strategies"
+description: "Explore popular caching strategies for improved application performance, including Cache Aside, Read/Write Through, Write Back, and more"
+publishedAt: "2025-06-20"
+coverImage: "https://cdn.hashnode.com/res/hashnode/image/upload/v1750428353601/a835e7d5-e3d1-4776-9702-a2959671c18c.jpeg"
+tech: ["caching strategies","interactive guide"]
+published: true
+renderStrategy: "ssg"
+---
+## Introduction
+
+Word cache originates from French word `cacher` which means `to hide`. Outside computer science circle it refers to a secret place where you hide things, usually emergency supplies. In computer science though the meaning of the word is flipped. Cache is a place where you store your frequently accessed data. It is one of the most effective ways to improve application performance, but choosing the right caching strategy can be tricky. Each strategy has its own strengths, trade-offs, and ideal use cases.
+
+## Terminologies
+
+* **Cache Hit:** When the data you are looking for is found in cache
+    
+* **Cache Miss:** When the data you are looking for is not found in cache
+    
+* **Asynchronous Writes:** When you write multiple items to DB back to back without waiting for last write to complete
+    
+* **Eventual Consistency:** Data syncing mechanism where updates not transferred immediately
+    
+* **Cache Stampede:** Situation where data that’s not available in cache is suddenly in high demand
+    
+* **Pre-Warming cache:** Loading cache with frequently used data before it’s even asked.
+    
+* **Cache pollution:** When frequently accessed data is repeatedly evicted and re-fetched leading to performance degradation
+    
+
+In this guide, we'll explore five common caching strategies that every developer should understand.
+
+## Cache Aside
+
+![Diagram showing a user request process involving a server, cache, and database. Steps: 1. User asks server for data. 2. Cache miss occurs. 3. Server reads from database. 4. Database sends data. 5. Server updates cache.](https://cdn.hashnode.com/res/hashnode/image/upload/v1750427846671/1bcfccb4-77e4-4c3b-b97d-9f80c35a4db1.png)
+
+<div data-node-type="callout">
+<div data-node-type="callout-emoji">💡</div>
+<div data-node-type="callout-text">Note that at step 2 cache miss is actually reported to server and server is responsible for updating cache.</div>
+</div>
+
+**Introduction:** Server takes the responsibility of managing cache
+
+**Cache Hit Behavior:** Return data directly from cache
+
+**Cache Miss Behavior:** Load from database, update cache, return data
+
+**Write Behavior:** Write to database only, invalidate cache entry
+
+**Consistency:** Eventual consistency, possible stale data
+
+**Performance:** Fast reads on hit, slower on miss
+
+**Use Cases:** Read-heavy workloads, unpredictable access patterns
+
+**Advantages:** Simple implementation, application has full control
+
+**Disadvantages:** Cache stampede risk, code duplication across services
+
+### [Link to interactive app](https://tools.sagyamthapa.com.np/caching?strategy=cache-aside)
+
+
+<ToolEmbed id="cache-aside" />
+## Read Through
+
+![Flowchart illustrating a cache system. The user requests data from the server, which first attempts to read from the cache. If a cache miss occurs, the server reads from the database, retrieves the data, and updates the cache before returning the data to the user.](https://cdn.hashnode.com/res/hashnode/image/upload/v1750427868738/3495c5aa-5ab5-491f-9e5b-4286e438809d.png)
+
+<div data-node-type="callout">
+<div data-node-type="callout-emoji">💡</div>
+<div data-node-type="callout-text">Note that at step 2 cache does not actually return cache miss to server. Instead it transparently fetches data from database and updates cache and send the data to server.</div>
+</div>
+
+**Introduction:** Cache takes full responsibility of managing cache
+
+**Cache Hit Behavior:** Cache returns data directly
+
+**Cache Miss Behavior:** Cache loads from database transparently
+
+**Write Behavior:** Typically combined with write-through or write-back
+
+**Consistency:** Depends on write strategy used
+
+**Performance:** Consistent read performance
+
+**Use Cases:** Uniform data access patterns
+
+**Advantages:** Simplified application code, centralized cache logic
+
+**Disadvantages:** Less flexibility, cache becomes critical component
+
+### [Link to interactive app](https://tools.sagyamthapa.com.np/caching?strategy=read-through)
+
+
+<ToolEmbed id="read-through" />
+## Write Through
+
+![Diagram showing data flow from a user to a server, then writing to a cache and synchronously to a database.](https://cdn.hashnode.com/res/hashnode/image/upload/v1750428483063/6a3b5207-1993-42ff-88db-cc59acaf7ce3.png)
+
+**Introduction:** Writes are first written to cache then immediately written to database
+
+**Cache Hit Behavior:** Return cached data
+
+**Cache Miss Behavior:** Load from database into cache
+
+**Write Behavior:** Write to cache and database before confirming
+
+**Consistency:** Strong consistency guaranteed
+
+**Performance:** Slower writes due to dual updates
+
+**Use Cases:** Financial systems, inventory management
+
+**Advantages:** No data loss risk, always consistent
+
+**Disadvantages:** Higher write latency, no benefit for write-heavy loads
+
+### [Link to interactive app](https://tools.sagyamthapa.com.np/caching?strategy=write-through)
+
+
+<ToolEmbed id="write-through" />
+## Write Back
+
+![Diagram showing a user interacting with a server, which writes constantly to a cache. The cache asynchronously writes to a database occasionally.](https://cdn.hashnode.com/res/hashnode/image/upload/v1750427984765/1c579fcb-c9d0-4fd6-90d2-b06228b3c446.png)
+
+**Introduction:** Writes are first written to cache and eventually written to database
+
+**Cache Hit Behavior:** Return cached data
+
+**Cache Miss Behavior:** Load from database if not in write queue
+
+**Write Behavior:** Write to cache immediately, batch/delay database writes
+
+**Consistency:** Eventual consistency
+
+**Performance:** Very fast writes
+
+**Use Cases:** Write-heavy workloads, analytics data
+
+**Advantages:** Excellent write performance, reduced database load
+
+**Disadvantages:** Risk of data loss, complex failure handling
+
+### [Link to interactive app](https://tools.sagyamthapa.com.np/caching?strategy=write-back)
+
+
+<ToolEmbed id="write-back" />
+## Write Around
+
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1750428701241/64dd991a-96a5-457d-8534-ac7495f87531.png)
+
+<div data-node-type="callout">
+<div data-node-type="callout-emoji">💡</div>
+<div data-node-type="callout-text">Note at step 4 cache miss is not advertised to server instead the cache fetches the data from database keeps a copy for itself and returns the data. Also step 2 can be asynchronous or synchronous.</div>
+</div>
+
+**Description:** Writes bypass cache, goes directly to database
+
+**Cache Hit Behavior:** Return cached data
+
+**Cache Miss Behavior:** Load from database, optionally cache
+
+**Write Behavior:** Direct to database, don't update cache
+
+**Consistency:** Avoids cache pollution from writes
+
+**Performance:** Good for infrequent reads after writes
+
+**Use Cases:** Bulk imports, audit logs
+
+**Advantages:** Prevents [cache pollution](https://www.wikiwand.com/en/articles/Cache_pollution), simpler write path
+
+**Disadvantages:** First read after write is slow
+
+### [Link to interactive app](https://tools.sagyamthapa.com.np/caching?strategy=write-around)
+
+
+<ToolEmbed id="write-around" />
+## Refresh Ahead
+
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1750427956768/89630563-1a9c-41d3-9ce4-17b7f6d1985d.png)
+
+<div data-node-type="callout">
+<div data-node-type="callout-emoji">💡</div>
+<div data-node-type="callout-text">Note that it’s not wise to re-fetch data just because it’s stale. This causes unnecessary strain on database. It better to re-fetch stale data only when it’s requested.</div>
+</div>
+
+**Introduction:** Needs pairing with another strategy
+
+**Cache Hit Behavior:** Always return fresh data
+
+**Cache Miss Behavior:** Rare, only on first access
+
+**Write Behavior:** Depends on combined strategy
+
+**Consistency:** Near real-time data freshness
+
+**Performance:** Consistent fast reads
+
+**Use Cases:** Frequently accessed data, predictable patterns
+
+**Advantages:** Minimizes cache misses, predictable performance
+
+**Disadvantages:** Wastes resources on unused data, complex prediction logic
+
+### [Link to interactive app](https://tools.sagyamthapa.com.np/caching?strategy=refresh-ahead)
+
+
+<ToolEmbed id="refresh-ahead-strategy" />
+## Conclusion
+
+As you see from these demos, picking the best caching strategy depends on your use case. Remember that these strategies aren't mutually exclusive. Many production systems combine strategies.
+
+Here are some of my recommendation:
+
+### Content Management System
+
+**Recommended:** Write Through + Read Through
+
+**Requirements:**
+
+* Ensures published content is immediately available
+    
+* Simplifies application logic
+    
+* Strong consistency for content updates
+    
+
+### E-commerce Product Catalog
+
+**Recommended:** Cache Aside + Refresh Ahead
+
+**Requirements:**
+
+* Cache Aside for flexibility with varying access patterns
+    
+* Refresh Ahead for popular items to ensure availability
+    
+* Handles both predictable (trending) and unpredictable ([long-tail](https://www.wikiwand.com/en/articles/Long_tail)) access
+    
+
+### Financial Trading System
+
+**Recommended:** Write Through
+
+**Requirements:**
+
+* Strong consistency is must
+    
+* Every transaction must be persisted immediately
+    
+* Cache serves only to reduce read latency
+    
+
+### Real-time Chat Application
+
+**Recommended:** Write Back + Read Through
+
+**Requirements:**
+
+* Write Back for message sending performance
+    
+* Read Through for message history
+    
+* Recent messages stay in cache
+    
+
+### Gaming Leader boards
+
+**Recommended:** Write Back + Refresh Ahead
+
+**Requirements:**
+
+* Write Back for rapid score updates
+    
+* Refresh Ahead for top players
+    
+* Eventual consistency acceptable
+    
+
+### API Rate Limiting
+
+**Recommended:** Write Back
+
+**Requirements:**
+
+* Extremely high update frequency
+    
+* Small data loss acceptable
+    
+* Performance critical for API gateway
+    
+
+Start simple with Cache-Aside, measure your performance, and evolve your caching strategy as your application grows. Happy caching!
+
+## References
+
+* [Prisma](https://www.prisma.io/dataguide/managing-databases/introduction-database-caching?query=&page=1)
+    
+* [ByeByteGo](https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F3smq5msfo852zeoej5iz.jpg)
+    
+* [Enjoy Algorithms](https://www.enjoyalgorithms.com/system-design/)

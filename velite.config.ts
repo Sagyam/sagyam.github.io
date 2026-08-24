@@ -1,4 +1,6 @@
+import rehypeKatex from 'rehype-katex';
 import rehypePrettyCode from 'rehype-pretty-code';
+import remarkMath from 'remark-math';
 import { defineCollection, defineConfig, s } from 'velite';
 
 const computedFields = <T extends { slug: string }>(data: T) => ({
@@ -37,7 +39,9 @@ export default defineConfig({
   },
   collections: { posts },
   mdx: {
+    remarkPlugins: [remarkMath],
     rehypePlugins: [
+      rehypeKatex,
       [
         rehypePrettyCode,
         {

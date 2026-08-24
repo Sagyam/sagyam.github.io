@@ -1,0 +1,115 @@
+---
+title: "An Interactive Guide To Count Min Sketch"
+description: "Learn Count Min Sketch: a probabilistic data structure for estimating item frequency in data streams, featuring an interactive guide and demo"
+publishedAt: "2025-06-25"
+coverImage: "https://cdn.hashnode.com/res/hashnode/image/upload/v1750873204106/b7240185-5094-44a3-bb6f-e5eef6317dc1.png"
+tech: ["count-min-sketch","probabilistic data structure"]
+published: true
+renderStrategy: "ssg"
+---
+## Introduction
+
+Count min sketch is a probabilistic data structure that can estimate the frequency of items in a stream. It is an improvement over [Hyperloglog](https://blog.sagyamthapa.com.np/an-interactive-guide-to-hyperloglog). While hyperloglog can estimate the number of unique items in a fixed amount of data, count min sketch can do that over a stream of data. Think of hyperloglog as something that can guess the frequency of unique items on an image *(something that is fixed),* while count min sketch as something that can do that for a live video stream *(stream of data)*. Meaning even when you don’t know how long the data stream is, you can still guess the frequency of items in the stream
+
+## Working principle
+
+This blog is the third installment of my probabilistic data structure series. I have written similar interactive guides on [Bloom Filter](https://blog.sagyamthapa.com.np/an-interactive-guide-to-bloom-filter) and [Hyperloglog](https://blog.sagyamthapa.com.np/an-interactive-guide-to-hyperloglog). If you are unfamiliar with probabilistic data structures, then reading a similar interactive guide in [Hyperloglog](https://blog.sagyamthapa.com.np/an-interactive-guide-to-hyperloglog) should give you a good idea.
+
+* **A Count-Min Sketch is made of**
+    
+    * A 2D array of counters with `d` rows and `w` columns.
+        
+    * Each row has its hash function *(h1, h2, h3..)*.
+        
+        ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1750863919322/0160d9fe-f665-48a0-baa3-816d7ec5fa04.png)
+        
+    
+    <div data-node-type="callout">
+    <div data-node-type="callout-emoji">💡</div>
+    <div data-node-type="callout-text">Here we hash first items i.e. 2 from stream of data and obtain the cell position that needs to be incremented.</div>
+    </div>
+    
+* **Insert Operation (Adding an item):**
+    
+    * For an item `x` Hash it using all `d` hash functions.
+        
+    * For each hash, increment the corresponding counter in its row:
+        
+        ```python
+        count[i][hash_i(x)] += 1
+        ```
+        
+* **Query Operation (Getting frequency estimate of** `x`):
+    
+    * Hash `x` with the same `d` hash functions.
+        
+    * Fetch the counts from the corresponding cells.
+        
+    * **Return the minimum** value among those `d` counters:
+        
+        ```python
+        estimate = min(count[0][h1(x)], count[1][h2(x)], ..., count[d-1][hd(x)])
+        ```
+        
+
+I have created a fun little [app](https://tools.sagyamthapa.com.np/cms-working) that lets you see the working of Count-Min Sketch. Adjust the number of rows and columns. Click to generate a random number. The number is hashed n times. Each time it’s hashed a location for cell whose value needs to incremented by one is found. Clicking on a number follows a similar process. Except instead of incrementing the values, we take the minimum of all cells to get the estimate for that item.
+
+**Can you get a count-min sketch to always get it right?**
+
+
+<ToolEmbed id="cms-working" />
+## Fun facts
+
+* It is called count-min sketch because it counts the minimum from a sketch *(sketch is like a compact summary of a large dataset)*.
+    
+* It has sub-linear space complexity, meaning it takes less space than storing an accurate count.
+    
+* The reason it never underestimates is that counters can only ever be incremented, and the minimum count is taken.
+    
+* Increasing `d` (rows) means higher probability of accurate results because more independent estimates but with more time complexity.
+    
+* Increasing `w` (columns) means better accuracy due to less chance of collision but more memory usage.
+    
+
+## Demo
+
+I have create a fun little [app](https://tools.sagyamthapa.com.np/count-min-sketch) that puts all the pieces together to show you count min sketch would work. Here our app is guessing the frequency of fruits in a stream of 5000 fruits. Hit start and see a stream of fruits appear. See how the hash table is updated in real-time. Notice that the count min sketch never underestimates the real amount.
+
+
+<ToolEmbed id="count-min-sketch" />
+## Mathematical Relationships
+
+### Error Bounds
+
+* Error in frequency estimate ≤ ε × N with probability 1 - δ
+    
+* Where:
+    
+    * ε = error factor (e.g., 0.001 means 0.1% error)
+        
+    * N = total number of items processed
+        
+    * δ = failure probability (e.g., 0.01 means 99% confidence)
+        
+
+### Formula for Parameters
+
+* Width: `w = ⌈e/ε⌉ (where e ≈ 2.718)`
+    
+* Depth: `d = ⌈ln(1/δ)⌉`
+    
+
+### **Use Cases**
+
+1. Finding heavy hitters in a stream.
+    
+2. Detecting DDoS attack.
+    
+3. Tracking popular search queries in search engine
+    
+
+## References
+
+* [Paper](https://dsf.berkeley.edu/cs286/papers/countmin-latin2004.pdf)
+    
+* [Wikipedia](https://www.wikiwand.com/en/articles/Count%E2%80%93min_sketch)

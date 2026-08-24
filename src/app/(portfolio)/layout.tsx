@@ -59,13 +59,14 @@ export default function PortfolioLayout({
             <div className="mt-8 flex items-center gap-x-4 text-muted-foreground">
               {socialLinks.map((link) => {
                 const Icon = iconMap[link.icon];
+                const isExternal = link.url.startsWith('http') || link.url.startsWith('mailto:');
                 return (
                   <Tooltip key={link.id}>
                     <TooltipTrigger asChild>
                       <a
                         href={link.url}
-                        target="_blank"
-                        rel="noreferrer noopener"
+                        target={isExternal ? '_blank' : undefined}
+                        rel={isExternal ? 'noreferrer noopener' : undefined}
                         aria-label={link.label}
                         className="transition-colors hover:text-foreground"
                       >

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { CertificationSchema } from './schema';
 import certificationsData from './data.json';
+import { CertificationSchema } from './schema';
 
 const CertificationsArraySchema = z.array(CertificationSchema);
 

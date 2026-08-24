@@ -13,8 +13,10 @@ build
 dist
 .contentlayer
 .velite
+public
 
 # Lock files
+bun.lock
 pnpm-lock.yaml
 package-lock.json
 yarn.lock

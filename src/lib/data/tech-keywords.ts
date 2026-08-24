@@ -3,23 +3,8 @@
 
 export const TECH_KEYWORDS = {
   cloud: ['AWS', 'Azure', 'GCP', 'Kubernetes', 'K8s', 'Databricks'],
-  infrastructure: [
-    'Docker',
-    'Helm',
-    'Terraform',
-    'Nginx',
-    'Redis',
-    'PostgreSQL',
-    'Postgres',
-  ],
-  observability: [
-    'Grafana',
-    'Prometheus',
-    'Loki',
-    'OpenTelemetry',
-    'Jaeger',
-    'Linkerd',
-  ],
+  infrastructure: ['Docker', 'Helm', 'Terraform', 'Nginx', 'Redis', 'PostgreSQL', 'Postgres'],
+  observability: ['Grafana', 'Prometheus', 'Loki', 'OpenTelemetry', 'Jaeger', 'Linkerd'],
   frontend: [
     'React',
     'Next.js',

@@ -9,13 +9,11 @@ import { ALL_TECH_KEYWORDS } from './data/tech-keywords';
 export function highlightTechKeywords(text: string): React.ReactNode[] {
   // Sort keywords by length (longest first) to match compound terms before simple ones
   // e.g., "GitHub Actions" before "GitHub", "Next.js" before "Next"
-  const sortedKeywords = [...ALL_TECH_KEYWORDS].sort(
-    (a, b) => b.length - a.length,
-  );
+  const sortedKeywords = [...ALL_TECH_KEYWORDS].sort((a, b) => b.length - a.length);
 
   // Escape special regex characters in keywords
   const escapedKeywords = sortedKeywords.map((keyword) =>
-    keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+    keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   );
 
   // Create regex pattern with word boundaries for exact matching
@@ -24,23 +22,24 @@ export function highlightTechKeywords(text: string): React.ReactNode[] {
 
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
-  let match: RegExpExecArray | null;
+  const matches = Array.from(text.matchAll(regex));
 
   // Find all matches and build array of text segments + highlighted spans
-  while ((match = regex.exec(text)) !== null) {
+  for (const match of matches) {
+    const matchIndex = match.index ?? 0;
     // Add text before the match
-    if (match.index > lastIndex) {
-      parts.push(text.substring(lastIndex, match.index));
+    if (matchIndex > lastIndex) {
+      parts.push(text.substring(lastIndex, matchIndex));
     }
 
     // Add highlighted match with unique key
     parts.push(
-      <span key={match.index} className="font-semibold text-primary">
+      <span key={matchIndex} className="font-semibold text-primary">
         {match[0]}
-      </span>,
+      </span>
     );
 
-    lastIndex = match.index + match[0].length;
+    lastIndex = matchIndex + match[0].length;
   }
 
   // Add remaining text after last match

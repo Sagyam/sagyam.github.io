@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { NavigationItemSchema } from './schema';
 import navigationData from './data.json';
+import { NavigationItemSchema } from './schema';
 
 const NavigationArraySchema = z.array(NavigationItemSchema);
 

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ProjectSchema } from './schema';
 import projectsData from './data.json';
+import { ProjectSchema } from './schema';
 
 const ProjectsArraySchema = z.array(ProjectSchema);
 

@@ -2,7 +2,8 @@
 
 import { ArrowLeft, BookOpen, Search } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { BookCard } from '@/components/book-card';
 import {
   Pagination,
   PaginationContent,
@@ -13,7 +14,6 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { books } from '@/lib/data';
-import { BookCard } from '@/components/book-card';
 
 const BOOKS_PER_PAGE = 6;
 
@@ -26,9 +26,11 @@ export default function BooksPage() {
   // Get all unique categories
   const allCategories = useMemo(() => {
     const categorySet = new Set<string>();
-    books.forEach((book) => {
-      book.categories.forEach((category) => categorySet.add(category));
-    });
+    for (const book of books) {
+      for (const category of book.categories) {
+        categorySet.add(category);
+      }
+    }
     return Array.from(categorySet).sort();
   }, []);
 
@@ -76,7 +78,7 @@ export default function BooksPage() {
   // Reset to page 1 when filters change
   useMemo(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedCategory, sortBy]);
+  }, []);
 
   // Generate page numbers for pagination
   const getPageNumbers = () => {
@@ -143,9 +145,10 @@ export default function BooksPage() {
         {/* Category Filter and Sort */}
         <div className="flex flex-wrap gap-4">
           <div className="flex-1 min-w-[200px]">
-            <label className="text-xs text-muted-foreground mb-2 block">Filter by Category</label>
+            <span className="text-xs text-muted-foreground mb-2 block">Filter by Category</span>
             <div className="flex flex-wrap gap-2">
               <button
+                type="button"
                 onClick={() => setSelectedCategory(null)}
                 className={`px-3 py-1 text-xs rounded-full transition-colors ${
                   selectedCategory === null
@@ -157,6 +160,7 @@ export default function BooksPage() {
               </button>
               {allCategories.map((category) => (
                 <button
+                  type="button"
                   key={category}
                   onClick={() => setSelectedCategory(category)}
                   className={`px-3 py-1 text-xs rounded-full transition-colors ${
@@ -172,8 +176,11 @@ export default function BooksPage() {
           </div>
 
           <div className="flex-shrink-0">
-            <label className="text-xs text-muted-foreground mb-2 block">Sort By</label>
+            <label htmlFor="sort-books-select" className="text-xs text-muted-foreground mb-2 block">
+              Sort By
+            </label>
             <select
+              id="sort-books-select"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'recent' | 'title' | 'author')}
               className="px-3 py-1 bg-background border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -222,7 +229,7 @@ export default function BooksPage() {
             </PaginationItem>
 
             {getPageNumbers().map((pageNum, idx) => (
-              <PaginationItem key={`${pageNum}-${idx}`}>
+              <PaginationItem key={pageNum === 'ellipsis' ? `ellipsis-${idx}` : `page-${pageNum}`}>
                 {pageNum === 'ellipsis' ? (
                   <PaginationEllipsis />
                 ) : (

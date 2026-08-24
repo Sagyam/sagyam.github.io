@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { navigation, profile } from '@/lib/data';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 export const revalidate = 86400; // Cache for 1 day (86400 seconds)
 
 export const alt = `${profile.name} | ${profile.title}`;

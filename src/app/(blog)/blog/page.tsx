@@ -123,7 +123,7 @@ export default async function BlogPage({
             </PaginationItem>
 
             {getPageNumbers().map((pageNum, idx) => (
-              <PaginationItem key={`${pageNum}-${idx}`}>
+              <PaginationItem key={pageNum === 'ellipsis' ? `ellipsis-${idx}` : `page-${pageNum}`}>
                 {pageNum === 'ellipsis' ? (
                   <PaginationEllipsis />
                 ) : (

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { SocialLinkSchema } from './schema';
 import socialLinksData from './data.json';
+import { SocialLinkSchema } from './schema';
 
 const SocialLinksArraySchema = z.array(SocialLinkSchema);
 

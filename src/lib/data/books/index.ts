@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { BookSchema } from './schema';
 import booksData from './data.json';
+import { BookSchema } from './schema';
 
 const BooksArraySchema = z.array(BookSchema);
 

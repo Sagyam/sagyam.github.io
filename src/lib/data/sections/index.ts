@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { SectionConfigSchema } from './schema';
 import sectionsData from './data.json';
+import { SectionConfigSchema } from './schema';
 
 const SectionsSchema = z.record(SectionConfigSchema);
 
