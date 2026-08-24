@@ -5,6 +5,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import * as runtime from 'react/jsx-runtime';
 import { Callout, Info, Note, Tip, Warning } from './callout';
+import { Code, CodeFigcaption, CodeFigure, CodePre } from './code-block';
 import { RateLimiterDemo } from './interactive/rate-limiting/RateLimiterDemo';
 import { InteractiveDemo } from './interactive/shared/InteractiveDemo';
 import { LastUpdated } from './interactive/shared/LastUpdated';
@@ -110,29 +111,10 @@ const components = {
       </Link>
     );
   },
-  code: ({ children, className, ...props }: any) => {
-    const isInline = !className;
-    if (isInline) {
-      return (
-        <code
-          className="rounded bg-white/10 px-1.5 py-0.5 text-sm font-mono text-primary"
-          {...props}
-        >
-          {children}
-        </code>
-      );
-    }
-    return (
-      <code className={className} {...props}>
-        {children}
-      </code>
-    );
-  },
-  pre: ({ children, ...props }: any) => (
-    <pre className="overflow-x-auto rounded-lg border border-border bg-black/50 p-4" {...props}>
-      {children}
-    </pre>
-  ),
+  code: Code,
+  pre: CodePre,
+  figure: CodeFigure,
+  figcaption: CodeFigcaption,
   h1: ({ children, id, ...props }: any) => {
     const headingText = getNodeText(children);
     const headingId = id || slugify(headingText);

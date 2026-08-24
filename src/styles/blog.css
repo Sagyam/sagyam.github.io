@@ -1,18 +1,14 @@
 /* Syntax highlighting styles for rehype-pretty-code */
 
 /* Code block container */
-[data-rehype-pretty-code-fragment] {
+[data-rehype-pretty-code-figure] {
   @apply my-6;
 }
 
 /* Code block pre */
-[data-rehype-pretty-code-fragment] pre {
-  @apply overflow-x-auto rounded-lg border border-border bg-black/50 p-4;
-}
-
-/* Inline code */
-[data-rehype-pretty-code-fragment] code {
-  @apply font-mono text-sm;
+[data-rehype-pretty-code-fragment] pre,
+[data-rehype-pretty-code-figure] pre {
+  @apply overflow-x-auto font-mono text-sm leading-relaxed;
 }
 
 /* Code block line numbers */
@@ -23,29 +19,38 @@
 [data-line-numbers] > [data-line]::before {
   counter-increment: line;
   content: counter(line);
-  @apply inline-block w-4 mr-4 text-right text-muted-foreground;
+  @apply inline-block w-5 mr-4 text-right text-slate-500/70 select-none font-mono text-xs;
 }
 
 /* Highlighted lines */
 .line--highlighted {
-  @apply bg-white/10 border-l-2 border-primary pl-3 -ml-4;
+  @apply bg-primary/10 border-l-2 border-primary pl-3 -ml-4;
 }
 
 /* Highlighted words */
 .word--highlighted {
-  @apply bg-primary/20 rounded px-1;
+  @apply bg-primary/20 text-sky-200 rounded px-1.5 py-0.5 border border-primary/30;
 }
 
-/* Code title */
+/* Code title handled inside CodeFigure header, keep fallback */
 [data-rehype-pretty-code-title] {
-  @apply px-4 py-2 font-mono text-sm text-foreground bg-white/5 border border-b-0 border-border rounded-t-lg;
-}
-
-[data-rehype-pretty-code-title] + pre {
-  @apply mt-0 rounded-t-none;
+  @apply px-4 py-2 font-mono text-xs text-foreground/90 bg-[#0e1626]/90 border-b border-border flex items-center gap-2;
 }
 
 /* Line highlights on hover */
-[data-line]:hover {
-  @apply bg-white/5;
+[data-code-block] [data-line]:hover {
+  @apply bg-white/[0.03];
+}
+
+/* Smooth code block scrollbar */
+[data-code-block] pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+[data-code-block] pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-code-block] pre::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-slate-800 hover:bg-slate-700;
 }

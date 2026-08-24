@@ -45,7 +45,8 @@ export default defineConfig({
       [
         rehypePrettyCode,
         {
-          theme: 'github-dark',
+          theme: 'tokyo-night',
+          keepBackground: false,
           onVisitLine(node: any) {
             // Prevent lines from collapsing in `display: grid` mode
             if (node.children.length === 0) {
