@@ -34,10 +34,9 @@ In this guide, we'll explore five common caching strategies that every developer
 
 ![Diagram showing a user request process involving a server, cache, and database. Steps: 1. User asks server for data. 2. Cache miss occurs. 3. Server reads from database. 4. Database sends data. 5. Server updates cache.](/blog/an-interactive-guide-to-caching-strategies/image-1.png)
 
-<div data-node-type="callout">
-<div data-node-type="callout-emoji">💡</div>
-<div data-node-type="callout-text">Note that at step 2 cache miss is actually reported to server and server is responsible for updating cache.</div>
-</div>
+<Callout emoji="💡">
+  Note that at step 2 cache miss is actually reported to server and server is responsible for updating cache.
+</Callout>
 
 **Introduction:** Server takes the responsibility of managing cache
 
@@ -65,10 +64,9 @@ In this guide, we'll explore five common caching strategies that every developer
 
 ![Flowchart illustrating a cache system. The user requests data from the server, which first attempts to read from the cache. If a cache miss occurs, the server reads from the database, retrieves the data, and updates the cache before returning the data to the user.](/blog/an-interactive-guide-to-caching-strategies/image-2.png)
 
-<div data-node-type="callout">
-<div data-node-type="callout-emoji">💡</div>
-<div data-node-type="callout-text">Note that at step 2 cache does not actually return cache miss to server. Instead it transparently fetches data from database and updates cache and send the data to server.</div>
-</div>
+<Callout emoji="💡">
+  Note that at step 2 cache does not actually return cache miss to server. Instead it transparently fetches data from database and updates cache and send the data to server.
+</Callout>
 
 **Introduction:** Cache takes full responsibility of managing cache
 
@@ -148,10 +146,9 @@ In this guide, we'll explore five common caching strategies that every developer
 
 ![](/blog/an-interactive-guide-to-caching-strategies/image-5.png)
 
-<div data-node-type="callout">
-<div data-node-type="callout-emoji">💡</div>
-<div data-node-type="callout-text">Note at step 4 cache miss is not advertised to server instead the cache fetches the data from database keeps a copy for itself and returns the data. Also step 2 can be asynchronous or synchronous.</div>
-</div>
+<Callout emoji="💡">
+  Note at step 4 cache miss is not advertised to server instead the cache fetches the data from database keeps a copy for itself and returns the data. Also step 2 can be asynchronous or synchronous.
+</Callout>
 
 **Description:** Writes bypass cache, goes directly to database
 
@@ -179,10 +176,9 @@ In this guide, we'll explore five common caching strategies that every developer
 
 ![](/blog/an-interactive-guide-to-caching-strategies/image-6.png)
 
-<div data-node-type="callout">
-<div data-node-type="callout-emoji">💡</div>
-<div data-node-type="callout-text">Note that it’s not wise to re-fetch data just because it’s stale. This causes unnecessary strain on database. It better to re-fetch stale data only when it’s requested.</div>
-</div>
+<Callout emoji="💡">
+  Note that it’s not wise to re-fetch data just because it’s stale. This causes unnecessary strain on database. It better to re-fetch stale data only when it’s requested.
+</Callout>
 
 **Introduction:** Needs pairing with another strategy
 

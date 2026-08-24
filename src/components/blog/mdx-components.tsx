@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
 import * as runtime from 'react/jsx-runtime';
+import { Callout, Info, Note, Tip, Warning } from './callout';
 import { RateLimiterDemo } from './interactive/rate-limiting/RateLimiterDemo';
 import { InteractiveDemo } from './interactive/shared/InteractiveDemo';
 import { LastUpdated } from './interactive/shared/LastUpdated';
@@ -11,12 +12,58 @@ import { ToolEmbed } from './interactive/ToolEmbed';
 
 // Custom components that can be used in MDX
 const components = {
+  // Callout components
+  Callout,
+  Tip,
+  Note,
+  Warning,
+  Info,
   // Interactive components
   InteractiveDemo,
   RateLimiterDemo,
   LastUpdated,
   ToolEmbed,
   // HTML elements
+  div: ({ children, className, 'data-node-type': nodeType, ...props }: any) => {
+    if (nodeType === 'callout') {
+      return (
+        <aside
+          role="note"
+          className="my-6 flex items-start gap-3.5 rounded-xl border border-l-4 border-amber-500/30 border-l-amber-500 bg-amber-500/[0.08] p-4 md:p-5 text-amber-100/90 shadow-[0_0_20px_-5px_rgba(245,158,11,0.08)] backdrop-blur-xs text-sm leading-relaxed"
+          {...props}
+        >
+          {children}
+        </aside>
+      );
+    }
+    if (nodeType === 'callout-emoji') {
+      return (
+        <span
+          className="text-xl shrink-0 leading-none select-none mt-0.5"
+          role="img"
+          aria-hidden="true"
+          {...props}
+        >
+          {children}
+        </span>
+      );
+    }
+    if (nodeType === 'callout-text') {
+      return (
+        <div
+          className="flex-1 min-w-0 [&>p]:my-1.5 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0 [&>ul]:my-1.5 [&>ol]:my-1.5 [&>code]:bg-black/30"
+          {...props}
+        >
+          {children}
+        </div>
+      );
+    }
+    return (
+      <div className={className} {...props}>
+        {children}
+      </div>
+    );
+  },
   img: ({ src, alt, ...props }: any) => (
     <img
       src={src}
@@ -131,6 +178,7 @@ const components = {
       {children}
     </td>
   ),
+  iframe: (props: any) => <iframe suppressHydrationWarning {...props} />,
   hr: (props: any) => <hr className="my-8 border-border" {...props} />,
 };
 
