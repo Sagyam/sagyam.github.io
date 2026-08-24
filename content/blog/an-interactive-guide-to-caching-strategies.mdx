@@ -2,7 +2,7 @@
 title: "An Interactive Guide To Caching Strategies"
 description: "Explore popular caching strategies for improved application performance, including Cache Aside, Read/Write Through, Write Back, and more"
 publishedAt: "2025-06-20"
-coverImage: "https://cdn.hashnode.com/res/hashnode/image/upload/v1750428353601/a835e7d5-e3d1-4776-9702-a2959671c18c.jpeg"
+coverImage: "/blog/an-interactive-guide-to-caching-strategies/cover.jpeg"
 tech: ["caching strategies","interactive guide"]
 published: true
 renderStrategy: "ssg"
@@ -32,7 +32,7 @@ In this guide, we'll explore five common caching strategies that every developer
 
 ## Cache Aside
 
-![Diagram showing a user request process involving a server, cache, and database. Steps: 1. User asks server for data. 2. Cache miss occurs. 3. Server reads from database. 4. Database sends data. 5. Server updates cache.](https://cdn.hashnode.com/res/hashnode/image/upload/v1750427846671/1bcfccb4-77e4-4c3b-b97d-9f80c35a4db1.png)
+![Diagram showing a user request process involving a server, cache, and database. Steps: 1. User asks server for data. 2. Cache miss occurs. 3. Server reads from database. 4. Database sends data. 5. Server updates cache.](/blog/an-interactive-guide-to-caching-strategies/image-1.png)
 
 <div data-node-type="callout">
 <div data-node-type="callout-emoji">💡</div>
@@ -63,7 +63,7 @@ In this guide, we'll explore five common caching strategies that every developer
 <ToolEmbed id="cache-aside" />
 ## Read Through
 
-![Flowchart illustrating a cache system. The user requests data from the server, which first attempts to read from the cache. If a cache miss occurs, the server reads from the database, retrieves the data, and updates the cache before returning the data to the user.](https://cdn.hashnode.com/res/hashnode/image/upload/v1750427868738/3495c5aa-5ab5-491f-9e5b-4286e438809d.png)
+![Flowchart illustrating a cache system. The user requests data from the server, which first attempts to read from the cache. If a cache miss occurs, the server reads from the database, retrieves the data, and updates the cache before returning the data to the user.](/blog/an-interactive-guide-to-caching-strategies/image-2.png)
 
 <div data-node-type="callout">
 <div data-node-type="callout-emoji">💡</div>
@@ -94,7 +94,7 @@ In this guide, we'll explore five common caching strategies that every developer
 <ToolEmbed id="read-through" />
 ## Write Through
 
-![Diagram showing data flow from a user to a server, then writing to a cache and synchronously to a database.](https://cdn.hashnode.com/res/hashnode/image/upload/v1750428483063/6a3b5207-1993-42ff-88db-cc59acaf7ce3.png)
+![Diagram showing data flow from a user to a server, then writing to a cache and synchronously to a database.](/blog/an-interactive-guide-to-caching-strategies/image-3.png)
 
 **Introduction:** Writes are first written to cache then immediately written to database
 
@@ -120,7 +120,7 @@ In this guide, we'll explore five common caching strategies that every developer
 <ToolEmbed id="write-through" />
 ## Write Back
 
-![Diagram showing a user interacting with a server, which writes constantly to a cache. The cache asynchronously writes to a database occasionally.](https://cdn.hashnode.com/res/hashnode/image/upload/v1750427984765/1c579fcb-c9d0-4fd6-90d2-b06228b3c446.png)
+![Diagram showing a user interacting with a server, which writes constantly to a cache. The cache asynchronously writes to a database occasionally.](/blog/an-interactive-guide-to-caching-strategies/image-4.png)
 
 **Introduction:** Writes are first written to cache and eventually written to database
 
@@ -146,7 +146,7 @@ In this guide, we'll explore five common caching strategies that every developer
 <ToolEmbed id="write-back" />
 ## Write Around
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1750428701241/64dd991a-96a5-457d-8534-ac7495f87531.png)
+![](/blog/an-interactive-guide-to-caching-strategies/image-5.png)
 
 <div data-node-type="callout">
 <div data-node-type="callout-emoji">💡</div>
@@ -177,7 +177,7 @@ In this guide, we'll explore five common caching strategies that every developer
 <ToolEmbed id="write-around" />
 ## Refresh Ahead
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1750427956768/89630563-1a9c-41d3-9ce4-17b7f6d1985d.png)
+![](/blog/an-interactive-guide-to-caching-strategies/image-6.png)
 
 <div data-node-type="callout">
 <div data-node-type="callout-emoji">💡</div>

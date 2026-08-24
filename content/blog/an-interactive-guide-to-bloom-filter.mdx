@@ -2,7 +2,7 @@
 title: "An Interactive Guide to Bloom Filter"
 description: "Discover the space-efficient Bloom filter, its workings, hash functions, tuning, and varied applications from database optimization to spam detection"
 publishedAt: "2024-12-01"
-coverImage: "https://cdn.hashnode.com/res/hashnode/image/upload/v1732723787386/a448c312-6aa9-4b3d-884a-1b22f1abfc10.jpeg"
+coverImage: "/blog/an-interactive-guide-to-bloom-filter/cover.jpeg"
 tech: ["interactive_blog","bloom filter","data structures"]
 published: true
 renderStrategy: "ssg"
@@ -19,7 +19,7 @@ If you store this list in a traditional database or an in memory data structure 
 
 Wouldn’t it be great if there was a magic solution to quickly determine whether an IP address is banned in constant time without querying the database? Enter Bloom filters.
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1733064544669/86d95e4f-ecf8-4cbc-9933-27493f2a9255.png)
+![](/blog/an-interactive-guide-to-bloom-filter/image-1.png)
 
 ## Prerequisite
 
@@ -27,7 +27,7 @@ Wouldn’t it be great if there was a magic solution to quickly determine whethe
 
 To understand Bloom filters, you need to be familiar with the concept of **hashing**. Hashing involves using a hash function to convert input data (like an IP address) into a fixed size output, often a number. Good hash functions are deterministic (they always produce the same output for the same input) and uniformly distribute outputs across the possible range.
 
-![Diagram illustrating a hash function mapping keys to hash values. "1.1.1.1" maps to "00," "2.2.2.2" and "3.3.3.3" map to "05," showing a hash collision. "4.4.4.4" maps to "05." Hash values range from "00" to "06."](https://cdn.hashnode.com/res/hashnode/image/upload/v1733025523446/548bdb33-99e4-4c0d-b6ed-a53b0a22e3dc.png)
+![Diagram illustrating a hash function mapping keys to hash values. "1.1.1.1" maps to "00," "2.2.2.2" and "3.3.3.3" map to "05," showing a hash collision. "4.4.4.4" maps to "05." Hash values range from "00" to "06."](/blog/an-interactive-guide-to-bloom-filter/image-2.png)
 
 ## Working
 

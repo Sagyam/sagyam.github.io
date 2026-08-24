@@ -2,7 +2,7 @@
 title: "Instrument your NodeJS App With OpenTelemetry"
 description: "Learn how to instrument a NodeJS app using OpenTelemetry for effective tracing and debugging of distributed systems"
 publishedAt: "2025-06-03"
-coverImage: "https://cdn.hashnode.com/res/hashnode/image/upload/v1732552404401/b1da1bec-c093-48e8-bedd-07f8b47d1d5a.jpeg"
+coverImage: "/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/cover.jpeg"
 tech: ["OpenTelemetry","SRE","Node.js","jaeger"]
 published: true
 renderStrategy: "ssg"
@@ -28,7 +28,7 @@ Sometimes debugging these issues without a tracing system is impossible. A traci
 
 * **Trace**: A trace is like a complete journey map of a single request as it moves through your entire distributed system. Imagine it as a detailed travel log that follows a request from its starting point to its final destination, capturing every stop and interaction along the way.
     
-    ![https://www.jaegertracing.io/img/spans-traces.png](https://www.jaegertracing.io/img/spans-traces.png)
+    ![https://www.jaegertracing.io/img/spans-traces.png](/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/image-1.png)
     
 * **Instrumentation**: The process of adding code to your application to collect telemetry data. It's like installing GPS trackers in different parts of your system.
     
@@ -51,7 +51,7 @@ Sometimes debugging these issues without a tracing system is impossible. A traci
 
 Observability lets you understand a system from the outside by letting you ask questions about that system without knowing its inner workings. It allows you to easily troubleshoot and handle novel problems, that is, **“unknown unknowns”**. It also answers the question **“Why is this happening?”**
 
-![Venn diagram showing realtion between Tracing, Metrics and Logging](https://cdn.hashnode.com/res/hashnode/image/upload/v1732559314516/82a38ba4-fd0a-4767-a55f-45903d918b47.png)
+![Venn diagram showing realtion between Tracing, Metrics and Logging](/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/image-2.png)
 
 ### Setting up the project
 
@@ -517,14 +517,14 @@ CMD ["pnpm", "run", "start:prod"]
 
 Visit http://localhost:3000/api-docs and make some API calls
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1732656370443/c7db3296-da38-44f2-8724-472032225594.png)
+![](/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/image-3.png)
 
 ### **Visualizing traces**
 
 Open your browser and go to [`http://localhost:16686`](http://localhost:16686) to see the Jaeger UI. Run some request and click **Find Trace** and click on a trace
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1732656011574/c85346cc-15f4-4f59-854b-afe3c5dd330e.png)
+![](/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/image-4.png)
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1732655235246/92991171-f32d-4e18-8ccd-4646f08dd44f.png)
+![](/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/image-5.png)
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1732655291696/f22f8c63-81cb-4ca6-9b14-4fffc3f67b0f.png)
+![](/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/image-6.png)

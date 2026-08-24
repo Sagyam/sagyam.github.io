@@ -2,7 +2,7 @@
 title: "Scaling PostgreSQL with Kubernetes"
 description: "Discover how to scale PostgreSQL with Kubernetes, exploring replication, partitioning, and sharding for improved performance and resilience"
 publishedAt: "2025-05-25"
-coverImage: "https://cdn.hashnode.com/res/hashnode/image/upload/v1748204181922/e9cabc4b-3f52-4f06-bfbc-adc7d6f7efb7.jpeg"
+coverImage: "/blog/scaling-postgresql-with-kubernetes/cover.jpeg"
 tech: ["Kubernetes","PostgreSQL","Distributed Database","high availability"]
 published: true
 renderStrategy: "ssg"
@@ -47,7 +47,7 @@ Replication means keeping multiple copies of data on multiple machines connected
 * It helps with scaling if most of your workload is read operation (which is the case for most [OLTP](https://www.wikiwand.com/en/articles/Online_transaction_processing))
     
 
-![Diagram depicting a database architecture with a leader and two followers. The leader handles create, delete, and update queries, while followers handle read queries. Data synchronization is done through WAL sync. User queries are directed through a pg-pool component.](https://cdn.hashnode.com/res/hashnode/image/upload/v1747838067614/bce32bd8-7609-4918-843d-72e7626c4cf8.png)
+![Diagram depicting a database architecture with a leader and two followers. The leader handles create, delete, and update queries, while followers handle read queries. Data synchronization is done through WAL sync. User queries are directed through a pg-pool component.](/blog/scaling-postgresql-with-kubernetes/image-1.png)
 
 > Here [pg-pool](https://www.pgpool.net/docs/46/en/html/intro-whatis.html) acts as load balancer, it distributes read request evenly among followers and mutation request to the leader. Notice that Leader periodically syncs it [WAL](https://www.wikiwand.com/en/articles/Write-ahead_logging) with it’s followers.
 
@@ -158,7 +158,7 @@ Partitioning splits the data (table in our case) into smaller, more manageable p
 
 Following code create a table orders and derives three tables from it using range, list and hash based partition in a hierarchical way. Order table is split by year, year is further split into regions and region is finally split by hash.
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1747840673080/c6e6cc7b-7f90-4d07-a35a-130eb3ef1c52.png)
+![](/blog/scaling-postgresql-with-kubernetes/image-2.png)
 
 > Notice that only hash based partition grantees that all partition are of same size.
 
@@ -264,7 +264,7 @@ Sharding splits a large database into small pieces called shards. Each shard is 
 2. **Schema based:** Just like last time we are still splitting the book but this time we are taking a few chapters that are related and turning it into a book about a sub topic. Think of how a very thick physics textbook can be split into Optics, Thermodynamics, Quantum Mechanics. Think of a table to large number of columns, but you don’t need the all the columns every time a query is made. So you split the table into shards such that related columns get placed together.
     
 
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1748175349647/636859c6-5d9f-47f7-ab08-2eb4f1e83ac8.png)
+![](/blog/scaling-postgresql-with-kubernetes/image-3.png)
 
 > Notice the resiliency of this architecture, not only we have multiple replicas for shards but also for the coordinator. As long as we have a minimum of 3 machines to run our sharded cluster, failure of single machine will not bring the down our database.
 

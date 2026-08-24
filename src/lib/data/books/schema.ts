@@ -5,7 +5,7 @@ export const BookSchema = z.object({
   slug: z.string().min(1, 'Book slug is required'),
   title: z.string().min(1, 'Book title is required'),
   author: z.string().min(1, 'Author is required'),
-  coverImage: z.string().url('Cover image must be a valid URL').optional(),
+  coverImage: z.string().optional(),
   categories: z.array(z.string().min(1)).min(1, 'At least one category is required'),
   description: z.string().optional(),
   readDate: z
