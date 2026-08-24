@@ -10,6 +10,26 @@ import { InteractiveDemo } from './interactive/shared/InteractiveDemo';
 import { LastUpdated } from './interactive/shared/LastUpdated';
 import { ToolEmbed } from './interactive/ToolEmbed';
 
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export function getNodeText(node: React.ReactNode): string {
+  if (typeof node === 'string') return node;
+  if (typeof node === 'number') return String(node);
+  if (!node) return '';
+  if (Array.isArray(node)) return node.map(getNodeText).join('');
+  if (React.isValidElement(node) && node.props && (node.props as any).children) {
+    return getNodeText((node.props as any).children);
+  }
+  return '';
+}
+
 // Custom components that can be used in MDX
 const components = {
   // Callout components
@@ -113,26 +133,58 @@ const components = {
       {children}
     </pre>
   ),
-  h1: ({ children, ...props }: any) => (
-    <h1 className="mt-8 mb-4 text-3xl font-bold text-foreground scroll-mt-20" {...props}>
-      {children}
-    </h1>
-  ),
-  h2: ({ children, ...props }: any) => (
-    <h2 className="mt-8 mb-4 text-2xl font-bold text-foreground scroll-mt-20" {...props}>
-      {children}
-    </h2>
-  ),
-  h3: ({ children, ...props }: any) => (
-    <h3 className="mt-6 mb-3 text-xl font-semibold text-foreground scroll-mt-20" {...props}>
-      {children}
-    </h3>
-  ),
-  h4: ({ children, ...props }: any) => (
-    <h4 className="mt-4 mb-2 text-lg font-semibold text-foreground scroll-mt-20" {...props}>
-      {children}
-    </h4>
-  ),
+  h1: ({ children, id, ...props }: any) => {
+    const headingText = getNodeText(children);
+    const headingId = id || slugify(headingText);
+    return (
+      <h1
+        id={headingId}
+        className="mt-8 mb-4 text-3xl font-bold text-foreground scroll-mt-24"
+        {...props}
+      >
+        {children}
+      </h1>
+    );
+  },
+  h2: ({ children, id, ...props }: any) => {
+    const headingText = getNodeText(children);
+    const headingId = id || slugify(headingText);
+    return (
+      <h2
+        id={headingId}
+        className="mt-8 mb-4 text-2xl font-bold text-foreground scroll-mt-24"
+        {...props}
+      >
+        {children}
+      </h2>
+    );
+  },
+  h3: ({ children, id, ...props }: any) => {
+    const headingText = getNodeText(children);
+    const headingId = id || slugify(headingText);
+    return (
+      <h3
+        id={headingId}
+        className="mt-6 mb-3 text-xl font-semibold text-foreground scroll-mt-24"
+        {...props}
+      >
+        {children}
+      </h3>
+    );
+  },
+  h4: ({ children, id, ...props }: any) => {
+    const headingText = getNodeText(children);
+    const headingId = id || slugify(headingText);
+    return (
+      <h4
+        id={headingId}
+        className="mt-4 mb-2 text-lg font-semibold text-foreground scroll-mt-24"
+        {...props}
+      >
+        {children}
+      </h4>
+    );
+  },
   p: ({ children, ...props }: any) => (
     <p className="my-4 text-muted-foreground leading-7" {...props}>
       {children}

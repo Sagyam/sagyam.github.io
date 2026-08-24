@@ -1,8 +1,10 @@
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { posts } from '#site/content';
 import { MDXContent } from '@/components/blog/mdx-components';
+import { TableOfContents } from '@/components/blog/table-of-contents';
 import { Badge } from '@/components/ui/badge';
 
 interface BlogPostPageProps {
@@ -50,7 +52,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const readingTime = getReadingTime(post.body);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="relative flex flex-col gap-8">
+      <TableOfContents />
+
       <div>
         <Link
           href="/blog"
@@ -62,10 +66,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </div>
 
       <article className="flex flex-col gap-8">
-        <header>
+        <header className="flex flex-col gap-4">
           <h1 className="text-4xl font-bold text-foreground">{post.title}</h1>
 
-          <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <Calendar className="size-4" />
               <time dateTime={post.publishedAt}>
@@ -83,7 +87,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           {post.tech.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2">
               {post.tech.map((tech) => (
                 <Badge key={tech} variant="default">
                   {tech}
@@ -93,7 +97,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
 
           {post.description && (
-            <p className="mt-4 text-lg text-muted-foreground">{post.description}</p>
+            <p className="text-lg text-muted-foreground leading-relaxed">{post.description}</p>
+          )}
+
+          {post.coverImage && (
+            <div className="relative mt-2 aspect-[16/9] w-full overflow-hidden rounded-xl border border-border shadow-lg bg-card">
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                priority
+                sizes="(max-width: 896px) 100vw, 896px"
+                className="object-cover"
+              />
+            </div>
           )}
         </header>
 
