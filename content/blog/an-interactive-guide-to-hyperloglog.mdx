@@ -1,5 +1,5 @@
 ---
-title: "An interactive Guide to HyperLogLog"
+title: "An Interactive Guide to HyperLogLog"
 description: "Learn to estimate large unique counts efficiently using HyperLogLog. Dive into the algorithm, its applications, and play with an interactive app"
 publishedAt: "2024-12-16"
 coverImage: "/blog/an-interactive-guide-to-hyperloglog/cover.jpeg"
@@ -7,161 +7,146 @@ tech: ["hyperloglog","interactive_blog","algorithms"]
 published: true
 renderStrategy: "ssg"
 ---
-## The problem
+## The Problem
 
-Imagine you’re running a large scale online store. Thousands of users visit your website every second, and you want to know how many unique users visit each day. This sounds straightforward just track each user by their IP address or login ID. But here’s the catch: keeping a list of every unique user requires a lot of memory, especially as the number of users grows into the billions.
+Imagine you’re running a large-scale online store. Thousands of users visit your website every second, and you want to know how many unique users visit each day. This sounds straightforward: just track each user by their IP address or login ID. But here’s the catch: keeping a set of every unique identifier requires huge amounts of memory, especially as the number of users grows into the billions.
 
-How do you solve this problem without drowning in memory usage? This is where **HyperLogLog**, a probabilistic data structure, comes into play.
+How do you solve this problem without drowning in memory usage? This is where **HyperLogLog**, a probabilistic cardinality estimation algorithm, comes into play.
 
-## The solution
+## The Solution
 
-HyperLogLog (HLL) is a clever algorithm that provides an approximate count of unique items ***(billion items)*** while using a fraction of the memory ***(1.5 kB)*** required by exact methods. It achieves this by trading off a small amount of accuracy for significant space savings.
+HyperLogLog (HLL) is a clever algorithm that provides an approximate count of unique items (even billions of items) while using a tiny fraction of the memory (typically around ~1.5 kB) required by exact hash sets. It achieves this by trading off a tiny amount of precision (usually $\approx 1-2\%$ error) for massive space savings.
 
 ## Play with HyperLogLog
 
-I have create a fun little [app](https://tools.sagyamthapa.com.np/hyperloglog) that let you play with HyperLogLog. Here is how this app works
+I have created an [interactive app](https://tools.sagyamthapa.com.np/hyperloglog) that lets you experiment with HyperLogLog in real-time. Here is how the app works:
 
 * **Input IP Address**:
     
-    * Click **"Random IP"** to generate IP address automatically.
+    * Click **"Random IP"** to generate an IP address automatically.
         
     * Add the entered IP to the HyperLogLog by clicking **"Add to HLL"**.
         
 * **Adjust Bucket Count**:
     
-    * Use the slider to adjust the number of buckets.
+    * Use the slider to adjust the number of buckets ($m = 2^p$).
         
-    * This resets the HyperLogLog and clears all previous data.
+    * Modifying this resets the HyperLogLog and clears previous data.
         
 * **Add Multiple Random IPs**:
     
-    * Use the preset buttons to add 1K, 5K, 10K, 50K, or 100K random IP addresses to the HyperLogLog.
+    * Use the preset buttons to insert 1K, 5K, 10K, 50K, or 100K random IP addresses into the sketch.
         
 * **View Metrics**:
     
-    * Check **Actual Count**, **Estimated Count**, **Difference**, **Margin of Error**, and **Actual Error** in the metrics cards.
-        
-    * Accurate metrics are displayed as the HyperLogLog processes the inputs.
+    * Compare **Actual Count**, **Estimated Count**, **Difference**, **Margin of Error**, and **Actual Error** in the metrics cards.
         
 * **Inspect Buckets**:
     
-    * Scroll through individual buckets to observe how HyperLogLog distributes and calculates run lengths.
+    * Scroll through individual buckets to observe how HyperLogLog distributes hashed items and tracks maximum leading zero runs.
         
-
 
 <ToolEmbed id="hyper-log-log" />
-## Things to notice
 
-* As you increase then number of buckets ***Margin of error*** reduces. *This is because a few bucket may get unlucky and get a big run early on, but when you spread that luck over large number of buckets chances of such mistakes reduces.* (Kinda like how insurance work)
-    
-* The error never actually reaches zero, this is because this is probabilistic algorithms i.e. unexpected wild swing are possible.
-    
-* See what happens to the estimate if you skimp on number of buckets.
-    
+## Things to Notice
 
-## Working
-
-1. ### Hash Functions and Uniform Distribution
+* **Margin of error decreases as buckets increase:** A single bucket might get unlucky with an unusually long run of leading zeros early on, but spreading observations across hundreds or thousands of buckets smooths out the variance. (Similar to how risk pooling works in insurance).
     
-    If you have reached here that I trust you know how hash function works. To refresh you memory
+* **The error never reaches absolute zero:** Because HyperLogLog is a probabilistic data structure, small statistical variance is inherent.
     
-    Hashing involves using a hash function to convert input data (like an IP address) into a fixed size output, often a number. Good hash functions are deterministic *(they always produce the same output for the same input)* and uniformly distribute outputs across the possible range.
-    
-2. ### Leading Zeros and Cardinality
-    
-    The core insight is that for a uniform random hash value:
-    
-    * The probability of encountering a hash value with at least $k$ leading zeros in its binary representation is $2^{-k}$.  
-        Example: For $k=3$, the binary prefix must start with $0$, which occurs $2^{-3} = \frac{1}{8}$ of the time.
-        
-    * The expected maximum run of leading zeros in the hash values increases logarithmically with the number of distinct elements $n$ in the dataset.
-        
-    
-3. ### Bucketing and Parallelism
+* **Skimping on buckets increases error:** Notice what happens to the variance and error margin if you reduce the bucket count to a very small number.
     
 
-To reduce variance and improve accuracy, the HyperLogLog algorithm splits the hash values into $m=2^p$ buckets (where $p$ is a tunable parameter).
+## How HyperLogLog Works
 
-* Each bucket is determined by the first $p$ bits of the hash value, which serve as the **bucket index**.
+### 1. Hash Functions and Uniform Distribution
+
+To estimate cardinality, we first hash incoming items. A good hash function is deterministic and distributes outputs uniformly across the entire bit space.
+
+### 2. Leading Zeros and Cardinality
+
+The core insight is based on coin flipping and probabilities:
+
+* When hashing data to a 64-bit integer, each bit is equally likely to be `0` or `1`.
     
-* The remaining bits of the hash value are used to compute the number of leading zeros for that bucket.
+* The probability of a hash starting with $k$ consecutive leading zeros is $2^{-k}$. For example:
+    * Starting with `0...` ($k=1$): probability $1/2$
+    * Starting with `00...` ($k=2$): probability $1/4$
+    * Starting with `000...` ($k=3$): probability $1/8$
     
-* Each bucket keeps track of the **maximum number of leading zeros** observed for hash values assigned to it.
+* If the maximum run of leading zeros observed is $k$, we can roughly estimate that we have seen on the order of $2^k$ distinct elements.
     
 
-4. ### Harmonic Mean of Maximum Leading Zeros
+### 3. Bucketing and Variance Reduction
+
+A single estimate has high variance. To reduce error, HyperLogLog divides the hash space into $m = 2^p$ independent buckets:
+
+* The first $p$ bits of the hash value determine the **bucket index**.
     
-    Each bucket contributes an estimate of the cardinality based on the leading zeros it observes. Since these estimates can vary significantly, HyperLogLog uses the **harmonic mean** of these estimates to combine the results:
+* The remaining bits are used to count the number of **leading zeros**.
+    
+* Each bucket maintains the **maximum leading zero count** ($M[j]$) observed so far.
     
 
-$$E = \alpha_m \cdot m^2 \cdot \left(\sum_{j=1}^{m} 2^{-M[j]} \right)$$
+### 4. Combining Estimates with the Harmonic Mean
+
+Instead of using a simple arithmetic mean (which is heavily skewed by outliers), HyperLogLog uses the **harmonic mean** of the estimates across all $m$ buckets:
+
+$$E = \alpha_m \cdot m^2 \cdot \left(\sum_{j=1}^{m} 2^{-M[j]} \right)^{-1}$$
 
 Where:
 
-* $m=2^p$: Number of buckets.
+* $m = 2^p$: Total number of buckets.
     
-* $M[j]$: Maximum number of leading zeros observed in the $j$-th bucket.
+* $M[j]$: Maximum leading zeros observed in the $j$-th bucket.
     
-* $\alpha_m$: A bias correction constant dependent on $m$ derived empirically.
-    
-
-5. ### Bias Correction and Range Adjustment
-    
-    The raw estimate $E$ can be biased for small or large cardinalities. HyperLogLog applies bias correction in the following ways:
-    
-    1\. **Small Range Correction**: If $E$ is small ( $E \leq \frac{5}{2}$), it applies a correction to handle underestimation caused by hash collisions:
+* $\alpha_m$: A bias-correction constant derived empirically based on $m$.
     
 
-$$E_{\text{corrected}} = m \cdot \log \left( \frac{m}{V} \right)$$
+### 5. Bias Correction for Edge Cases
 
-Where $V$ is the number of empty buckets.
+The raw estimate $E$ can exhibit bias at the extreme ends:
 
-2. **Large Range Correction**: If $E$ exceeds a threshold (typically when $n$ approaches or exceeds $2^{32}$, the algorithm switches to a simpler **linear counting** method.
+1. **Small Range Correction (Linear Counting):** When $E \le \frac{5}{2}m$ and there are empty buckets ($V > 0$), hash collisions are rare. HyperLogLog falls back to Linear Counting:
     
-3. ### Error and Memory Efficiency
+    $$E_{\text{corrected}} = m \cdot \ln\left(\frac{m}{V}\right)$$
     
-
-The relative error of HyperLogLog is approximately:
-
-$$Error \approx \frac{1.04}{\sqrt{m}}$$
-
-* Larger $m$ (more buckets) reduces error but increases memory usage.
-    
-* Memory usage is proportional to $mlog_2(log_2(n))$ bits, making HyperLogLog extremely space efficient.
+2. **Large Range Correction:** When $n$ approaches $2^{32}$ (on 32-bit hashes), corrections are applied to account for 32-bit hash space saturation.
     
 
-7. ### Intuition Behind Logarithmic Behavior
+### 6. Error and Memory Efficiency
+
+The theoretical standard error of HyperLogLog is approximately:
+
+$$\text{Error} \approx \frac{1.04}{\sqrt{m}}$$
+
+* With $m = 2048$ buckets (each requiring only 5 or 6 bits), the standard error is roughly $\approx 2.3\%$, using just 1.5 KB of memory!
+    
+* Space complexity scales as $O(m \log(\log n))$, making HyperLogLog remarkably memory-efficient.
     
 
-The logarithmic behavior of leading zeros stems from the exponential relationship between probabilities and cardinalities:
+## Real-World Applications
 
-* As the cardinality $n$ grows, the probability of observing hash values with more leading zeros increases logarithmically.
+* **Web Analytics**: Platforms like Google Analytics and YouTube use HyperLogLog variants to estimate unique daily/monthly active users and video views.
     
-* HyperLogLog aggregates these local estimates (per bucket) and normalizes them using the harmonic mean, resulting in a robust global estimate.
+* **Databases & Caches**: [Redis](https://redis.io/docs/latest/develop/data-types/probabilistic/hyperloglogs/) provides built-in `PFADD` / `PFCOUNT` commands taking ~12 KB for up to $2^{64}$ items; [TimescaleDB](https://docs.timescale.com/use-timescale/latest/hyperfunctions/approx-count-distincts/hyperloglog/) uses it for fast time-series rollups.
     
-
-## Where it’s used
-
-* **Web Analytics**: Google Analytics and YouTube use algorithms similar to HyperLogLog to estimate unique visitors.
-    
-* **Databases**: [TimescaleDB](https://docs.timescale.com/use-timescale/latest/hyperfunctions/approx-count-distincts/hyperloglog/) and [Redis](https://redis.io/docs/latest/develop/data-types/probabilistic/hyperloglogs/) implement HyperLogLog for approximate distinct counts.
-    
-* **Big Data Platforms**: [Apache Druid](https://druid.apache.org/docs/latest/querying/hll-old#hyperunique-aggregator) and [Presto](https://prestodb.io/docs/current/functions/hyperloglog.html#) use HyperLogLog to provide fast, approximate query results.
+* **Big Data & Query Engines**: [Apache Druid](https://druid.apache.org/docs/latest/querying/hll-old#hyperunique-aggregator) and [Presto / Trino](https://prestodb.io/docs/current/functions/hyperloglog.html) use HyperLogLog for ultra-fast `COUNT(DISTINCT ...)` queries across petabytes of data.
     
 
-## Downsides
+## Limitations
 
-While HyperLogLog is powerful, it’s important to understand its limitations:
-
-* **Approximation**: The algorithm provides an estimate, not an exact count. The error rate is about
+* **Approximation Only:** HyperLogLog produces an estimate, not an exact count. If 100% exact precision is required (such as in billing or financial transactions), exact sets must be used instead.
     
-* **Hash Collisions**: The accuracy depends on the quality of the hash function. Poor hashing can lead to inaccuracies.
+* **Hash Function Dependency:** Accuracy relies heavily on a uniform, high-quality hash function (e.g., MurmurHash3 or HighwayHash).
+    
+* **Cannot Retrieve Elements:** HyperLogLog only counts unique items; it does not store or allow retrieval of the actual elements.
     
 
-## Further reading
+## Further Reading
 
-[HyperLogLog: the analysis of a near-optimal cardinality estimation algorithm](https://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf)
-
-[Engineering at Meta: HyperLogLog in Presto: A significantly faster way to handle cardinality estimation](https://engineering.fb.com/2018/12/13/data-infrastructure/hyperloglog/)
-
-[Redis Docs](https://redis.io/docs/latest/develop/data-types/probabilistic/hyperloglogs/)
+* [HyperLogLog: The Analysis of a Near-Optimal Cardinality Estimation Algorithm (Flajolet et al.)](https://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf)
+    
+* [Engineering at Meta: HyperLogLog in Presto](https://engineering.fb.com/2018/12/13/data-infrastructure/hyperloglog/)
+    
+* [Redis Documentation: HyperLogLog Data Type](https://redis.io/docs/latest/develop/data-types/probabilistic/hyperloglogs/)

@@ -9,86 +9,87 @@ renderStrategy: "ssg"
 ---
 ## Introduction
 
-Rate limiting is a must have strategy in every back-end app. It prevent one user from overusing a resource and degrading the quality of service for other users. Here are some benefits of rate limiting
+Rate limiting is an essential strategy for every backend application. It prevents a single user or client from overwhelming resources and degrading service quality for everyone else. Here are some of the primary benefits of rate limiting:
 
-* It presents resource starvation
+* **Prevents resource starvation** by ensuring fair API usage across all consumers.
     
-* Reduces server hosting cost
+* **Reduces hosting and infrastructure costs** by bounding peak loads.
     
-* Provides basic protection against [DDoS](https://en.wikipedia.org/wiki/Denial-of-service_attack)
+* **Provides baseline protection against [Denial of Service (DoS/DDoS)](https://en.wikipedia.org/wiki/Denial-of-service_attack)** and brute-force attacks.
     
 
-I have made four interactive app that let’s you play around with common rate limiting algorithms.
+I have created four interactive apps below that let you experiment with the most common rate limiting algorithms.
 
-## Token bucket
+## Token Bucket
 
-### Working:
+### How It Works
 
-* A bucket holds fixed number tokens
+* A bucket holds a fixed maximum number of tokens.
     
-* Tokens are added to bucket at fixed rate
+* New tokens are added to the bucket at a constant refill rate.
     
-* When a request comes in:
+* When a request arrives:
     
-    * If a token is available, it’s removed from the bucket and the request is allowed.
+    * If a token is available, one token is consumed and the request is processed.
         
-    * If no tokens are available, the request is rejected or delayed.
+    * If no tokens are available, the request is immediately rejected (HTTP 429) or queued.
         
-* Allows for occasional short burst if tokens are available
+* **Key characteristic:** Allows for short, configurable bursts of traffic as long as enough tokens have accumulated.
     
 
-I have created an [app](https://tools.sagyamthapa.com.np/token-bucket) that let’s you play with leaky bucket algorithm.
-
+I have created an [interactive app](https://tools.sagyamthapa.com.np/token-bucket) that lets you experiment with the **Token Bucket** algorithm:
 
 <ToolEmbed id="token-bucket" />
-## Leaky bucket
 
-### Working
+## Leaky Bucket
 
-* Think of it as a bucket leaking at a fixed rate
+### How It Works
+
+* Imagine a bucket with a small hole at the bottom that leaks water at a steady, fixed rate.
     
-* Incoming requests are added to the bucket
+* Incoming requests are added to the bucket like drops of water.
     
-* Requests are processed (or "leak") at a **constant rate**
+* Requests are processed (or "leaked") at a **constant, smooth rate**.
     
-* If the bucket is full when a new request arrives, the request is dropped
+* If the bucket fills to maximum capacity when a new request arrives, the overflow is dropped.
     
-* Smooths out bursts; outputs requests at a steady rate
-    
-    I have made an [app](https://tools.sagyamthapa.com.np/leaky-bucket) that let’s you play with leaky bucket algorithm.
+* **Key characteristic:** Smooths out traffic bursts and outputs a steady stream of requests to downstream services.
     
 
+I have created an [interactive app](https://tools.sagyamthapa.com.np/leaky-bucket) that lets you experiment with the **Leaky Bucket** algorithm:
 
 <ToolEmbed id="leaky-bucket" />
-## Fixed window counter
 
-### Working:
+## Fixed Window Counter
 
-* Time is divided into fixed size windows (e.g., 1 minute)
+### How It Works
+
+* Time is divided into fixed-size chronological windows (e.g., 1 minute or 1 hour).
     
-* A counter tracks the number of requests per client/IP in the current window
+* A counter tracks the total number of requests made by a client within the current window.
     
-* If the count exceeds the limit, further requests are rejected until the next window
+* If the counter exceeds the allowed threshold, subsequent requests are blocked until the next window begins.
     
-* Simple and efficient, but allows burst traffic spike at end/start
-    
-    I have created an [app](https://tools.sagyamthapa.com.np/fixed-window) that let’s you play with fixed bucket algorithm.
+* **Key characteristic:** Extremely simple and memory-efficient, but susceptible to traffic bursts (up to 2x the limit) at the boundary between adjacent windows.
     
 
+I have created an [interactive app](https://tools.sagyamthapa.com.np/fixed-window) that lets you experiment with the **Fixed Window** algorithm:
 
 <ToolEmbed id="fixed-window" />
-## Sliding window counter
 
-### Working:
+## Sliding Window Counter
 
-* Keeps a timestamped log of each request
+### How It Works
+
+* Maintains a rolling time window by tracking request timestamps or combining previous and current window counts.
     
-* When a request comes in, logs are checked to count how many requests were made in the last `X` seconds
+* When a request arrives, the system calculates how many requests occurred in the sliding interval preceding the current moment.
     
-* If under the limit, the request is allowed and logged; otherwise, it’s rejected
+* If the count is within the limit, the request is permitted; otherwise, it is throttled.
     
-    I have created an [app](https://tools.sagyamthapa.com.np/sliding-window) that let’s you play with sliding bucket algorithm.
+* **Key characteristic:** Prevents the boundary burst issue of fixed windows while maintaining high accuracy and smooth rate limiting.
     
 
+I have created an [interactive app](https://tools.sagyamthapa.com.np/sliding-window) that lets you experiment with the **Sliding Window** algorithm:
 
 <ToolEmbed id="sliding-window" />

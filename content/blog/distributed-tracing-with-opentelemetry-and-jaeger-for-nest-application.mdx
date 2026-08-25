@@ -1,59 +1,57 @@
 ---
-title: "Instrument your NodeJS App With OpenTelemetry"
-description: "Learn how to instrument a NodeJS app using OpenTelemetry for effective tracing and debugging of distributed systems"
+title: "Instrument Your Node.js App With OpenTelemetry"
+description: "Learn how to instrument a Node.js and NestJS application using OpenTelemetry and Jaeger for distributed tracing and debugging"
 publishedAt: "2025-06-03"
 coverImage: "/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/cover.jpeg"
 tech: ["OpenTelemetry","SRE","Node.js","jaeger"]
 published: true
 renderStrategy: "ssg"
 ---
-### Introduction
+## Introduction
 
-Have you ever had a bug that occurred in production and you have no idea what went wrong because your logs won’t tell you exactly what went wrong or a request that takes usually long to process.
+Have you ever encountered a production bug where your logs couldn't explain what went wrong, or a critical API request that took unusually long to complete?
 
-Sometimes debugging these issues without a tracing system is impossible. A tracing system is like a CCTV camera that captures every thing *what happened, when did it happen, what was the order of events, how long did it each event take*. This information is vital for debugging and identifying performance bottlenecks in complex distributed applications.
+Debugging these issues across microservices and complex backends without a dedicated tracing system is frustrating and time-consuming. Distributed tracing acts like a CCTV camera for your architecture: it records *what happened, when it happened, the sequence of operations, and exactly how long each step took*. This visibility is vital for troubleshooting failures and diagnosing performance bottlenecks in modern systems.
 
-### Prerequisite
+## Prerequisites
 
-* NodeJS
-    
-* Typescript
-    
-* NestJS
-    
-* Docker
-    
+* [Node.js](https://nodejs.org/) (v18+)
+* [TypeScript](https://www.typescriptlang.org/)
+* [NestJS](https://nestjs.com/)
+* [Docker](https://www.docker.com/) and Docker Compose
 
-### Terminology
+## Key Concepts and Terminology
 
-* **Trace**: A trace is like a complete journey map of a single request as it moves through your entire distributed system. Imagine it as a detailed travel log that follows a request from its starting point to its final destination, capturing every stop and interaction along the way.
+* **Trace:** A trace represents the complete end-to-end journey of a single request as it traverses your distributed system. Think of it as a detailed travel log recording every stop, database query, and external API call from entry to exit.
     
-    ![https://www.jaegertracing.io/img/spans-traces.png](/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/image-1.png)
+    ![Jaeger Spans and Traces Diagram](https://www.jaegertracing.io/img/spans-traces.png)
     
-* **Instrumentation**: The process of adding code to your application to collect telemetry data. It's like installing GPS trackers in different parts of your system.
+* **Span:** The fundamental building block of a trace. A span represents a single contiguous unit of work (e.g., executing an HTTP request or running an SQL query):
     
-* **Exporter**: A component responsible for sending collected trace data to a back-end system for storage and analysis. Think of it as a postal service that sends your travel logs to a central archive.
-    
-* **Span:**
-    
-    * Root span: The first span in a trace, marking the beginning of the entire request journey. It's like the starting point of your travel log.
+    * **Root Span:** The top-level span that initiates the trace when the request enters the first service.
         
-    * Child span: A span that is nested within another span, representing a more specific operation within a broader process.
+    * **Child Span:** A nested span representing a sub-operation executed within the context of a parent span.
         
-* **Context propagation:** The mechanism of transferring trace information between different services and components. It's like passing a traveler's passport that contains their complete journey details.
+* **Instrumentation:** The process of integrating telemetry code into your application to measure runtime performance and record spans.
     
-* **Metrics**: Metrics are numerical data that tells up about app’s performance, health and behavior.
+* **Context Propagation:** The mechanism for passing trace identifiers (such as Trace ID and Span ID) across service boundaries and HTTP headers so downstream services correlate their work with the same trace.
     
-* **Logs**: Logs are text entries describing usage patterns, activities, and operations within your application.
+* **Exporter:** An OpenTelemetry component that batches and transmits recorded trace spans over the network (e.g., via OTLP/HTTP or gRPC) to a storage and visualization backend like Jaeger.
+    
+* **Metrics:** Numerical values aggregated over time (e.g., request rate, error counts, CPU usage) to monitor overall application health.
+    
+* **Logs:** Timestamped text records describing discrete events occurring within the application.
     
 
-### Three horsemen of observability
+## The Three Pillars of Observability
 
-Observability lets you understand a system from the outside by letting you ask questions about that system without knowing its inner workings. It allows you to easily troubleshoot and handle novel problems, that is, **“unknown unknowns”**. It also answers the question **“Why is this happening?”**
+Observability enables you to understand the internal state of a system based solely on its external outputs. It equips engineering teams to diagnose not just known failure modes, but also **"unknown unknowns"** by answering the fundamental question: **“Why is this happening?”**
 
-![Venn diagram showing realtion between Tracing, Metrics and Logging](/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/image-2.png)
+![Venn diagram showing relation between Tracing, Metrics, and Logging](/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/image-2.png)
 
-### Setting up the project
+## Setting Up the NestJS Project
+
+Create a new NestJS project using the CLI:
 
 ```bash
 pnpm i -g @nestjs/cli
@@ -61,9 +59,9 @@ nest new tracing-app
 cd tracing-app
 ```
 
-### **Installing dependencies**
+## Installing Dependencies
 
-Install Jaeger and OpenTelemetry related libraries:
+Install the required OpenTelemetry and Jaeger packages:
 
 ```bash
 pnpm install @opentelemetry/sdk-trace-node @opentelemetry/resources @opentelemetry/sdk-trace-base 
@@ -72,21 +70,21 @@ pnpm install @opentelemetry/exporter-trace-otlp-http
 pnpm install @opentelemetry/api @opentelemetry/semantic-conventions
 ```
 
-Install Prisma ORM and SQLite:
+Install Prisma ORM, SQLite driver, and Swagger documentation support:
 
 ```bash
 pnpm install @prisma/client sqlite3 class-validator
 pnpm install prisma --save-dev
-pnpm install --save @nestjs/swagger
+pnpm install @nestjs/swagger
 ```
 
-Initialize Prisma:
+Initialize Prisma in the project:
 
 ```bash
 npx prisma init
 ```
 
-This will create a `prisma` directory with a `schema.prisma` file.
+This generates a `prisma` directory with a `schema.prisma` configuration file. Update it as follows:
 
 ```sql
 datasource db {
@@ -105,29 +103,22 @@ model User {
 }
 ```
 
-Run Prisma migrations:
+Run initial migrations and generate the Prisma Client:
 
 ```bash
 npx prisma migrate dev --name init
-```
-
-Generate Prisma Client:
-
-```bash
 npx prisma generate
 ```
 
-### **Setup a CRUD endpoint**
+## Creating CRUD Endpoints
 
-Generate a CRUD module for users
+Generate a CRUD resource for users using the NestJS CLI:
 
 ```bash
 pnpm nest generate resource users
 ```
 
-This will create a `users` module with a controller, service, and DTOs.
-
-Create a `prisma.service.ts` file in prisma folder
+Create a `prisma.service.ts` file in the `src/prisma/` folder to manage the database connection lifecycle:
 
 ```typescript
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
@@ -145,13 +136,13 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 }
 ```
 
-Update the `users.module.ts` file to include the `PrismaService`:
+Update `users.module.ts` to register `PrismaService`:
 
 ```typescript
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Module({
   controllers: [UsersController],
@@ -160,11 +151,11 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class UsersModule { }
 ```
 
-Create a file named `create-user.dto.ts` in the `users/dto` directory:
+Create a DTO file named `create-user.dto.ts` in the `src/users/dto/` directory:
 
 ```typescript
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 
 export class CreateUserDto {
     @ApiProperty({
@@ -187,7 +178,7 @@ export class CreateUserDto {
 export class UpdateUserDto extends PartialType(CreateUserDto) {}
 ```
 
-Update the `users.service.ts` file to use Prisma:
+Implement the business logic in `src/users/users.service.ts`:
 
 ```typescript
 import { Injectable } from '@nestjs/common';
@@ -230,7 +221,7 @@ export class UsersService {
 }
 ```
 
-**Update the** `users.controller.ts` file:
+Update the `src/users/users.controller.ts` file with Swagger annotations:
 
 ```typescript
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
@@ -286,9 +277,9 @@ export class UsersController {
 }
 ```
 
-### **Configuring exporters**
+## Configuring OpenTelemetry and Exporters
 
-Create a file ***tracing.ts*** in your ***src*** directory:
+Create a file named `tracing.ts` in your `src/` directory to configure the OpenTelemetry Node SDK and automatic instrumentations:
 
 ```typescript
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions';
@@ -304,21 +295,21 @@ import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
 
 export function setupTracing() {
-    // Enable OpenTelemetry diagnostic logging
+    // Enable OpenTelemetry diagnostic logging for troubleshooting
     diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
 
-    // Create a resource with service information
+    // Create a resource describing your service
     const resource = new Resource({
         [ATTR_SERVICE_NAME]: process.env.SERVICE_NAME || 'tracer-app',
         [ATTR_SERVICE_VERSION]: process.env.npm_package_version || '1.0.0',
     });
 
+    // Configure OTLP exporter pointing to Jaeger or an OpenTelemetry Collector
     const otlpExporter = new OTLPTraceExporter({
         url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || 'http://localhost:4318/v1/traces',
     });
 
-
-    // Create tracer provider with resource and span processors
+    // Create tracer provider with resource metadata and a batch span processor
     const provider = new NodeTracerProvider({
         resource,
         spanProcessors: [
@@ -331,7 +322,7 @@ export function setupTracing() {
         ]
     });
 
-    // Register instrumentations with more comprehensive coverage
+    // Register auto-instrumentations for HTTP, Express, and Prisma
     registerInstrumentations({
         tracerProvider: provider,
         instrumentations: [
@@ -346,72 +337,53 @@ export function setupTracing() {
         ],
     });
 
-    // Register the provider
+    // Register the tracer provider globally
     provider.register();
 
-    // Return the provider for potential manual instrumentation
     return provider;
 }
 
-// Call this at application startup
+// Call this at application startup before bootstrapping NestJS
 setupTracing();
 ```
 
-### **Explanation**
+### Breakdown of the Configuration
 
-* **Diagnostic Logging:** Enables diagnostic logging using a console logger at the `INFO` level to debug tracing setup.
+* **Diagnostic Logging:** Logs OpenTelemetry internal events to the console at `INFO` level to simplify debugging and confirm initialization.
     
-* **Resource Initialization:**
+* **Resource Initialization:** Attaches metadata (like `service.name` and `service.version`) to all emitted spans, enabling filtering by service in Jaeger.
     
-    * Defines metadata about the service, like `SERVICE_NAME` and `SERVICE_VERSION`.
-        
-    * This metadata is attached to every trace and helps identify which service the trace belongs to.
-        
-* **OTLP Trace Exporter:** Configures the OpenTelemetry Protocol (**OTLP**) exporter to send trace data to the backend which is Jaeger for now using ***HTTP*** protocol. Note that Jaeger can be swapped with other backend like Honeycomb, Zipkin etc and you change the protocol to more efficient **GRPC** from current **HTTP.**
+* **OTLP Trace Exporter:** Configures the OpenTelemetry Protocol (OTLP) exporter to send trace batches via HTTP (port `4318`). You can easily point this to other backends like Honeycomb, Datadog, or Grafana Tempo, or switch to the higher-performance **gRPC** exporter (port `4317`).
     
-* **Tracer Provider with Span Processor:** Creates a `NodeTracerProvider`, which manages tracers and spans:
+* **BatchSpanProcessor:** Buffers spans in memory and exports them asynchronously in batches to minimize runtime overhead on API requests.
     
-    * **Resource**: Includes service metadata.
-        
-    * **BatchSpanProcessor**: Buffers spans and exports them in batches to minimize performance impact. Key configurations:
-        
-        * `maxQueueSize`: Maximum spans in the queue before flushing.
-            
-        * `scheduledDelayMillis`: Frequency of flushing spans.
-            
-        * `exportTimeoutMillis`: Max time allowed for export.
-            
-        * `maxExportBatchSize`: Maximum spans per export batch.
-            
-* **Register Instrumentation**: Automatically captures traces for libraries and frameworks:
+* **Auto-Instrumentation:** Automatically intercepts inbound/outbound calls:
     
-    * `HttpInstrumentation`: Captures time taken by HTTP requests/responses.
+    * `HttpInstrumentation`: Traces incoming HTTP requests and outgoing HTTP client calls.
         
-    * `NetInstrumentation`: Captures time taken by low-level networking events.
+    * `ExpressInstrumentation`: Captures route matching and middleware execution time.
         
-    * `ExpressInstrumentation`: Tracks time taken by Express middleware and routes.
-        
-    * `PrismaInstrumentation`: Tracks time taken by SQL queries generated by Prisma
+    * `PrismaInstrumentation`: Records duration and queries generated by Prisma database operations.
         
 
-### **Inject instrumenting code in your application**
+## Initializing Tracing in Your Application
 
-Import and initialize the tracing configuration in your main application file ***main.ts***:
+Import the `tracing` setup as the very first line of your `src/main.ts` file before any NestJS modules are imported:
 
 ```typescript
+import './tracing';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import './tracing';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Tracing example')
-    .setDescription('The tracing API description')
+    .setTitle('Tracing Example API')
+    .setDescription('NestJS API instrumented with OpenTelemetry')
     .setVersion('1.0')
-    .addTag('tracing')
+    .addTag('users')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, documentFactory);
@@ -421,17 +393,11 @@ async function bootstrap() {
 bootstrap();
 ```
 
-### Run Your Application
+## Running Jaeger Locally
 
-```typescript
-pnpm run start:dev
-```
+The easiest way to run Jaeger locally for development is with Docker Compose.
 
-### **Setting Jaeger for development environment**
-
-Easiest way to setup Jaeger is with docker-compose winch will work fine a development environment.
-
-Create `docker-compose.yaml` file:
+Create a `docker-compose.yaml` file:
 
 ```yaml
 services:
@@ -441,18 +407,32 @@ services:
     environment:
       COLLECTOR_OTLP_ENABLED: "true"
     ports:
-      - "4317:4317" # For Jaeger-GRPC
-      - "4318:4318" # For Jaeger-HTTP
-      - "16686:16686" # # Web UI
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP HTTP receiver
+      - "16686:16686" # Jaeger Web UI
 
 networks:
   default:
     driver: bridge
 ```
 
-### **Containerize app (optional)**
+Start Jaeger:
 
-You can use [**docker init**](https://docs.docker.com/reference/cli/docker/init/) command to automatically generate an optimized Dockerfile if you have newer version of docker installed.
+```bash
+docker compose up -d
+```
+
+## Running Your Application
+
+Start your NestJS development server:
+
+```bash
+pnpm run start:dev
+```
+
+## Containerizing the Application (Optional)
+
+You can use the `docker init` command or the following multi-stage `Dockerfile` to package your application for production:
 
 ```dockerfile
 # Arguments for versions
@@ -471,57 +451,51 @@ WORKDIR /usr/src/app
 RUN --mount=type=cache,target=/root/.npm \
     npm install -g pnpm@${PNPM_VERSION}
 
-# Copy package.json and pnpm-lock.yaml to install dependencies
-COPY ../package.json pnpm-lock.yaml ./
+# Copy package manifests to install dependencies
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies with cache
 RUN --mount=type=cache,target=/root/.pnpm-store \
     pnpm install --frozen-lockfile
 
-# Copy the all application code
-COPY .. .
+# Copy application source code
+COPY . .
 
-# Setup prisma
+# Generate Prisma client and build application
 RUN pnpm prisma generate
-
-# Build the application
 RUN pnpm run build
 
 # Runner Stage
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS runner
 
-# Set working directory
 WORKDIR /usr/src/app
 
-# Copy the built application from the builder stage
+# Copy built application and production dependencies
 COPY --from=builder /usr/src/app/dist ./dist
-COPY ../package.json pnpm-lock.yaml ./
-COPY ../prisma/schema.prisma ./prisma/schema.prisma
+COPY package.json pnpm-lock.yaml ./
+COPY prisma/schema.prisma ./prisma/schema.prisma
 
-# Install pnpm globally
+# Install pnpm globally and production dependencies
 RUN --mount=type=cache,target=/root/.npm \
     npm install -g pnpm@${PNPM_VERSION}
 
-# Install dependencies with cache
 RUN --mount=type=cache,target=/root/.pnpm-store \
     pnpm install --frozen-lockfile --prod
 
-# Set NODE_ENV to production
 ENV NODE_ENV=production
 
-# Run the application
 CMD ["pnpm", "run", "start:prod"]
 ```
 
-### **Swagger UI**
+## Testing with Swagger UI
 
-Visit http://localhost:3000/api-docs and make some API calls
+Visit `http://localhost:3000/api-docs` in your browser and execute a few API requests (e.g., `POST /users` and `GET /users`):
 
 ![](/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/image-3.png)
 
-### **Visualizing traces**
+## Visualizing Traces in Jaeger
 
-Open your browser and go to [`http://localhost:16686`](http://localhost:16686) to see the Jaeger UI. Run some request and click **Find Trace** and click on a trace
+Open your browser and navigate to `http://localhost:16686` to access the Jaeger UI. Select `tracer-app` from the **Service** dropdown, click **Find Traces**, and select any trace to inspect the complete span waterfall:
 
 ![](/blog/distributed-tracing-with-opentelemetry-and-jaeger-for-nest-application/image-4.png)
 

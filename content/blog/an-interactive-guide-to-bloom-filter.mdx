@@ -9,65 +9,65 @@ renderStrategy: "ssg"
 ---
 ## Introduction
 
-Bloom filter is **space efficient probabilistic data structure** that can tell if a given element is already present in a database. It saves us from doing an expensive query to our database. **While Bloom filters can guarantee that an element is not in the set, they cannot guarantee its presence.** Instead, they can sometimes return false positives indicating an element is in the set when it is not but they never return false negatives.
+A Bloom filter is a **space-efficient probabilistic data structure** used to test whether an element is a member of a set. It saves us from performing expensive queries against our database. **While Bloom filters can guarantee that an element is not in the set, they cannot guarantee its presence.** Instead, they can sometimes return false positives (indicating an element is in the set when it is not), but they never return false negatives.
 
 ## Problem
 
 Before diving into how Bloom filters work, let’s consider the problem they solve. Imagine you run a website that needs to process thousands or even millions of requests every second. One of your tasks is to check whether the IP address making a request is in a list of banned IPs.
 
-If you store this list in a traditional database or an in memory data structure like a hash table, every lookup will consume resources, and the time to check will grow with the size of the list. For every incoming request, you’ll have to query the database or search through the list, which could severely impact the website’s performance.
+If you store this list in a traditional database or an in-memory data structure like a hash table, every lookup consumes resources, and lookup time can grow with the size of the list. For every incoming request, querying the database or searching through a large list can severely impact performance.
 
-Wouldn’t it be great if there was a magic solution to quickly determine whether an IP address is banned in constant time without querying the database? Enter Bloom filters.
+Wouldn’t it be great if there was a fast, constant-time way to determine whether an IP address is banned without querying the database? Enter Bloom filters.
 
 ![](/blog/an-interactive-guide-to-bloom-filter/image-1.png)
 
-## Prerequisite
+## Prerequisites
 
-## Hashing
+### Hashing
 
-To understand Bloom filters, you need to be familiar with the concept of **hashing**. Hashing involves using a hash function to convert input data (like an IP address) into a fixed size output, often a number. Good hash functions are deterministic (they always produce the same output for the same input) and uniformly distribute outputs across the possible range.
+To understand Bloom filters, you need to be familiar with the concept of **hashing**. Hashing involves using a hash function to convert input data (like an IP address) into a fixed-size output, often an integer. Good hash functions are deterministic (they always produce the same output for the same input) and uniformly distribute outputs across the available range.
 
 ![Diagram illustrating a hash function mapping keys to hash values. "1.1.1.1" maps to "00," "2.2.2.2" and "3.3.3.3" map to "05," showing a hash collision. "4.4.4.4" maps to "05." Hash values range from "00" to "06."](/blog/an-interactive-guide-to-bloom-filter/image-2.png)
 
-## Working
+## How It Works
 
-Bloom filters address the problem of quickly checking membership by using multiple hash functions and a bit array. Here’s how it works:
+Bloom filters address the problem of fast membership checks by using multiple hash functions and a bit array. Here’s how it works:
 
-1. **Initialization**: A Bloom filter uses a fixed size bit array `(m)`, initially set to all zeros. It also uses `k` independent hash functions.
+1. **Initialization**: A Bloom filter uses a fixed-size bit array of size `m`, initially set to all zeros. It also uses `k` independent hash functions.
     
 2. **Adding an element**:
     
     * To add an element, it is passed through all `k` hash functions.
         
-    * Each hash function maps the element to a position in the bit array, and the corresponding bits at these positions are set to 1.
+    * Each hash function maps the element to a position in the bit array, and the corresponding bits at these positions are set to `1`.
         
 3. **Checking for membership**:
     
     * To check if an element is in the set, the element is hashed with the same `k` hash functions.
         
-    * If all the bits at the positions indicated by the hash functions are set to 1, the filter reports that the element *might* be in the set.
+    * If all the bits at the positions indicated by the hash functions are `1`, the filter reports that the element *might* be in the set.
         
-    * If any of these bits are 0, the element is definitely not in the set.
+    * If any of these bits are `0`, the element is definitely not in the set.
         
 
-This design ensures that the Bloom filter is both space efficient and fast. However, there is a trade off: the possibility of **false positives**, which occurs when the bits set by other elements overlap, making it appear that an element is in the set when it is not.
+This design ensures that the Bloom filter is both space-efficient and fast ($O(k)$ time complexity). However, there is a trade-off: the possibility of **false positives**, which occurs when bits set by previously inserted elements overlap, making it appear that a new element is in the set when it has never been added.
 
-I have create a fun little [app](https://tools.sagyamthapa.com.np/bloom-filter) that let’s you play with a bloom filter.
+I have created a fun little [app](https://tools.sagyamthapa.com.np/bloom-filter) that lets you play with a Bloom filter interactively:
 
 
 <ToolEmbed id="bloom-filter" />
-* See what happens when you fill filter with all ones.
+* See what happens when you fill the filter with all ones.
     
-* Can you get the bloom filter to return is false positive.
+* Can you get the Bloom filter to return a false positive?
     
-* Notice how increasing hash function fills up the filter.
+* Notice how increasing the number of hash functions fills up the filter faster.
     
-* Notice how deceasing hash function affects probability.
+* Notice how decreasing the number of hash functions affects the false positive probability.
     
 
 ## Tuning
 
-I have made another fun little [app](https://tools.sagyamthapa.com.np/bloom-calculator) that let’s you play around with parameters of a bloom filter.
+I have made another fun little [app](https://tools.sagyamthapa.com.np/bloom-calculator) that lets you experiment with the parameters of a Bloom filter:
 
 * Number of elements `N`
     
@@ -78,74 +78,74 @@ I have made another fun little [app](https://tools.sagyamthapa.com.np/bloom-calc
 
 
 <ToolEmbed id="bloom-calculator" />
-Some conclusion you to draw from the graphs, for a well designed filter:
+Some conclusions you can draw from the graphs for a well-designed filter:
 
-* False positive vs No of Items follows a logistic curve.
+* **False positive rate vs. number of items** follows a logistic curve (increasing items gradually saturates the filter).
     
-* False positive vs No of hash function follows a J curve.
+* **False positive rate vs. number of hash functions** follows a U/J-curve (too few or too many hash functions increase false positives).
     
-* False positive vs Filter size follows a linear downward line.
+* **False positive rate vs. filter size** decreases inversely as more bits are allocated.
     
 
-## Formulae
+## Formulas
 
-### 1\. Probability of a False Positive
+### 1. Probability of a False Positive
 
-The probability of a false positive in a Bloom Filter is given by:
+The probability of a false positive in a Bloom filter is approximately:
 
 $$P \approx \left( 1 - e^{- \frac{kn}{m}} \right)^k$$
 
 Where:
 
-* `m`: Number of bits in the Bloom Filter.
+* `m`: Number of bits in the Bloom filter.
     
 * `k`: Number of hash functions.
     
 * `n`: Number of elements inserted into the filter.
     
 
-### 2\. Optimal Number of Hash Functions
+### 2. Optimal Number of Hash Functions
 
-The optimal number of hash functions `k`, to minimize the false positive rate, is:
+The optimal number of hash functions `k` to minimize the false positive rate is:
 
 $$k = \frac{m}{n} \ln 2$$
 
-### 3\. Expected Fraction of Bits Set to 1
+### 3. Expected Fraction of Bits Set to 1
 
-The fraction `f` of bits in the Bloom Filter that are set to 1 after `n` insertions is:
+The fraction `f` of bits in the Bloom filter that are set to 1 after `n` insertions is:
 
 $$f = 1 - \left( 1 - \frac{1}{m} \right)^{kn}$$
 
-## Improvements
+## Alternatives and Variations
 
-* ### Cuckoo Filters:
+* ### Cuckoo Filters
     
-    A lighter and faster version that allows you to delete an inserted item. It collects fingerprint of inserted item and stores it in an array of buckets. Works great for application needing frequency counts or large scale de-duplication.
+    A modern alternative that supports deleting inserted items. It stores fingerprints of inserted items in an array of buckets using cuckoo hashing. It works great for applications needing high lookup throughput, deletions, or large-scale deduplication.
     
-* ### Counting Bloom filters
+* ### Counting Bloom Filters
     
-    Uses a **counter array**, where each position in the array is a small integer. Lookup and delete are performed by incrementing and decrementing the positions in the array. Works great for application with high performance and low memory usage
-    
-
-## Application
-
-Bloom filters have a wide range of applications, including:
-
-* **Database Query Optimization**: Reduce database lookup by quickly discarding queries for non existent elements.
-    
-* **Web Caching**: Check if a URL is cached before attempting to fetch it.
-    
-* **Spam Detection**: Quickly determine whether an email sender is blacklisted.
-    
-* **Distributed Systems**: Identify duplicate data or requests in distributed storage and processing systems.
+    Uses a **counter array** where each position is a small integer instead of a single bit. Lookups, insertions, and deletions are performed by incrementing and decrementing the counters. Works great for applications that require element deletions while maintaining high performance and bounded memory usage.
     
 
-## Further reading
+## Applications
 
-* [When Bloom filters don't bloom](https://blog.cloudflare.com/when-bloom-filters-dont-bloom)
+Bloom filters have a wide range of real-world applications, including:
+
+* **Database Query Optimization**: Reduce disk I/O and lookups by quickly discarding queries for non-existent elements (e.g., in Cassandra, RocksDB, and PostgreSQL).
     
-* [Wikipedia](https://en.wikipedia.org/wiki/Bloom_filter)
+* **Web Caching**: Quickly check if a URL is cached before attempting to fetch it from disk or remote storage.
     
-* [JasonDavies](https://www.jasondavies.com/bloomfilter/)
+* **Spam and Malicious URL Detection**: Fast pre-checks to determine whether an email sender or URL is present on a blacklist.
     
-* [SamWhoCode](https://samwho.dev/bloom-filters/)
+* **Distributed Systems**: Avoid unnecessary cross-node synchronization and identify duplicate data or requests efficiently.
+    
+
+## Further Reading
+
+* [When Bloom filters don't bloom (Cloudflare Blog)](https://blog.cloudflare.com/when-bloom-filters-dont-bloom)
+    
+* [Bloom Filter on Wikipedia](https://en.wikipedia.org/wiki/Bloom_filter)
+    
+* [Jason Davies: Bloom Filter Visualization](https://www.jasondavies.com/bloomfilter/)
+    
+* [Sam Who: Bloom Filters](https://samwho.dev/bloom-filters/)

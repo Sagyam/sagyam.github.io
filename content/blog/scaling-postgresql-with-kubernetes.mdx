@@ -7,22 +7,22 @@ tech: ["Kubernetes","PostgreSQL","Distributed Database","high availability"]
 published: true
 renderStrategy: "ssg"
 ---
-## A case for vertical scaling
+## A Case for Vertical Scaling
 
-If you have read any article or a book on system design then you probably know what vertical and horizontal scaling is and benefits of horizontal scaling. Before I explain how to setup proper horizontal scaling with Postgres let me make a case when you should not try this.
+If you have read articles or books on system design, you probably know the differences between vertical and horizontal scaling and the advantages of scaling horizontally. But before jumping straight into horizontal architectures, let's first consider when you should *stick with vertical scaling*:
 
-1. Simplicity: Single node database means you can run your database out of the box. Although I recommend you run [PGTune](https://pgtune.leopard.in.ua/) for a quick preset or visit [postconf](http://postgresqlco.nf) a full breakdown
+1. **Simplicity:** A single-node database works right out of the box without the operational overhead of consensus, distributed transactions, or cross-node networking. (Tip: Use [PGTune](https://pgtune.leopard.in.ua/) for quick config presets or visit [postgresqlco.nf](https://postgresqlco.nf) for detailed parameter tuning).
     
-2. Easier backup and recovery: No need to think about state across replicas when creating backups or applying a backup.
+2. **Straightforward Backup & Recovery:** Point-in-time recovery (PITR) and database dumps are simpler because you don't need to coordinate state across multiple distributed nodes.
     
-3. No network overhead especially with write heavy operations.
+3. **Zero Distributed Network Overhead:** Local transactions and write-heavy workloads run at raw NVMe/SSD disk speed without network serialization latency.
     
-4. A temporary fix: If need a fix right now, this will provide an instant relief.
+4. **Immediate Capacity Relief:** Upgrading RAM, CPU, and disk throughput on a single instance is often the fastest, most reliable way to handle sudden traffic growth.
     
 
-## Prerequisite
+## Prerequisites
 
-Make sure you have following tools installed.
+Make sure you have the following CLI tools installed:
 
 * [kubectl](https://kubernetes.io/docs/reference/kubectl/)
     
@@ -32,31 +32,34 @@ Make sure you have following tools installed.
     
 * [k9s](https://k9scli.io/)
     
-      
-    Following the guide requires you have basic understanding of Kubernetes, [CRD](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/), Helm. Nothing deep a quick AI summary will suffice.
-    
 
-## Replication
+*Note: Following this guide assumes a basic familiarity with Kubernetes concepts, [Custom Resource Definitions (CRDs)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/), and Helm.*
 
-Replication means keeping multiple copies of data on multiple machines connected via network. Here is why you might want to do that:
+## Replication (High Availability & Read Scaling)
 
-* It keeps you data close to your users.
+Replication involves maintaining synchronized copies of data across multiple database instances connected over the network. Here is why you should implement replication:
+
+* **High Availability & Fault Tolerance:** If the primary node crashes, an automated failover promotes a replica to primary with minimal downtime.
     
-* It acts as a hot backup of a follower goes down.
+* **Read Scalability:** Distribute read queries across multiple read replicas (ideal for read-heavy OLTP workloads).
     
-* It helps with scaling if most of your workload is read operation (which is the case for most [OLTP](https://www.wikiwand.com/en/articles/Online_transaction_processing))
+* **Geographical Proximity:** Serve read requests closer to end users.
     
 
 ![Diagram depicting a database architecture with a leader and two followers. The leader handles create, delete, and update queries, while followers handle read queries. Data synchronization is done through WAL sync. User queries are directed through a pg-pool component.](/blog/scaling-postgresql-with-kubernetes/image-1.png)
 
-> Here [pg-pool](https://www.pgpool.net/docs/46/en/html/intro-whatis.html) acts as load balancer, it distributes read request evenly among followers and mutation request to the leader. Notice that Leader periodically syncs it [WAL](https://www.wikiwand.com/en/articles/Write-ahead_logging) with it’s followers.
+> In this architecture, a connection pooler / proxy like `pgpool-II` acts as a load balancer: it distributes read queries evenly among replicas and routes write transactions directly to the primary leader. The leader continuously streams its [WAL (Write-Ahead Log)](https://www.wikiwand.com/en/articles/Write-ahead_logging) to the standby replicas.
 
-### Setup StackGres and enable load balancer
+### Set Up StackGres and Enable Load Balancer
+
+Enable MetalLB on Minikube and start the tunnel:
 
 ```bash
 minikube addons enable metallb
 minikube tunnel
 ```
+
+Install the StackGres Operator using Helm:
 
 ```bash
 helm install stackgres-operator stackgres-charts/stackgres-operator \
@@ -64,7 +67,9 @@ helm install stackgres-operator stackgres-charts/stackgres-operator \
     --create-namespace
 ```
 
-### Define CRD for replicated cluster
+### Define Cluster Custom Resource
+
+Create a file named `replication.yaml`:
 
 ```yaml
 apiVersion: stackgres.io/v1
@@ -91,49 +96,61 @@ spec:
       type: LoadBalancer
 ```
 
-### Apply the CRD
+### Deploy the Cluster
+
+Apply the configuration and watch the pods initialize:
 
 ```bash
 kubectl apply -f ./replication.yaml
 kubectl get pods -w
 ```
 
-### Get credentials
+### Retrieve Database Credentials
+
+Fetch the generated superuser password:
 
 ```bash
 PG_PASSWORD=$(kubectl -n default get secret cluster --template '{{ printf "%s" (index .data "superuser-password" | base64decode) }}')
 echo "The superuser password is: $PG_PASSWORD"
 ```
 
-### See who is who
+### Inspect Cluster Status and Roles
+
+Check which node is the elected leader using `patronictl`:
 
 ```bash
-kubectl exec -it cluster-0  -c patroni -- patronictl list 
+kubectl exec -it cluster-0 -c patroni -- patronictl list 
 ```
 
-### Kill the primary
+### Simulate Failover (Kill the Primary)
+
+Delete the active primary pod to trigger an automated failover:
 
 ```bash
 kubectl delete pod cluster-0
 ```
 
-### See who is in charge now
+### Verify Leader Election
 
-[Patroni](https://patroni.readthedocs.io/en/latest/) should have elected a new leader by now.
+Check cluster status again. [Patroni](https://patroni.readthedocs.io/en/latest/) will have automatically elected a new primary among the remaining replicas:
 
 ```bash
 kubectl exec -it cluster-1 -c patroni -- patronictl list
 ```
 
-### Tell something only to the primary
+### Write Data to the New Primary
+
+Execute writes against the new leader:
 
 ```bash
 PRIMARY=$(kubectl exec -it cluster-1 -c patroni -- patronictl list | grep Leader | awk '{print $2}')
 kubectl exec -it $PRIMARY -c patroni -- psql -U postgres -c "CREATE TABLE replication_test_table (id SERIAL PRIMARY KEY, data TEXT);"
-kubectl exec -it $PRIMARY -c patroni -- psql -U postgres -c "INSERT INTO replication_test_table (data) VALUES ('Spread the word about our lord savior PostgreSQL!');"
+kubectl exec -it $PRIMARY -c patroni -- psql -U postgres -c "INSERT INTO replication_test_table (data) VALUES ('Spread the word about PostgreSQL high availability!');"
 ```
 
-### Primary tell his followers
+### Verify Replication Across Replicas
+
+Query the other pods to confirm that the new record has replicated:
 
 ```bash
 kubectl exec -it cluster-0 -c patroni -- psql -U postgres -c "SELECT * FROM replication_test_table;"
@@ -141,48 +158,33 @@ kubectl exec -it cluster-1 -c patroni -- psql -U postgres -c "SELECT * FROM repl
 kubectl exec -it cluster-2 -c patroni -- psql -U postgres -c "SELECT * FROM replication_test_table;"
 ```
 
-As you can see how quickly the word has spread. This is possible because StackGres uses [Patroni](https://patroni.readthedocs.io/en/latest/) under the hood to coordinate all the replication.
+As you can see, data replication is nearly instantaneous. StackGres uses [Patroni](https://patroni.readthedocs.io/en/latest/) under the hood to handle consensus, health checks, and automatic failovers seamlessly.
 
 ## Partitioning
 
-Partitioning splits the data (table in our case) into smaller, more manageable parts. This is done **within a single database instance**. Postgres supports this out of the box. It is defined in data definition layer and having multiple replicas for makes a partition highly available. It works best for time-series data, logs, or region-based segmentation.
+Table partitioning splits large tables into smaller, distinct physical storage units **within a single database instance**. PostgreSQL supports table partitioning natively via DDL. Partitioning improves query performance (via partition pruning) and speeds up bulk data purging. It is ideal for time-series data, audit logs, and region-based datasets.
 
 ### Types of Partitioning
 
-1. **Range Partitioning** – Data is partitioned based on value ranges (e.g., date ranges).
+1. **Range Partitioning:** Data is mapped based on continuous ranges (e.g., date intervals, numerical ranges).
     
-2. **List Partitioning** – Partitioning based on a list of values (e.g., regions or categories).
+2. **List Partitioning:** Data is grouped explicitly by distinct keys (e.g., countries, departments, statuses).
     
-3. **Hash Partitioning** – Data is distributed using a hash function (e.g., `MOD(user_id, 4)`).
+3. **Hash Partitioning:** Data is distributed deterministically across partitions using a modulus hash function (e.g., `MOD(customer_id, 2)`).
     
 
-Following code create a table orders and derives three tables from it using range, list and hash based partition in a hierarchical way. Order table is split by year, year is further split into regions and region is finally split by hash.
+The following SQL demonstrates hierarchical partitioning: the parent `orders` table is partitioned by year (range), then by region (list), and finally by customer ID (hash):
 
 ![](/blog/scaling-postgresql-with-kubernetes/image-2.png)
 
-> Notice that only hash based partition grantees that all partition are of same size.
+> Note: Hash partitioning guarantees that data is evenly balanced across partitions, preventing hotspotting.
 
-### Setup StackGres and enable load balancer
+### Connect to the Database
 
-```bash
-helm install stackgres-operator stackgres-charts/stackgres-operator \
-    --namespace stackgres-operator \
-    --create-namespace
+Connect via an SQL client such as [pgAdmin](https://www.pgadmin.org/) or `psql` using:
+`postgresql://postgres:<password>@localhost:5432`
 
-minikube addons enable metallb
-minikube tunnel
-```
-
-### Get credentials
-
-```bash
-PG_PASSWORD=$(kubectl -n default get secret cluster --template '{{ printf "%s" (index .data "superuser-password" | base64decode) }}')
-echo "The superuser password is: $PG_PASSWORD" 
-```
-
-> Your database should now be available at `postgresql://postgres:<password>:localhost:5432`
-
-Now open an SQL Editor like [pgAdmin](https://www.pgadmin.org/), and run the following.
+### Create Hierarchical Partitions
 
 ```pgsql
 -- Parent table
@@ -195,94 +197,75 @@ CREATE TABLE orders (
     PRIMARY KEY (order_id, order_date, region, customer_id)
 ) PARTITION BY RANGE (order_date);
 
-
--- Range: Year 2024
+-- Range partitions: Year 2024 & 2025
 CREATE TABLE orders_2024 PARTITION OF orders
     FOR VALUES FROM ('2024-01-01') TO ('2025-01-01')
     PARTITION BY LIST (region);
 
--- Range: Year 2025
 CREATE TABLE orders_2025 PARTITION OF orders
     FOR VALUES FROM ('2025-01-01') TO ('2026-01-01')
     PARTITION BY LIST (region);
 
--- 2024 - US region
+-- List partitions: US & EU regions for 2024
 CREATE TABLE orders_2024_us PARTITION OF orders_2024
     FOR VALUES IN ('US')
     PARTITION BY HASH (customer_id);
 
--- 2024 - EU region
 CREATE TABLE orders_2024_eu PARTITION OF orders_2024
     FOR VALUES IN ('EU')
     PARTITION BY HASH (customer_id);
 
--- 2024 - US - Hash partitions
+-- Hash sub-partitions
 CREATE TABLE orders_2024_us_0 PARTITION OF orders_2024_us FOR VALUES WITH (MODULUS 2, REMAINDER 0);
 CREATE TABLE orders_2024_us_1 PARTITION OF orders_2024_us FOR VALUES WITH (MODULUS 2, REMAINDER 1);
 
--- 2024 - EU - Hash partitions
 CREATE TABLE orders_2024_eu_0 PARTITION OF orders_2024_eu FOR VALUES WITH (MODULUS 2, REMAINDER 0);
 CREATE TABLE orders_2024_eu_1 PARTITION OF orders_2024_eu FOR VALUES WITH (MODULUS 2, REMAINDER 1);
 ```
 
-### Bulk insert synthetic data
+### Insert Sample Data and Query
 
 ```sql
--- Generate 1000 random orders
+-- Generate 1,000 synthetic orders
 INSERT INTO orders (order_id, customer_id, order_date, region, amount)
 SELECT 
-    -- Generate order IDs between 1000 and 9999
     1000 + floor(random() * 9000)::int AS order_id,
-    -- Generate customer IDs between 1000 and 9999
     1000 + floor(random() * 9000)::int AS customer_id,    
-    -- Generate dates in 2024 (to fit the 2024 partition)
     DATE '2024-01-01' + (floor(random() * 366)::int * INTERVAL '1 day') AS order_date,    
-    -- Randomly select region
     (ARRAY['US', 'EU'])[1 + floor(random() * 2)::int] AS region,    
-    -- Generate random amounts between 10 and 1000
     10 + floor(random() * 990)::int AS amount
 FROM 
-    generate_series(1, 1000) AS i;            -- 1k rows
+    generate_series(1, 1000) AS i;
 ```
 
 ```sql
 SELECT * FROM orders
 WHERE order_date = '2024-06-10'
-  AND region = 'US'
+  AND region = 'US';
 ```
 
-> Querying the orders does not require you to know the partition
+> Application queries only need to target the parent `orders` table—PostgreSQL's query planner automatically routes queries to the exact matching partition (partition pruning).
 
-## Sharding with replication
+## Sharding with Citus
 
-Sharding splits a large database into small pieces called shards. Each shard is then split among multiple machines so that our database can continue to function even if we lose a few machines. Routing of queries to the proper is done by a coordinator, and just like with the replication example we will have `pg-pool` doing load balancing within a shard.
+Sharding distributes table rows horizontally across multiple independent database worker nodes (shards). Query coordination, distributed joins, and aggregation are managed transparently by coordinator nodes.
 
-### Types of sharding
+### Types of Sharding
 
-1. **Row based:** Think of it like splitting a very thick book into many volumes ***(shards)*** *based on* and creating a new volumes just to keep track of table of content ***(coordinator)***. Think of a table where the schema of the table is simple but amount of rows and amount write operation has gone crazy. With this method both read/write operation for every shard can scale as needed.  
+1. **Row-Based Sharding (Horizontal):** Rows of a large table are split across multiple worker nodes using a distributed distribution column (e.g., `user_id` or `tenant_id`). Both read and write throughput scale linearly as you add worker nodes.
     
-2. **Schema based:** Just like last time we are still splitting the book but this time we are taking a few chapters that are related and turning it into a book about a sub topic. Think of how a very thick physics textbook can be split into Optics, Thermodynamics, Quantum Mechanics. Think of a table to large number of columns, but you don’t need the all the columns every time a query is made. So you split the table into shards such that related columns get placed together.
+2. **Schema-Based / Domain Sharding (Vertical):** Entire domain models or related microservice tables (e.g., Auth vs. Billing) are housed in separate databases or worker nodes.
     
 
 ![](/blog/scaling-postgresql-with-kubernetes/image-3.png)
 
-> Notice the resiliency of this architecture, not only we have multiple replicas for shards but also for the coordinator. As long as we have a minimum of 3 machines to run our sharded cluster, failure of single machine will not bring the down our database.
+> In this architecture, both the coordinator and worker shards are configured with standby replicas. The cluster remains fully operational even if individual worker pods or nodes encounter failures.
 
-### Setup StackGres and enable load balancer
+### Define Custom Resource for Sharded Citus Cluster
 
-```bash
-helm install stackgres-operator stackgres-charts/stackgres-operator \
-    --namespace stackgres-operator \
-    --create-namespace
-
-minikube addons enable metallb
-minikube tunnel
-```
-
-### Define CRD for Sharded Cluster
+Create `shard.yaml`:
 
 ```yaml
-# shard.yaml
 apiVersion: stackgres.io/v1alpha1
 kind: SGShardedCluster
 metadata:
@@ -299,7 +282,7 @@ spec:
         size: '1Gi'
   shards:
     clusters: 3 # Number of shards
-    instancesPerCluster: 3 # 1 primary and 2 replicas
+    instancesPerCluster: 3 # 1 primary and 2 replicas per shard
     pods:
       persistentVolume:
         size: '1Gi'
@@ -311,32 +294,33 @@ spec:
   profile: development
 ```
 
-### Apply Citus CRD
+### Apply Citus Configuration
 
 ```bash
 kubectl apply -f ./shard.yaml
 ```
 
-### Get credentials
+### Retrieve Credentials and Connect
 
 ```bash
 PG_PASSWORD=$(kubectl -n default get secret cluster --template '{{ printf "%s" (index .data "superuser-password" | base64decode) }}')
 echo "The superuser password is: $PG_PASSWORD" 
 ```
 
-> Your database should now be available at `postgresql://postgres:<password>:localhost:5432`
+Connect to the coordinator endpoint:
+`postgresql://postgres:<password>@localhost:5432`
 
-Now open a app like SQL Editor like [pgAdmin](https://www.pgadmin.org/), and run the following.
-
-### Create some distributed table
+### Create Distributed Tables
 
 ```pgsql
+-- Create and distribute users table
 CREATE TABLE users (
     id BIGINT PRIMARY KEY,
     name TEXT
 );
 SELECT create_distributed_table('users', 'id');
 
+-- Create and distribute orders table (co-located by user_id)
 CREATE TABLE orders (
     id BIGINT,
     user_id BIGINT,
@@ -346,6 +330,7 @@ CREATE TABLE orders (
 );
 SELECT create_distributed_table('orders', 'user_id');
 
+-- Create reference table (replicated to all worker nodes)
 CREATE TABLE products (
     id BIGINT PRIMARY KEY,
     name TEXT,
@@ -354,7 +339,7 @@ CREATE TABLE products (
 SELECT create_reference_table('products');
 ```
 
-### Insert some data
+### Insert Sample Data
 
 ```pgsql
 INSERT INTO users (id, name) VALUES
@@ -367,20 +352,23 @@ INSERT INTO orders (id, user_id, product_id, amount) VALUES
 (2, 1, 2, 3),
 (3, 2, 1, 1),
 (4, 3, 3, 5);
+
 INSERT INTO products (id, name, price) VALUES
 (1, 'Product A', 10.00),
 (2, 'Product B', 20.00),
 (3, 'Product C', 30.00);
 ```
 
-### See how shards are spread
+### Inspect Shard Distribution
+
+View the distributed shard placements generated by Citus:
 
 ```pgsql
 SELECT * FROM citus_shards
 WHERE table_name = 'orders'::regclass;
 ```
 
-### Find which node host which shard
+### Find Which Node Hosts Which Shard
 
 ```pgsql
 SELECT
@@ -393,13 +381,13 @@ JOIN pg_dist_node n ON p.nodename = n.nodename
 WHERE s.logicalrelid = 'orders'::regclass;
 ```
 
-### Find which has a specific row
+### Find Which Shard Holds a Specific Row
 
 ```pgsql
 SELECT get_shard_id_for_distribution_column('orders', 1);
 ```
 
-### Join distributed-distributed (co-located)
+### Co-located Distributed Joins
 
 ```pgsql
 SELECT
@@ -410,9 +398,9 @@ FROM orders o
 JOIN users u ON o.user_id = u.id;
 ```
 
-This is efficient because orders and users are sharded using the same key (user\_id and id)
+*Because `orders` and `users` are sharded on matching keys (`user_id` and `id`), Citus executes joins locally on each worker node without costly cross-network data shuffling.*
 
-### Join distributed-reference
+### Distributed-to-Reference Table Joins
 
 ```pgsql
 SELECT
@@ -425,12 +413,12 @@ JOIN users u ON o.user_id = u.id
 JOIN products p ON o.product_id = p.id;
 ```
 
-This works well because products is replicated across all nodes.
+*This join executes fast and efficiently because the `products` reference table is replicated across all worker nodes, allowing the join to occur locally.*
 
 ## References
 
-* [Postgres partitioning docs](https://www.postgresql.org/docs/current/ddl-partitioning.html)
+* [PostgreSQL Documentation: Table Partitioning](https://www.postgresql.org/docs/current/ddl-partitioning.html)
     
-* [StackGres docs](https://stackgres.io/doc/1.2/reference/crd/sgcluster/)
+* [StackGres Documentation: SGCluster Reference](https://stackgres.io/doc/1.2/reference/crd/sgcluster/)
     
-* [Citus data](https://www.citusdata.com/blog/2023/08/04/understanding-partitioning-and-sharding-in-postgres-and-citus/)
+* [Citus Data: Understanding Partitioning and Sharding in PostgreSQL](https://www.citusdata.com/blog/2023/08/04/understanding-partitioning-and-sharding-in-postgres-and-citus/)
