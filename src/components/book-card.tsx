@@ -12,11 +12,11 @@ export function BookCard({ book }: BookCardProps) {
   return (
     <Link
       href={`/books/${book.slug}`}
-      className="group relative flex gap-4 items-start rounded-lg p-4 transition-all duration-300 border border-transparent hover:bg-white/10 hover:shadow-lg hover:backdrop-blur-sm hover:border-white/20"
+      className="group relative flex gap-4 items-start rounded-lg p-4 transition-all duration-300 border border-transparent hover:bg-edge/5 hover:shadow-lg hover:backdrop-blur-xs hover:border-edge/10"
     >
-      <div className="flex-shrink-0 w-24 sm:w-28 z-10">
+      <div className="shrink-0 w-24 sm:w-28 z-10">
         {book.coverImage && (
-          <div className="aspect-[2/3] relative overflow-hidden rounded border border-border shadow-md">
+          <div className="aspect-2/3 relative overflow-hidden rounded border border-border shadow-md">
             <Image
               src={book.coverImage}
               alt={book.title}

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import '@/styles/blog.css';
 import 'katex/dist/katex.min.css';
-import { Space_Grotesk, Work_Sans } from 'next/font/google';
+import { JetBrains_Mono, Space_Grotesk, Work_Sans } from 'next/font/google';
+import { ThemeProvider } from 'next-themes';
 import { metadata as siteMetadata } from '@/lib/data';
 
 const workSans = Work_Sans({
@@ -16,6 +16,12 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
   variable: '--font-space-grotesk',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains-mono',
   display: 'swap',
 });
 
@@ -59,11 +65,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`dark ${workSans.variable} ${spaceGrotesk.variable}`}
+      className={`${workSans.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
-      <body className="font-body antialiased bg-background text-foreground">{children}</body>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

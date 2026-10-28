@@ -59,7 +59,26 @@ bun run typecheck
 
 - **Framework:** Next.js 16
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS
+- **Styling:** Tailwind CSS 4
 - **UI Components:** Radix UI
 - **Forms:** React Hook Form + Zod
 - **Analytics:** Vercel Analytics & Speed Insights
+
+## Design system
+
+This site is the source of the design language every project linked from it shares: colours, type,
+radii and the chart palette, light and dark. It lives in [`registry/`](registry) and is published
+as a [shadcn registry](https://ui.shadcn.com/docs/registry) at `/r/` on every build.
+
+| Item           | Installs                         | For                                         |
+| -------------- | -------------------------------- | ------------------------------------------- |
+| `theme`        | `src/styles/sagyam.css`          | Any Tailwind 4 project                      |
+| `theme-switch` | `components/theme-switch.tsx`    | Next.js sites with next-themes              |
+
+```bash
+bunx shadcn@latest add https://sagyamthapa.com.np/r/theme.json --overwrite
+bunx shadcn@latest add https://sagyamthapa.com.np/r/theme-switch.json
+```
+
+Import the theme right after Tailwind and put a project's own tokens after it. To change the shared
+design, edit `registry/theme/sagyam.css` here, deploy, then re-run the command above in each project.

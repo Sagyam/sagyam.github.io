@@ -50,7 +50,7 @@ const components = {
       return (
         <aside
           role="note"
-          className="my-6 flex items-start gap-3.5 rounded-xl border border-l-4 border-amber-500/30 border-l-amber-500 bg-amber-500/[0.08] p-4 md:p-5 text-amber-100/90 shadow-[0_0_20px_-5px_rgba(245,158,11,0.08)] backdrop-blur-xs text-sm leading-relaxed"
+          className="my-6 flex items-start gap-3.5 rounded-xl border border-l-4 border-amber-500/30 border-l-amber-500 bg-amber-500/8 p-4 md:p-5 text-amber-950/80 dark:text-amber-100/90 shadow-[0_0_20px_-5px_rgba(245,158,11,0.08)] backdrop-blur-xs text-sm leading-relaxed"
           {...props}
         >
           {children}
@@ -72,7 +72,7 @@ const components = {
     if (nodeType === 'callout-text') {
       return (
         <div
-          className="flex-1 min-w-0 [&>p]:my-1.5 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0 [&>ul]:my-1.5 [&>ol]:my-1.5 [&>code]:bg-black/30"
+          className="flex-1 min-w-0 [&>p]:my-1.5 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0 [&>ul]:my-1.5 [&>ol]:my-1.5 [&>code]:bg-edge/10"
           {...props}
         >
           {children}
@@ -203,7 +203,7 @@ const components = {
     </div>
   ),
   th: ({ children, ...props }: any) => (
-    <th className="px-4 py-2 text-left font-semibold text-foreground bg-white/5" {...props}>
+    <th className="px-4 py-2 text-left font-semibold text-foreground bg-edge/5" {...props}>
       {children}
     </th>
   ),

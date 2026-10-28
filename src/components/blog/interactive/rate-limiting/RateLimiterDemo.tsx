@@ -31,7 +31,7 @@ export function RateLimiterDemo({ algorithm = 'token-bucket', limit = 10 }: Rate
   };
 
   return (
-    <Card className="my-6 border-primary/20 bg-white/5">
+    <Card className="my-6 border-primary/20 bg-edge/5">
       <CardHeader>
         <CardTitle className="text-xl text-foreground">Rate Limiter Demo - {algorithm}</CardTitle>
         <CardDescription className="text-muted-foreground">
@@ -42,11 +42,11 @@ export function RateLimiterDemo({ algorithm = 'token-bucket', limit = 10 }: Rate
         <div className="grid grid-cols-2 gap-4 text-center">
           <div>
             <p className="text-sm text-muted-foreground">Successful Requests</p>
-            <p className="text-3xl font-bold text-green-500">{requests.length}</p>
+            <p className="text-3xl font-bold text-success">{requests.length}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Blocked Requests</p>
-            <p className="text-3xl font-bold text-red-500">{blocked}</p>
+            <p className="text-3xl font-bold text-destructive">{blocked}</p>
           </div>
         </div>
 

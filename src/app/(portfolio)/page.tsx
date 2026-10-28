@@ -24,7 +24,7 @@ export default async function Home() {
   return (
     <div className="flex flex-col gap-24">
       <section id="about" className="scroll-mt-16 lg:scroll-mt-24">
-        <div className="prose prose-invert max-w-none space-y-4 text-muted-foreground">
+        <div className="prose max-w-none space-y-4 text-muted-foreground">
           {profile.about.map((paragraph) => (
             <p key={paragraph.substring(0, 50)}>{highlightTechKeywords(paragraph)}</p>
           ))}

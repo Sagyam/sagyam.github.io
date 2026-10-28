@@ -101,7 +101,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
 
           {post.coverImage && (
-            <div className="relative mt-2 aspect-[16/9] w-full overflow-hidden rounded-xl border border-border shadow-lg bg-card">
+            <div className="relative mt-2 aspect-video w-full overflow-hidden rounded-xl border border-border shadow-lg bg-card">
               <Image
                 src={post.coverImage}
                 alt={post.title}
@@ -114,7 +114,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
         </header>
 
-        <div className="prose prose-invert max-w-none">
+        <div className="prose max-w-none">
           <MDXContent code={post.body} />
         </div>
       </article>

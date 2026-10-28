@@ -10,7 +10,7 @@ interface ExperienceCardProps {
 
 export function ExperienceCard({ experience }: ExperienceCardProps) {
   return (
-    <div className="group relative grid rounded-lg p-4 transition-all duration-300 border border-transparent hover:bg-white/10 hover:shadow-lg hover:backdrop-blur-sm hover:border-white/20 md:grid-cols-8 md:gap-4">
+    <div className="group relative grid rounded-lg p-4 transition-all duration-300 border border-transparent hover:bg-edge/5 hover:shadow-lg hover:backdrop-blur-xs hover:border-edge/10 md:grid-cols-8 md:gap-4">
       <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground md:col-span-2 z-10">
         {experience.date}
       </p>

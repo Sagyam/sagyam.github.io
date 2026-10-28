@@ -8,7 +8,7 @@ interface CertificationCardProps {
 
 export function CertificationCard({ certification }: CertificationCardProps) {
   return (
-    <div className="group relative grid md:grid-cols-8 gap-4 items-start rounded-lg p-4 transition-all duration-300 border border-transparent hover:bg-white/10 hover:shadow-lg hover:backdrop-blur-sm hover:border-white/20">
+    <div className="group relative grid md:grid-cols-8 gap-4 items-start rounded-lg p-4 transition-all duration-300 border border-transparent hover:bg-edge/5 hover:shadow-lg hover:backdrop-blur-xs hover:border-edge/10">
       <p className="md:col-span-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground z-10">
         {certification.issueDate}
       </p>
