@@ -70,11 +70,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body>
+        {/* No switch on this site: it follows the OS. A fresh storage key drops any choice made with
+            the switch it briefly had. */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
+          storageKey="portfolio-theme"
         >
           {children}
         </ThemeProvider>

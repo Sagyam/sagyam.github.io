@@ -1,4 +1,3 @@
-import { ThemeSwitch } from '@registry/theme-switch/theme-switch';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { FileText, GithubIcon, Linkedin, Mail, Rss } from 'lucide-react';
@@ -57,30 +56,27 @@ export default function PortfolioLayout({
                 </ul>
               </nav>
             </div>
-            <div className="mt-8 flex flex-col items-start gap-6">
-              <div className="flex items-center gap-x-4 text-muted-foreground">
-                {socialLinks.map((link) => {
-                  const Icon = iconMap[link.icon];
-                  const isExternal = link.url.startsWith('http') || link.url.startsWith('mailto:');
-                  return (
-                    <Tooltip key={link.id}>
-                      <TooltipTrigger asChild>
-                        <a
-                          href={link.url}
-                          target={isExternal ? '_blank' : undefined}
-                          rel={isExternal ? 'noreferrer noopener' : undefined}
-                          aria-label={link.label}
-                          className="transition-colors hover:text-foreground"
-                        >
-                          <Icon className="size-6" />
-                        </a>
-                      </TooltipTrigger>
-                      <TooltipContent>{link.label}</TooltipContent>
-                    </Tooltip>
-                  );
-                })}
-              </div>
-              <ThemeSwitch />
+            <div className="mt-8 flex items-center gap-x-4 text-muted-foreground">
+              {socialLinks.map((link) => {
+                const Icon = iconMap[link.icon];
+                const isExternal = link.url.startsWith('http') || link.url.startsWith('mailto:');
+                return (
+                  <Tooltip key={link.id}>
+                    <TooltipTrigger asChild>
+                      <a
+                        href={link.url}
+                        target={isExternal ? '_blank' : undefined}
+                        rel={isExternal ? 'noreferrer noopener' : undefined}
+                        aria-label={link.label}
+                        className="transition-colors hover:text-foreground"
+                      >
+                        <Icon className="size-6" />
+                      </a>
+                    </TooltipTrigger>
+                    <TooltipContent>{link.label}</TooltipContent>
+                  </Tooltip>
+                );
+              })}
             </div>
           </header>
           <main className="pt-16 lg:w-7/12 lg:py-24">{children}</main>
