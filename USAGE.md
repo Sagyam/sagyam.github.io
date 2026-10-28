@@ -467,7 +467,7 @@ Renders as styled badges using `shadcn/ui`:
 
 2. **Next.js builds app**:
    ```bash
-   pnpm build
+   bun run build
 
    # Outputs:
    # - Static pages for SSG posts
@@ -480,7 +480,7 @@ Renders as styled badges using `shadcn/ui`:
    # Vercel (recommended)
    vercel deploy
 
-   # Or other platforms supporting Next.js 15
+   # Or other platforms supporting Next.js 16
    ```
 
 ### Environment Setup
@@ -522,7 +522,7 @@ Route (app)                    Size    First Load JS  Revalidate
 **Solution**:
 ```bash
 # Run build once to generate .velite directory
-pnpm build
+bun run build
 ```
 
 #### "Cannot destructure property 'Fragment'"
@@ -542,7 +542,7 @@ import * as runtime from 'react/jsx-runtime';
 
 **Solution**:
 1. Make content changes
-2. Rebuild: `pnpm build`
+2. Rebuild: `bun run build`
 3. Redeploy
 
 #### ISR post not updating
@@ -614,7 +614,7 @@ const x = 1;
 1. Use dynamic imports for heavy components
 2. Check bundle with:
    ```bash
-   ANALYZE=true pnpm build
+   ANALYZE=true bun run build
    ```
 3. Remove unused dependencies
 
@@ -622,7 +622,7 @@ const x = 1;
 
 **Solutions**:
 1. Limit number of posts during development
-2. Use `pnpm dev` for fast refresh
+2. Use `bun run dev` for fast refresh
 3. Check Velite processing time in build logs
 
 ---
@@ -682,19 +682,19 @@ content/blog/
 
 ```bash
 # Development
-pnpm dev
+bun run dev
 
 # Build
-pnpm build
+bun run build
 
 # Production
-pnpm start
+bun run start
 
 # Type check
-pnpm typecheck
+bun run typecheck
 
 # Lint
-pnpm lint
+bun run lint
 ```
 
 ### Component Template

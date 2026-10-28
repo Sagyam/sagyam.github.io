@@ -1,10 +1,10 @@
 # Portfolio
 
-A modern portfolio website built with Next.js 15, React 18, and TypeScript.
+A modern portfolio website built with Next.js 16, React 18, and TypeScript.
 
 ## Features
 
-- Built with Next.js 15 with Turbopack for fast development
+- Built with Next.js 16 and Turbopack for fast development
 - UI components powered by Radix UI and Tailwind CSS
 - Form handling with React Hook Form and Zod validation
 - Analytics with Vercel Analytics and Speed Insights
@@ -14,17 +14,21 @@ A modern portfolio website built with Next.js 15, React 18, and TypeScript.
 
 ### Prerequisites
 
-- Node.js 22 or higher
-- pnpm (recommended)
+- [Bun](https://bun.sh/) 1.2 or higher
 
 ### Installation
 
 ```bash
 # Install dependencies
-pnpm install
+bun install
 ```
 
 ### Development
+
+```bash
+# Start the dev server with Turbopack
+bun run dev
+```
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
 
@@ -32,25 +36,28 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 ```bash
 # Create production build
-pnpm build
+bun run build
 
 # Start production server
-pnpm start
+bun start
 ```
 
 ### Code Quality
 
 ```bash
-# Run ESLint
-pnpm lint
+# Run Biome and apply safe fixes
+bun run lint
+
+# Check formatting and linting without writing changes
+bun run check
 
 # Type checking
-pnpm typecheck
+bun run typecheck
 ```
 
 ## Tech Stack
 
-- **Framework:** Next.js 15
+- **Framework:** Next.js 16
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
 - **UI Components:** Radix UI

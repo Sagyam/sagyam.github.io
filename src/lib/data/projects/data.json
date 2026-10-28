@@ -1,9 +1,18 @@
 [
   {
+    "id": "9",
+    "title": "Labeling Harness",
+    "description": "Human-in-the-loop workbench that turns raw recordings into a verified speech dataset. Three recognizers draft every clip, disagreement pushes the doubtful ones to the top of a ranked queue, and one annotator checks them at keyboard speed — 61 hours and 17,000+ Nepali–English clips labeled so far.",
+    "tech": ["Python", "FastAPI", "React", "TypeScript", "PostgreSQL", "Docker"],
+    "imageId": "",
+    "logoUrl": "/projects/labeling-harness-logo.png",
+    "link": "https://github.com/Sagyam/labeling-harness"
+  },
+  {
     "id": "7",
     "title": "Linite",
-    "description": "A Ninite-style bulk package installer for Linux distributions.",
-    "tech": ["App Installer", "Linux", "TypeScript"],
+    "description": "Bulk installer for 200+ curated Linux apps across 14 distros and 11 package managers, from APT to Flatpak. Supports shareable collections, cross-device install tracking, and daily metadata sync from Flathub, Snapcraft, AUR, and Repology.",
+    "tech": ["Next.js", "TypeScript", "Drizzle", "Turso", "Vercel"],
     "imageId": "",
     "imageUrl": "/projects/7.png",
     "link": "https://linite.sagyamthapa.com.np"
@@ -11,19 +20,10 @@
   {
     "id": "8",
     "title": "InfraWise",
-    "description": "A financial modeling tool for comparing Total Cost of Ownership (TCO) between cloud and on-premise infrastructure solutions. Make informed infrastructure decisions with detailed cost breakdowns and breakeven analysis.",
-    "tech": ["TCO Analysis", "Cloud Cost", "Financial Modeling", "TypeScript"],
+    "description": "Models cloud vs. on-prem total cost of ownership across 8 cost categories, with multi-year projections, breakeven, and sensitivity analysis over 80+ variables.",
+    "tech": ["Next.js", "TypeScript", "shadcn/ui", "Recharts"],
     "imageId": "",
     "imageUrl": "/projects/8.png",
     "link": "https://infrawise.sagyamthapa.com.np"
-  },
-  {
-    "id": "9",
-    "title": "Tools",
-    "description": "A comprehensive collection of interactive educational tools for learning computer science algorithms, data structures, and system design concepts.",
-    "tech": ["Data Structures", "Algorithms", "Rate Limiting", "System Design", "Networking"],
-    "imageId": "",
-    "imageUrl": "/projects/9.png",
-    "link": "https://tools.sagyamthapa.com.np"
   }
 ]

@@ -26,9 +26,11 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
             <ArrowUpRight className="ml-1 size-4 shrink-0 transition-transform group-hover:-translate-y-px group-hover:translate-x-px" />
           </Link>
         </h3>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {highlightTechKeywords(experience.description)}
-        </p>
+        <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm leading-relaxed text-muted-foreground marker:text-primary/60">
+          {experience.highlights.map((highlight) => (
+            <li key={highlight}>{highlightTechKeywords(highlight)}</li>
+          ))}
+        </ul>
         <div className="mt-3 flex flex-wrap gap-2">
           {experience.tech.map((tech) => (
             <Badge key={tech} variant="default">

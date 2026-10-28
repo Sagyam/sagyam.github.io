@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import type { Project } from '@/lib/data';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
+import { cn } from '@/lib/utils';
 
 interface ProjectCardProps {
   project: Project;
@@ -12,6 +13,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, image }: ProjectCardProps) {
   const displayImage = project.imageUrl || image?.imageUrl;
+  const hasMedia = Boolean(project.logoUrl || displayImage);
   const isExternal = project.link?.startsWith('http');
 
   return (
@@ -21,8 +23,8 @@ export function ProjectCard({ project, image }: ProjectCardProps) {
       rel={isExternal ? 'noopener noreferrer' : undefined}
       className="group relative grid md:grid-cols-8 gap-4 items-start rounded-lg p-4 transition-all duration-300 border border-transparent hover:bg-white/10 hover:shadow-lg hover:backdrop-blur-sm hover:border-white/20"
     >
-      <div className="md:col-span-3 mt-1 z-10">
-        {displayImage && (
+      <div className={cn('md:col-span-3 mt-1 z-10', !hasMedia && 'hidden')}>
+        {displayImage ? (
           <div className="aspect-video relative overflow-hidden rounded border border-border">
             <Image
               src={displayImage}
@@ -33,9 +35,20 @@ export function ProjectCard({ project, image }: ProjectCardProps) {
               loading="lazy"
             />
           </div>
-        )}
+        ) : project.logoUrl ? (
+          <div className="relative mx-auto aspect-square w-full max-w-[200px]">
+            <Image
+              src={project.logoUrl}
+              alt={`${project.title} logo`}
+              fill
+              sizes="(max-width: 768px) 50vw, 200px"
+              className="object-contain transition-transform group-hover:scale-105"
+              loading="lazy"
+            />
+          </div>
+        ) : null}
       </div>
-      <div className="md:col-span-5 z-10">
+      <div className={cn('z-10', hasMedia ? 'md:col-span-5' : 'md:col-span-8')}>
         <h3 className="font-medium text-foreground group-hover:text-primary flex items-center">
           {project.title}
           {project.link && (

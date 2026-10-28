@@ -8,6 +8,7 @@ export const ProjectSchema = z.object({
   imageId: z.string(),
   link: z.string().url('Project link must be a valid URL').optional(),
   imageUrl: z.string().optional(),
+  logoUrl: z.string().optional(),
 });
 
 export type Project = z.infer<typeof ProjectSchema>;
