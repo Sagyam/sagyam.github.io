@@ -1,3 +1,4 @@
+import { ThemeSwitch } from '@registry/theme-switch/theme-switch';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { FileText, GithubIcon, Linkedin, Mail, Rss } from 'lucide-react';
@@ -27,14 +28,14 @@ export default function PortfolioLayout({
 }>) {
   return (
     <TooltipProvider>
-      <div className="mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
+      <div className="mx-auto min-h-screen max-w-(--breakpoint-xl) px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
         <div className="lg:flex lg:justify-between lg:gap-16">
           <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-5/12 lg:flex-col lg:justify-between lg:py-24">
             <div>
-              <h1 className="font-headline text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
                 {profile.name}
               </h1>
-              <h2 className="mt-3 font-headline text-lg font-medium tracking-tight text-foreground sm:text-xl">
+              <h2 className="mt-3 font-heading text-lg font-medium tracking-tight text-foreground sm:text-xl">
                 {profile.title}
               </h2>
               <p className="mt-4 max-w-xs leading-normal text-muted-foreground">
@@ -56,27 +57,30 @@ export default function PortfolioLayout({
                 </ul>
               </nav>
             </div>
-            <div className="mt-8 flex items-center gap-x-4 text-muted-foreground">
-              {socialLinks.map((link) => {
-                const Icon = iconMap[link.icon];
-                const isExternal = link.url.startsWith('http') || link.url.startsWith('mailto:');
-                return (
-                  <Tooltip key={link.id}>
-                    <TooltipTrigger asChild>
-                      <a
-                        href={link.url}
-                        target={isExternal ? '_blank' : undefined}
-                        rel={isExternal ? 'noreferrer noopener' : undefined}
-                        aria-label={link.label}
-                        className="transition-colors hover:text-foreground"
-                      >
-                        <Icon className="size-6" />
-                      </a>
-                    </TooltipTrigger>
-                    <TooltipContent>{link.label}</TooltipContent>
-                  </Tooltip>
-                );
-              })}
+            <div className="mt-8 flex flex-col items-start gap-6">
+              <div className="flex items-center gap-x-4 text-muted-foreground">
+                {socialLinks.map((link) => {
+                  const Icon = iconMap[link.icon];
+                  const isExternal = link.url.startsWith('http') || link.url.startsWith('mailto:');
+                  return (
+                    <Tooltip key={link.id}>
+                      <TooltipTrigger asChild>
+                        <a
+                          href={link.url}
+                          target={isExternal ? '_blank' : undefined}
+                          rel={isExternal ? 'noreferrer noopener' : undefined}
+                          aria-label={link.label}
+                          className="transition-colors hover:text-foreground"
+                        >
+                          <Icon className="size-6" />
+                        </a>
+                      </TooltipTrigger>
+                      <TooltipContent>{link.label}</TooltipContent>
+                    </Tooltip>
+                  );
+                })}
+              </div>
+              <ThemeSwitch />
             </div>
           </header>
           <main className="pt-16 lg:w-7/12 lg:py-24">{children}</main>

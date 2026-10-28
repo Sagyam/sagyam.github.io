@@ -84,10 +84,10 @@ export function CopyButton({ onCopy, copied, className }: CopyButtonProps) {
       aria-label={copied ? 'Copied code to clipboard' : 'Copy code to clipboard'}
       className={cn(
         'group/copy relative inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-all duration-200',
-        'border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary active:scale-95',
+        'border focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary active:scale-95',
         copied
           ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400 shadow-[0_0_12px_-3px_rgba(16,185,129,0.25)]'
-          : 'border-white/10 bg-white/5 text-muted-foreground hover:border-white/20 hover:bg-white/10 hover:text-foreground',
+          : 'border-white/10 bg-white/5 text-muted-foreground hover:border-edge/10 hover:bg-edge/5 hover:text-foreground',
         className
       )}
     >
@@ -178,14 +178,15 @@ export function CodeFigure({ children, className, ...props }: CodeFigureProps) {
     <CodeBlockContext.Provider value={{ isInsideWrapper: true }}>
       <div
         ref={containerRef}
+        // `dark` keeps a code block a dark terminal in either theme: the tokens inside resolve dark.
         className={cn(
-          'group/code relative my-6 overflow-hidden rounded-xl border border-border/80 bg-[#090d16] shadow-xl shadow-black/30 transition-all duration-200 hover:border-slate-700/80',
+          'dark group/code relative my-6 overflow-hidden rounded-xl border border-border/80 bg-[#090d16] shadow-xl shadow-black/30 transition-all duration-200 hover:border-slate-700/80',
           className
         )}
         data-code-block=""
       >
         {/* Code Block Header */}
-        <div className="flex h-10 items-center justify-between border-b border-border/60 bg-[#0e1626]/90 backdrop-blur-sm px-4 select-none">
+        <div className="flex h-10 items-center justify-between border-b border-border/60 bg-[#0e1626]/90 backdrop-blur-xs px-4 select-none">
           {/* Left Side: Window dots + Title or Language */}
           <div className="flex items-center gap-2.5 min-w-0">
             {/* macOS-style decorative dots */}
@@ -293,10 +294,10 @@ export function CodePre({ children, className, ...props }: PreProps) {
 
   return (
     <div
-      className="group/code relative my-6 overflow-hidden rounded-xl border border-border/80 bg-[#090d16] shadow-xl shadow-black/30 transition-all duration-200 hover:border-slate-700/80"
+      className="dark group/code relative my-6 overflow-hidden rounded-xl border border-border/80 bg-[#090d16] shadow-xl shadow-black/30 transition-all duration-200 hover:border-slate-700/80"
       data-code-block=""
     >
-      <div className="flex h-10 items-center justify-between border-b border-border/60 bg-[#0e1626]/90 backdrop-blur-sm px-4 select-none">
+      <div className="flex h-10 items-center justify-between border-b border-border/60 bg-[#0e1626]/90 backdrop-blur-xs px-4 select-none">
         <div className="flex items-center gap-2.5">
           <div className="flex items-center gap-1.5 shrink-0" aria-hidden="true">
             <span className="size-2.5 rounded-full bg-rose-500/60" />

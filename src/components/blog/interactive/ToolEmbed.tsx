@@ -21,8 +21,8 @@ export function ToolEmbed({ id, src, title, height = 520 }: ToolEmbedProps) {
     title || id?.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()) || 'Interactive Tool';
 
   return (
-    <div className="my-8 overflow-hidden rounded-xl border border-border/80 bg-black/40 shadow-xl backdrop-blur-sm">
-      <div className="flex items-center justify-between border-b border-border/60 bg-white/5 px-4 py-2.5">
+    <div className="my-8 overflow-hidden rounded-xl border border-border/80 bg-card shadow-xl backdrop-blur-xs">
+      <div className="flex items-center justify-between border-b border-border/60 bg-edge/5 px-4 py-2.5">
         <div className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-red-500/80" />
           <span className="h-3 w-3 rounded-full bg-yellow-500/80" />
@@ -43,7 +43,7 @@ export function ToolEmbed({ id, src, title, height = 520 }: ToolEmbedProps) {
         style={{ height: typeof height === 'number' ? `${height}px` : height }}
       >
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+          <div className="absolute inset-0 flex items-center justify-center bg-background/40">
             <div className="text-xs text-muted-foreground animate-pulse">
               Loading interactive demo...
             </div>

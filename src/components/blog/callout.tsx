@@ -22,55 +22,55 @@ const calloutConfig = {
     icon: Lightbulb,
     defaultEmoji: '💡',
     containerClass:
-      'border-amber-500/30 bg-amber-500/[0.08] text-amber-100/90 shadow-[0_0_20px_-5px_rgba(245,158,11,0.08)]',
+      'border-amber-500/30 bg-amber-500/8 text-amber-950/80 dark:text-amber-100/90 shadow-[0_0_20px_-5px_rgba(245,158,11,0.08)]',
     borderAccent: 'border-l-amber-500',
-    iconColor: 'text-amber-400',
-    titleColor: 'text-amber-300',
+    iconColor: 'text-amber-600 dark:text-amber-400',
+    titleColor: 'text-amber-800 dark:text-amber-300',
   },
   note: {
     icon: InfoIcon,
     defaultEmoji: '📝',
     containerClass:
-      'border-sky-500/30 bg-sky-500/[0.08] text-sky-100/90 shadow-[0_0_20px_-5px_rgba(14,165,233,0.08)]',
+      'border-sky-500/30 bg-sky-500/8 text-sky-950/80 dark:text-sky-100/90 shadow-[0_0_20px_-5px_rgba(14,165,233,0.08)]',
     borderAccent: 'border-l-sky-500',
-    iconColor: 'text-sky-400',
-    titleColor: 'text-sky-300',
+    iconColor: 'text-sky-600 dark:text-sky-400',
+    titleColor: 'text-sky-800 dark:text-sky-300',
   },
   info: {
     icon: InfoIcon,
     defaultEmoji: 'ℹ️',
     containerClass:
-      'border-blue-500/30 bg-blue-500/[0.08] text-blue-100/90 shadow-[0_0_20px_-5px_rgba(59,130,246,0.08)]',
+      'border-blue-500/30 bg-blue-500/8 text-blue-950/80 dark:text-blue-100/90 shadow-[0_0_20px_-5px_rgba(59,130,246,0.08)]',
     borderAccent: 'border-l-blue-500',
-    iconColor: 'text-blue-400',
-    titleColor: 'text-blue-300',
+    iconColor: 'text-blue-600 dark:text-blue-400',
+    titleColor: 'text-blue-800 dark:text-blue-300',
   },
   warning: {
     icon: AlertTriangle,
     defaultEmoji: '⚠️',
     containerClass:
-      'border-orange-500/30 bg-orange-500/[0.08] text-orange-100/90 shadow-[0_0_20px_-5px_rgba(249,115,22,0.08)]',
+      'border-orange-500/30 bg-orange-500/8 text-orange-950/80 dark:text-orange-100/90 shadow-[0_0_20px_-5px_rgba(249,115,22,0.08)]',
     borderAccent: 'border-l-orange-500',
-    iconColor: 'text-orange-400',
-    titleColor: 'text-orange-300',
+    iconColor: 'text-orange-600 dark:text-orange-400',
+    titleColor: 'text-orange-800 dark:text-orange-300',
   },
   danger: {
     icon: AlertCircle,
     defaultEmoji: '🚨',
     containerClass:
-      'border-rose-500/30 bg-rose-500/[0.08] text-rose-100/90 shadow-[0_0_20px_-5px_rgba(244,63,94,0.08)]',
+      'border-rose-500/30 bg-rose-500/8 text-rose-950/80 dark:text-rose-100/90 shadow-[0_0_20px_-5px_rgba(244,63,94,0.08)]',
     borderAccent: 'border-l-rose-500',
-    iconColor: 'text-rose-400',
-    titleColor: 'text-rose-300',
+    iconColor: 'text-rose-600 dark:text-rose-400',
+    titleColor: 'text-rose-800 dark:text-rose-300',
   },
   success: {
     icon: CheckCircle2,
     defaultEmoji: '✅',
     containerClass:
-      'border-emerald-500/30 bg-emerald-500/[0.08] text-emerald-100/90 shadow-[0_0_20px_-5px_rgba(16,185,129,0.08)]',
+      'border-emerald-500/30 bg-emerald-500/8 text-emerald-950/80 dark:text-emerald-100/90 shadow-[0_0_20px_-5px_rgba(16,185,129,0.08)]',
     borderAccent: 'border-l-emerald-500',
-    iconColor: 'text-emerald-400',
-    titleColor: 'text-emerald-300',
+    iconColor: 'text-emerald-600 dark:text-emerald-400',
+    titleColor: 'text-emerald-800 dark:text-emerald-300',
   },
 };
 
@@ -116,7 +116,7 @@ export function Callout({
       {...props}
     >
       {renderIcon()}
-      <div className="flex-1 min-w-0 text-sm leading-relaxed [&>p]:my-1.5 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0 [&>ul]:my-1.5 [&>ol]:my-1.5 [&>code]:bg-black/30">
+      <div className="flex-1 min-w-0 text-sm leading-relaxed [&>p]:my-1.5 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0 [&>ul]:my-1.5 [&>ol]:my-1.5 [&>code]:bg-edge/10">
         {title && (
           <h5 className={cn('mb-1.5 font-semibold text-sm tracking-tight', config.titleColor)}>
             {title}

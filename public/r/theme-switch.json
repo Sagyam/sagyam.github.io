@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "theme-switch",
+  "title": "Theme switch",
+  "description": "The System / Light / Dark switch for a site's footer. Needs next-themes' ThemeProvider (attribute=\"class\", defaultTheme=\"system\"). Pair it with the theme item.",
+  "dependencies": [
+    "next-themes@^0.4.6"
+  ],
+  "files": [
+    {
+      "path": "registry/theme-switch/theme-switch.tsx",
+      "content": "'use client';\n\nimport { Monitor, Moon, Sun } from 'lucide-react';\nimport { useTheme } from 'next-themes';\nimport { useEffect, useState } from 'react';\n\nconst themes = [\n  { value: 'system', label: 'System', icon: Monitor },\n  { value: 'light', label: 'Light', icon: Sun },\n  { value: 'dark', label: 'Dark', icon: Moon },\n];\n\n/**\n * The System / Light / Dark switch every site of sagyamthapa.com.np carries, usually in its footer.\n * Needs next-themes' ThemeProvider with attribute=\"class\" and defaultTheme=\"system\".\n */\nexport function ThemeSwitch({ className }: { className?: string }) {\n  const { theme, setTheme } = useTheme();\n  const [mounted, setMounted] = useState(false);\n\n  // The stored theme is only known on the client; mark nothing pressed until then.\n  // eslint-disable-next-line react-hooks/set-state-in-effect\n  useEffect(() => setMounted(true), []);\n\n  return (\n    <fieldset\n      aria-label=\"Theme\"\n      className={`inline-flex rounded-lg border border-edge/10 bg-edge/[0.03] p-0.5 ${className ?? ''}`}\n    >\n      {themes.map(({ value, label, icon: Icon }) => (\n        <button\n          key={value}\n          type=\"button\"\n          onClick={() => setTheme(value)}\n          aria-pressed={mounted && theme === value}\n          title={label}\n          className=\"inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-xs text-muted-foreground transition-colors hover:text-foreground aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:shadow-sm aria-pressed:ring-1 aria-pressed:ring-edge/10\"\n        >\n          <Icon className=\"size-3.5\" aria-hidden=\"true\" />\n          {label}\n        </button>\n      ))}\n    </fieldset>\n  );\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "type": "registry:component"
+}

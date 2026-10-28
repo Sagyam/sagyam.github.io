@@ -18,7 +18,7 @@ export function InteractiveDemo({
   const [count, setCount] = useState(0);
 
   return (
-    <Card className="my-6 border-primary/20 bg-white/5">
+    <Card className="my-6 border-primary/20 bg-edge/5">
       <CardHeader>
         <CardTitle className="text-xl text-foreground">{title}</CardTitle>
         <CardDescription className="text-muted-foreground">{description}</CardDescription>

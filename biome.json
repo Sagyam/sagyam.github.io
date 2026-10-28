@@ -11,7 +11,7 @@
       "src/**",
       "velite.config.ts",
       "next.config.ts",
-      "tailwind.config.ts",
+      "registry/**",
       "biome.json",
       "package.json",
       "tsconfig.json"

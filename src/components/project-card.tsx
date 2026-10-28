@@ -21,7 +21,7 @@ export function ProjectCard({ project, image }: ProjectCardProps) {
       href={project.link || '#'}
       target={isExternal ? '_blank' : undefined}
       rel={isExternal ? 'noopener noreferrer' : undefined}
-      className="group relative grid md:grid-cols-8 gap-4 items-start rounded-lg p-4 transition-all duration-300 border border-transparent hover:bg-white/10 hover:shadow-lg hover:backdrop-blur-sm hover:border-white/20"
+      className="group relative grid md:grid-cols-8 gap-4 items-start rounded-lg p-4 transition-all duration-300 border border-transparent hover:bg-edge/5 hover:shadow-lg hover:backdrop-blur-xs hover:border-edge/10"
     >
       <div className={cn('md:col-span-3 mt-1 z-10', !hasMedia && 'hidden')}>
         {displayImage ? (

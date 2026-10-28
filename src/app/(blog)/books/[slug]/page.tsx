@@ -58,7 +58,7 @@ export default async function BookPage({ params }: BookPageProps) {
           {/* Book Cover */}
           {book.coverImage && (
             <div className="md:col-span-1">
-              <div className="aspect-[2/3] relative overflow-hidden rounded-lg border border-border shadow-lg">
+              <div className="aspect-2/3 relative overflow-hidden rounded-lg border border-border shadow-lg">
                 <Image
                   src={book.coverImage}
                   alt={book.title}
@@ -126,7 +126,7 @@ export default async function BookPage({ params }: BookPageProps) {
                     href={book.goodreadsLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-white/10 transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-edge/5 transition-colors"
                   >
                     <ExternalLink className="size-4" />
                     View on Goodreads
@@ -148,10 +148,10 @@ export default async function BookPage({ params }: BookPageProps) {
                 <Link
                   key={relatedBook.id}
                   href={`/books/${relatedBook.slug}`}
-                  className="group flex flex-col rounded-lg border border-border overflow-hidden transition-all duration-300 hover:bg-white/10 hover:shadow-lg hover:border-white/20"
+                  className="group flex flex-col rounded-lg border border-border overflow-hidden transition-all duration-300 hover:bg-edge/5 hover:shadow-lg hover:border-edge/10"
                 >
                   {relatedBook.coverImage && (
-                    <div className="aspect-[2/3] relative overflow-hidden bg-secondary">
+                    <div className="aspect-2/3 relative overflow-hidden bg-secondary">
                       <Image
                         src={relatedBook.coverImage}
                         alt={relatedBook.title}
