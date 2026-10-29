@@ -19,34 +19,18 @@ HyperLogLog (HLL) is a clever algorithm that provides an approximate count of un
 
 ## Play with HyperLogLog
 
-I have created an [interactive app](https://tools.sagyamthapa.com.np/hyperloglog) that lets you experiment with HyperLogLog in real-time. Here is how the app works:
+Below is a HyperLogLog counting unique IP addresses. Next to it is an exact `Set` holding every IP, so you can see how close the estimate gets:
 
-* **Input IP Address**:
+* **Add one IP** by typing it (or clicking **Random IP**) and pressing **Add to HLL**. You'll see how its hash is split into a bucket and a run length, and whether that bucket changes. Add the same IP twice: the sketch doesn't change, which is exactly why it counts *unique* items.
     
-    * Click **"Random IP"** to generate an IP address automatically.
-        
-    * Add the entered IP to the HyperLogLog by clicking **"Add to HLL"**.
-        
-* **Adjust Bucket Count**:
+* **Add thousands at once** with the **+1K** to **+100K** buttons.
     
-    * Use the slider to adjust the number of buckets ($m = 2^p$).
-        
-    * Modifying this resets the HyperLogLog and clears previous data.
-        
-* **Add Multiple Random IPs**:
+* **Change the bucket count** with the slider (`m = 2^p`). This starts a fresh sketch.
     
-    * Use the preset buttons to insert 1K, 5K, 10K, 50K, or 100K random IP addresses into the sketch.
-        
-* **View Metrics**:
+* **Watch the error chart.** Each point is the estimate's error at that count. The shaded band is the expected margin of error, `±1.04/√m`.
     
-    * Compare **Actual Count**, **Estimated Count**, **Difference**, **Margin of Error**, and **Actual Error** in the metrics cards.
-        
-* **Inspect Buckets**:
-    
-    * Scroll through individual buckets to observe how HyperLogLog distributes hashed items and tracks maximum leading zero runs.
-        
 
-<ToolEmbed id="hyper-log-log" />
+<HllPlayground />
 
 ## Things to Notice
 
@@ -54,7 +38,9 @@ I have created an [interactive app](https://tools.sagyamthapa.com.np/hyperloglog
     
 * **The error never reaches absolute zero:** Because HyperLogLog is a probabilistic data structure, small statistical variance is inherent.
     
-* **Skimping on buckets increases error:** Notice what happens to the variance and error margin if you reduce the bucket count to a very small number.
+* **Skimping on buckets increases error:** Drop the slider to 16 buckets and add 100K IPs. The band widens to ±26% and the estimate wanders inside it.
+    
+* **Memory barely grows:** 4,096 buckets take about 2.5 KB, whether they've seen a thousand IPs or a million. The exact `Set` alongside needs tens of megabytes.
     
 
 ## How HyperLogLog Works
@@ -85,8 +71,12 @@ A single estimate has high variance. To reduce error, HyperLogLog divides the ha
     
 * The remaining bits are used to count the number of **leading zeros**.
     
-* Each bucket maintains the **maximum leading zero count** ($M[j]$) observed so far.
+* Each bucket maintains the **maximum run length** ($M[j]$, the leading zeros plus one) observed so far.
     
+
+Try it with any value below. The first `p` bits pick the bucket; the run of zeros after them is the coin-flip streak.
+
+<HllAnatomy />
 
 ### 4. Combining Estimates with the Harmonic Mean
 

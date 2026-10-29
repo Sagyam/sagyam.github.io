@@ -52,39 +52,45 @@ Bloom filters address the problem of fast membership checks by using multiple ha
 
 This design ensures that the Bloom filter is both space-efficient and fast ($O(k)$ time complexity). However, there is a trade-off: the possibility of **false positives**, which occurs when bits set by previously inserted elements overlap, making it appear that a new element is in the set when it has never been added.
 
-I have created a fun little [app](https://tools.sagyamthapa.com.np/bloom-filter) that lets you play with a Bloom filter interactively:
+Here is a tiny Bloom filter guarding the banned-IP list from earlier. Five IPs are already banned. Hover one to see which bits it set, then look up any IP to see the bits it lands on.
 
+<BloomPlayground />
 
-<ToolEmbed id="bloom-filter" />
-* See what happens when you fill the filter with all ones.
+Things to try:
+
+* Look up an IP that isn't on the list. Most of the time one of its bits is 0, and the filter knows for sure it was never added.
     
-* Can you get the Bloom filter to return a false positive?
+* **Can you get the filter to return a false positive?** Ban a few random IPs and keep checking random ones. When it happens, the filter shows which banned IPs set the bits.
     
-* Notice how increasing the number of hash functions fills up the filter faster.
+* Keep banning until every bit is 1. Now every lookup says "probably banned" and the filter is useless.
     
-* Notice how decreasing the number of hash functions affects the false positive probability.
+* Raise `k`. Each item now sets more bits, so the array fills up faster.
+    
+* Lower `m` and watch the false positive odds climb: the same items squeezed into fewer bits collide more often.
     
 
 ## Tuning
 
-I have made another fun little [app](https://tools.sagyamthapa.com.np/bloom-calculator) that lets you experiment with the parameters of a Bloom filter:
+A real filter holds millions of items, not five, so its size comes down to three numbers:
 
-* Number of elements `N`
+* Number of elements `n`
     
-* Size of filter `M`
+* Size of filter `m`
     
-* Number of hash functions `K`
+* Number of hash functions `k`
     
 
+Drag the sliders below to size a filter. Each chart varies one of the three numbers while holding the other two where you set them, and the amber dot marks your filter.
 
-<ToolEmbed id="bloom-calculator" />
-Some conclusions you can draw from the graphs for a well-designed filter:
+<BloomTuner />
 
-* **False positive rate vs. number of items** follows a logistic curve (increasing items gradually saturates the filter).
+Some conclusions you can draw from the charts:
+
+* **False positive rate vs. number of items** follows a logistic curve: a filter does fine until it nears capacity, then saturates quickly.
     
-* **False positive rate vs. number of hash functions** follows a U/J-curve (too few or too many hash functions increase false positives).
+* **False positive rate vs. number of hash functions** follows a U/J-curve: too few hashes and each item is easy to impersonate; too many and the bit array fills up. **Use k** jumps to the bottom of the U.
     
-* **False positive rate vs. filter size** decreases inversely as more bits are allocated.
+* **False positive rate vs. filter size** falls steeply as more bits are allocated. Around 10 bits per item with the best `k` gives roughly a 1% false positive rate, whether you store a thousand items or a billion.
     
 
 ## Formulas

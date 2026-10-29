@@ -51,15 +51,15 @@ This blog is the third installment in my probabilistic data structures series. I
         ```
         
 
-I have created an [interactive app](https://tools.sagyamthapa.com.np/cms-working) that lets you visualize how a Count-Min Sketch operates:
+Here is a small sketch you can work by hand. Its items are the digits 0 to 9, and each row's hash is simple enough to check in your head:
 
-1. Adjust the number of rows and columns.
-2. Click to generate a random number. The number is hashed `d` times, finding the cell in each row that gets incremented by 1.
-3. Querying follows a similar process: we hash the item, inspect all `d` matching cells, and take their minimum value to obtain the frequency estimate.
+1. Click a digit to add it to the stream. It's hashed once per row, and the counter it lands on in each row goes up by 1.
+2. Hover a digit to query it. Its cells light up, and the smallest of them (filled amber) is the estimate.
+3. Change the rows and columns. Everything you've added is replayed into the new shape, so you can compare.
 
-**Can you configure the parameters so the Count-Min Sketch always gets the estimate right?**
+**Can you configure the parameters so the Count-Min Sketch always gets the estimate right?** The badge above the last row turns green when all ten estimates are exact.
 
-<ToolEmbed id="cms-working" />
+<CmsExplorer />
 
 ## Key Insights
 
@@ -76,9 +76,16 @@ I have created an [interactive app](https://tools.sagyamthapa.com.np/cms-working
 
 ## Interactive Demo
 
-I have created an [interactive demo](https://tools.sagyamthapa.com.np/count-min-sketch) that puts all the pieces together. In this demo, the sketch estimates the frequency of fruits in a stream of 5,000 items. Hit **Start** to watch the stream of fruits process in real-time, and observe how the sketch never underestimates the true count.
+Now for a real stream. This sketch counts 5,000 fruits drawn the way real traffic tends to arrive: a few items (apples, bananas) make up most of the stream and a long tail shows up rarely. Hit **Start** and watch:
 
-<ToolEmbed id="count-min-sketch" />
+* The amber part of each bar is how far the sketch overestimates that fruit. It's never negative: the sketch **never underestimates**.
+    
+* Rare fruits suffer most. A dozen extra counts are noise for apples and a big error for blueberries.
+    
+* The worst overestimate stays under the bound `εN` (see below). Shrink the columns to 4 and it grows; widen them to 40 and errors nearly vanish.
+    
+
+<CmsStream />
 
 ## Mathematical Relationships
 
