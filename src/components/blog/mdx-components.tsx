@@ -6,10 +6,7 @@ import * as React from 'react';
 import * as runtime from 'react/jsx-runtime';
 import { Callout, Info, Note, Tip, Warning } from './callout';
 import { Code, CodeFigcaption, CodeFigure, CodePre } from './code-block';
-import { RateLimiterDemo } from './interactive/rate-limiting/RateLimiterDemo';
-import { InteractiveDemo } from './interactive/shared/InteractiveDemo';
-import { LastUpdated } from './interactive/shared/LastUpdated';
-import { ToolEmbed } from './interactive/ToolEmbed';
+import { interactiveComponents } from './interactive';
 
 export function slugify(text: string): string {
   return text
@@ -39,11 +36,8 @@ const components = {
   Note,
   Warning,
   Info,
-  // Interactive components
-  InteractiveDemo,
-  RateLimiterDemo,
-  LastUpdated,
-  ToolEmbed,
+  // Interactive figures, each loaded only by the posts that use it
+  ...interactiveComponents,
   // HTML elements
   div: ({ children, className, 'data-node-type': nodeType, ...props }: any) => {
     if (nodeType === 'callout') {

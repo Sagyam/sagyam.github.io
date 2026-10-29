@@ -30,7 +30,7 @@ However, choosing the right caching strategy can be tricky. Each pattern has its
 * **Cache Pollution:** When rarely accessed or one-off data fills up the cache, evicting valuable, frequently accessed data and degrading performance.
     
 
-In this guide, we'll explore five common caching strategies that every developer should understand.
+In this guide, we'll explore six common caching strategies that every developer should understand. Each one comes with a simulator: an app, a cache that holds four entries, and a database. Read and write keys and watch every request travel between them. The latencies are simulated, about 1 ms per hop to the cache and 30 ms to the database.
 
 ## Cache-Aside (Lazy Loading)
 
@@ -58,9 +58,9 @@ In this guide, we'll explore five common caching strategies that every developer
 
 **Disadvantages:** Susceptible to cache stampedes; caching logic must be duplicated across multiple services.
 
-### [Link to interactive app](https://tools.sagyamthapa.com.np/caching?strategy=cache-aside)
+Try it: read `user2`. It isn't cached, so the app has to make the round trip to the database itself and then fill the cache. Read it again for a hit and compare the latency. Then write `user1` and watch the app invalidate the cached copy.
 
-<ToolEmbed id="cache-aside" />
+<CacheAsideDemo />
 
 ## Read-Through
 
@@ -88,9 +88,9 @@ In this guide, we'll explore five common caching strategies that every developer
 
 **Disadvantages:** Less flexibility in custom query caching; the caching layer becomes a critical single point of dependency.
 
-### [Link to interactive app](https://tools.sagyamthapa.com.np/caching?strategy=read-through)
+Try it: read `user2` and compare it with cache-aside above. The same miss happens, but now it's the *cache* that talks to the database. The app's side of the conversation is just one `GET`.
 
-<ToolEmbed id="read-through" />
+<ReadThroughDemo />
 
 ## Write-Through
 
@@ -114,9 +114,9 @@ In this guide, we'll explore five common caching strategies that every developer
 
 **Disadvantages:** High write latency; writes that are never read consume cache memory unnecessarily.
 
-### [Link to interactive app](https://tools.sagyamthapa.com.np/caching?strategy=write-through)
+Try it: write a key and watch the latency. The app waits for the database on every write, so writes are never faster than the database. Now press **New record** a few times, as a logging service would. Each record lands in the cache and pushes out the keys you were actually reading.
 
-<ToolEmbed id="write-through" />
+<WriteThroughDemo />
 
 ## Write-Back (Write-Behind)
 
@@ -140,9 +140,9 @@ In this guide, we'll explore five common caching strategies that every developer
 
 **Disadvantages:** Risk of data loss if the cache node crashes before pending writes are flushed to disk; complex failure handling.
 
-### [Link to interactive app](https://tools.sagyamthapa.com.np/caching?strategy=write-back)
+Try it: write `user1` and `item5` and note how fast each write returns. The database rows are marked *behind* until the batch flushes. Now write again and hit **Crash cache** before the flush: those writes are gone for good.
 
-<ToolEmbed id="write-back" />
+<WriteBackDemo />
 
 ## Write-Around
 
@@ -170,9 +170,9 @@ In this guide, we'll explore five common caching strategies that every developer
 
 **Disadvantages:** Initial reads after writes are slower.
 
-### [Link to interactive app](https://tools.sagyamthapa.com.np/caching?strategy=write-around)
+Try it: press **New record** a few times. Unlike write-through, the cache doesn't change at all. The cost shows up on the first read after a write: write `user1`, then read it, and it's a miss.
 
-<ToolEmbed id="write-around" />
+<WriteAroundDemo />
 
 ## Refresh-Ahead
 
@@ -200,13 +200,13 @@ In this guide, we'll explore five common caching strategies that every developer
 
 **Disadvantages:** Can waste database resources if the pre-fetched data is not actually requested; requires accurate access prediction logic.
 
-### [Link to interactive app](https://tools.sagyamthapa.com.np/caching?strategy=refresh-ahead)
+Try it: read `user1` every few seconds. Its bar never runs out, because the cache reloads it in the background when it turns amber. `item5`, which nobody reads, expires and drops out.
 
-<ToolEmbed id="refresh-ahead-strategy" />
+<RefreshAheadDemo />
 
 ## Conclusion
 
-As these interactive demos demonstrate, picking the best caching strategy depends heavily on your access patterns and consistency requirements. These strategies are not mutually exclusive—real-world production architectures often combine them:
+As the simulators show, picking the best caching strategy depends heavily on your access patterns and consistency requirements. These strategies are not mutually exclusive—real-world production architectures often combine them:
 
 Here are some architectural recommendations:
 

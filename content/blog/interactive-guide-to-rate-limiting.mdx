@@ -18,7 +18,7 @@ Rate limiting is an essential strategy for every backend application. It prevent
 * **Provides baseline protection against [Denial of Service (DoS/DDoS)](https://en.wikipedia.org/wiki/Denial-of-service_attack)** and brute-force attacks.
     
 
-I have created four interactive apps below that let you experiment with the most common rate limiting algorithms.
+Below are the four most common rate limiting algorithms, each with a simulation you can poke at. In every one, requests travel from a client through the limiter to a server: **green** dots get through, **red** ones are rejected. The strip underneath each simulation records the last ten seconds: what came **in**, and what went on **to the server**.
 
 ## Token Bucket
 
@@ -37,9 +37,9 @@ I have created four interactive apps below that let you experiment with the most
 * **Key characteristic:** Allows for short, configurable bursts of traffic as long as enough tokens have accumulated.
     
 
-I have created an [interactive app](https://tools.sagyamthapa.com.np/token-bucket) that lets you experiment with the **Token Bucket** algorithm:
+Try it: let the bucket fill up, then hit **Burst of 8**. All eight get through at once, because ten tokens were saved up. Hit it again straight away and most are rejected until tokens drip back in.
 
-<ToolEmbed id="token-bucket" />
+<TokenBucketDemo />
 
 ## Leaky Bucket
 
@@ -56,9 +56,9 @@ I have created an [interactive app](https://tools.sagyamthapa.com.np/token-bucke
 * **Key characteristic:** Smooths out traffic bursts and outputs a steady stream of requests to downstream services.
     
 
-I have created an [interactive app](https://tools.sagyamthapa.com.np/leaky-bucket) that lets you experiment with the **Leaky Bucket** algorithm:
+Try it: send a **Burst of 8**. Nothing is rejected, but look at the timeline: the requests come *in* together and go *to the server* evenly spaced. The cost is waiting, shown under **Average wait**. Send a second burst before the first drains and the overflow is dropped.
 
-<ToolEmbed id="leaky-bucket" />
+<LeakyBucketDemo />
 
 ## Fixed Window Counter
 
@@ -73,9 +73,9 @@ I have created an [interactive app](https://tools.sagyamthapa.com.np/leaky-bucke
 * **Key characteristic:** Extremely simple and memory-efficient, but susceptible to traffic bursts (up to 2x the limit) at the boundary between adjacent windows.
     
 
-I have created an [interactive app](https://tools.sagyamthapa.com.np/fixed-window) that lets you experiment with the **Fixed Window** algorithm:
+Try it: hit **Boundary burst**. It sends a full window's worth of requests just before a window ends and another just after the next begins. Every window stays within its limit, yet the server gets twice the limit within a fraction of a second. The red band on the timeline marks the spot.
 
-<ToolEmbed id="fixed-window" />
+<FixedWindowDemo />
 
 ## Sliding Window Counter
 
@@ -90,6 +90,28 @@ I have created an [interactive app](https://tools.sagyamthapa.com.np/fixed-windo
 * **Key characteristic:** Prevents the boundary burst issue of fixed windows while maintaining high accuracy and smooth rate limiting.
     
 
-I have created an [interactive app](https://tools.sagyamthapa.com.np/sliding-window) that lets you experiment with the **Sliding Window** algorithm:
+There are two common variants, and the demo has both:
 
-<ToolEmbed id="sliding-window" />
+* **Log:** store the timestamp of every accepted request and count those in the last window. Exact, but memory grows with the limit.
+    
+* **Counter:** keep just two counts, for the current and previous fixed windows, and weigh the previous one by how much of it still overlaps the sliding window. If the previous window had 4 requests, the current one has 2, and we're 60% of the way through the current window, the estimate is `4 × 0.4 + 2 = 3.6`. Two integers per client, and accurate enough in practice.
+    
+
+Try it: send requests until you're rejected, then watch the amber window slide on. Each old request drops out of it one at a time, unlike a fixed window, which forgets everything at once.
+
+<SlidingWindowDemo />
+
+## Side by Side
+
+Here are all four limiters with the same budget, six requests every two seconds, fed exactly the same traffic. Switch patterns and compare what reaches the server:
+
+<RateLimiterComparison />
+
+* **Steady traffic** under the limit passes through all four the same way. Algorithms only differ under pressure.
+    
+* **Bursts:** the token bucket passes the start of each burst instantly; the leaky bucket accepts the same amount but delivers it at an even pace, adding wait time; the window limiters cut each burst off at six.
+    
+* **Window boundaries:** the fixed window lets twelve through in well under a second. That's the ▲ in the **Busiest 2s** column. The sliding window never exceeds six.
+    
+
+Which one to pick depends on what you're protecting. Use a **token bucket** when short bursts are fine (most public APIs). Use a **leaky bucket** when the downstream service needs a steady pace. Use a **sliding window counter** when you need a hard ceiling at low cost, and a **fixed window** when simplicity matters more than the edge cases.
