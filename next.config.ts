@@ -43,12 +43,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Umami, served from this domain so ad blockers that block umami.is still let it through.
+  // Umami, served from this domain so ad blockers that block umami.is still let it through. Its
+  // collection endpoint, /u/api/send, is a route handler, so Umami gets the visitor's address.
   async rewrites() {
-    return [
-      { source: '/u/script.js', destination: 'https://cloud.umami.is/script.js' },
-      { source: '/u/api/send', destination: 'https://gateway.umami.is/api/send' },
-    ];
+    return [{ source: '/u/script.js', destination: 'https://cloud.umami.is/script.js' }];
   },
   // Empty turbopack config to acknowledge we're using Turbopack
   turbopack: {},
