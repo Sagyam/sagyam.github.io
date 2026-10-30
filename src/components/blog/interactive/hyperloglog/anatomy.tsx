@@ -2,8 +2,10 @@
 
 import { Dices } from 'lucide-react';
 import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+
 import { Range } from '../shared/controls';
 import { Demo } from '../shared/demo';
 import { grouped } from '../shared/format';

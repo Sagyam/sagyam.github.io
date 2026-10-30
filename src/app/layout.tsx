@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import 'katex/dist/katex.min.css';
-import { JetBrains_Mono, Space_Grotesk, Work_Sans } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
+import { JetBrains_Mono, Space_Grotesk, Work_Sans } from 'next/font/google';
+
 import { metadata as siteMetadata } from '@/lib/data';
 
 const workSans = Work_Sans({

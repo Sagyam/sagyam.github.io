@@ -1,5 +1,6 @@
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
+
 import { Badge } from '@/components/ui/badge';
 import type { Experience } from '@/lib/data';
 import { highlightTechKeywords } from '@/lib/text-highlight';

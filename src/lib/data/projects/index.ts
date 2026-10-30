@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import projectsData from './data.json';
 import { ProjectSchema } from './schema';
 

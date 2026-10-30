@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import sectionsData from './data.json';
 import { SectionConfigSchema } from './schema';
 

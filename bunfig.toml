@@ -1,0 +1,45 @@
+[fmt]
+printWidth = 100
+singleQuote = true
+trailingComma = "es5"
+sortImports = true
+# Blog posts and public assets are written by hand, not formatted.
+ignorePatterns = ["/content/", "/public/", "*.md", "*.mdx", "bun.lock"]
+
+[lint]
+# shadcn components are generated, so they're left as shadcn writes them.
+ignorePatterns = ["/public/", "/src/components/ui/", "/src/hooks/use-toast.ts"]
+
+# On top of the defaults: ESLint and typescript-eslint recommended, plus the React hook rules.
+[lint.rules]
+"no-unused-vars" = "error"
+"prefer-const" = "error"
+"prefer-template" = "error"
+"no-var" = "error"
+"dot-notation" = "error"
+"eqeqeq" = ["error", "smart"]
+"unicorn/prefer-node-protocol" = "error"
+"@typescript-eslint/no-explicit-any" = "warn"
+"react/self-closing-comp" = "error"
+"react/button-has-type" = "error"
+"react/no-danger" = "warn"
+"react/no-danger-with-children" = "error"
+"jsx-a11y/alt-text" = "error"
+"jsx-a11y/anchor-has-content" = "error"
+"jsx-a11y/aria-props" = "error"
+"jsx-a11y/aria-proptypes" = "error"
+"jsx-a11y/aria-unsupported-elements" = "error"
+"jsx-a11y/click-events-have-key-events" = "warn"
+"jsx-a11y/html-has-lang" = "error"
+"jsx-a11y/iframe-has-title" = "error"
+"jsx-a11y/no-access-key" = "error"
+"jsx-a11y/no-autofocus" = "warn"
+"jsx-a11y/no-distracting-elements" = "error"
+"jsx-a11y/role-has-required-aria-props" = "error"
+"jsx-a11y/scope" = "error"
+"jsx-a11y/tabindex-no-positive" = "error"
+
+[[lint.overrides]]
+files = ["*.config.ts", "*.test.ts", "*.test.tsx", "src/components/blog/mdx-components.tsx"]
+rules = { "@typescript-eslint/no-explicit-any" = "off" }
+

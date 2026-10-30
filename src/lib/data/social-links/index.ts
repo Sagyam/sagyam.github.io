@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import socialLinksData from './data.json';
 import { SocialLinkSchema } from './schema';
 

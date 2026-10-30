@@ -2,9 +2,11 @@
 
 import { Ban, Check, Dices, Search, TriangleAlert } from 'lucide-react';
 import { type FormEvent, useMemo, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+
 import { Eyebrow, Range, Stat } from '../shared/controls';
 import { Demo } from '../shared/demo';
 import { chance } from '../shared/format';

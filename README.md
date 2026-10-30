@@ -45,8 +45,12 @@ bun start
 ### Code Quality
 
 ```bash
-# Run Biome and apply safe fixes
-bun run lint
+# Lint, and apply safe fixes (configured in bunfig.toml)
+bun lint
+bun lint --fix
+
+# Format
+bun fmt
 
 # Check formatting and linting without writing changes
 bun run check

@@ -6,12 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "shadcn build && velite && NODE_ENV=production next build",
     "start": "next start",
-    "lint": "biome check --write .",
-    "lint:check": "biome check .",
-    "lint:fix": "biome check --write --unsafe .",
-    "format": "biome format --write .",
-    "format:check": "biome format .",
-    "check": "biome check .",
+    "check": "bun fmt --check && bun lint",
     "typecheck": "tsc --noEmit",
     "registry:build": "shadcn build"
   },
@@ -69,7 +64,6 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.10",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20.19.43",
     "@types/react": "^18.3.31",

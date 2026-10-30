@@ -2,14 +2,16 @@
 
 import { AppWindow, BookOpen, Database, FilePlus, Layers, PenLine, Skull } from 'lucide-react';
 import { type ReactNode, useEffect, useReducer, useRef, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+
 import { Eyebrow, Stat } from '../shared/controls';
 import { Demo, useDemoVisible } from '../shared/demo';
 import { useFrame, useReducedMotion } from '../shared/hooks';
 import {
-  CAPACITY,
   CacheModel,
+  CAPACITY,
   FLUSH_DELAY,
   HOP_MS,
   KEYS,

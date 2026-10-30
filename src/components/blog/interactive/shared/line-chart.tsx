@@ -1,6 +1,7 @@
 'use client';
 
 import { type PointerEvent, useState } from 'react';
+
 import { useWidth } from './hooks';
 
 export interface Point {

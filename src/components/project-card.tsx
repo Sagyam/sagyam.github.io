@@ -1,6 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { Badge } from '@/components/ui/badge';
 import type { Project } from '@/lib/data';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';

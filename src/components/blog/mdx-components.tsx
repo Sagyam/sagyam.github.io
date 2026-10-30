@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
 import * as runtime from 'react/jsx-runtime';
+
 import { Callout, Info, Note, Tip, Warning } from './callout';
 import { Code, CodeFigcaption, CodeFigure, CodePre } from './code-block';
 import { interactiveComponents } from './interactive';
@@ -206,7 +207,9 @@ const components = {
       {children}
     </td>
   ),
-  iframe: (props: any) => <iframe suppressHydrationWarning {...props} />,
+  iframe: ({ title, ...props }: any) => (
+    <iframe title={title} suppressHydrationWarning {...props} />
+  ),
   hr: (props: any) => <hr className="my-8 border-border" {...props} />,
 };
 

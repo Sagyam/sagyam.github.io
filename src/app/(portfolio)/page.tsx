@@ -1,5 +1,6 @@
 import { ArrowUpRight, BookOpen, Rss } from 'lucide-react';
 import Link from 'next/link';
+
 import { BookCard } from '@/components/book-card';
 import { CertificationCard } from '@/components/certification-card';
 import { ExperienceCard } from '@/components/experience-card';
