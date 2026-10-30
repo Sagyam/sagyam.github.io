@@ -3,6 +3,7 @@ import './globals.css';
 import 'katex/dist/katex.min.css';
 import { ThemeProvider } from 'next-themes';
 import { JetBrains_Mono, Space_Grotesk, Work_Sans } from 'next/font/google';
+import Script from 'next/script';
 
 import { metadata as siteMetadata } from '@/lib/data';
 
@@ -82,6 +83,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           {children}
         </ThemeProvider>
+        {/* Umami Cloud, through the /u proxy in next.config.ts. Only counts the live domain, so
+            localhost and Vercel previews stay out of the stats. */}
+        <Script
+          src="/u/script.js"
+          data-host-url="/u"
+          data-website-id="799ae957-587f-41bd-a520-4a18f6b94763"
+          data-domains={new URL(siteMetadata.siteUrl).hostname}
+        />
       </body>
     </html>
   );
