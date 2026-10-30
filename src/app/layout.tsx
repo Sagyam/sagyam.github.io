@@ -7,6 +7,9 @@ import Script from 'next/script';
 
 import { metadata as siteMetadata } from '@/lib/data';
 
+// The bare domain redirects to www, so Umami has to accept both.
+const siteHost = new URL(siteMetadata.siteUrl).hostname.replace(/^www\./, '');
+
 const workSans = Work_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
@@ -89,7 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           src="/u/script.js"
           data-host-url="/u"
           data-website-id="799ae957-587f-41bd-a520-4a18f6b94763"
-          data-domains={new URL(siteMetadata.siteUrl).hostname}
+          data-domains={`${siteHost},www.${siteHost}`}
         />
       </body>
     </html>
