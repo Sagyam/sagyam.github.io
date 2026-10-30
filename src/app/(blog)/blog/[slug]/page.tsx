@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 
 import { posts } from '#site/content';
 import { MDXContent } from '@/components/blog/mdx-components';
+import { ReadTracker } from '@/components/blog/read-tracker';
 import { TableOfContents } from '@/components/blog/table-of-contents';
 import { Badge } from '@/components/ui/badge';
 
@@ -115,9 +116,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
         </header>
 
-        <div className="prose max-w-none">
-          <MDXContent code={post.body} />
-        </div>
+        <ReadTracker post={slug}>
+          <div className="prose max-w-none">
+            <MDXContent code={post.body} />
+          </div>
+        </ReadTracker>
       </article>
     </div>
   );
