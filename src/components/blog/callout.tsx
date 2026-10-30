@@ -5,6 +5,7 @@ import {
   Info as InfoIcon,
   Lightbulb,
 } from 'lucide-react';
+
 import { cn } from '@/lib/utils';
 
 export type CalloutType = 'tip' | 'note' | 'info' | 'warning' | 'danger' | 'success';

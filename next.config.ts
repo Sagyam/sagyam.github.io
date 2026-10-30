@@ -43,6 +43,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Umami, served from this domain so ad blockers that block umami.is still let it through.
+  async rewrites() {
+    return [
+      { source: '/u/script.js', destination: 'https://cloud.umami.is/script.js' },
+      { source: '/u/api/send', destination: 'https://gateway.umami.is/api/send' },
+    ];
+  },
   // Empty turbopack config to acknowledge we're using Turbopack
   turbopack: {},
   webpack: (config) => {

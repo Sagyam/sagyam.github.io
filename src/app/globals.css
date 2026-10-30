@@ -1,7 +1,7 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "../../registry/theme/sagyam.css";
-@import "../styles/blog.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '../../registry/theme/sagyam.css';
+@import '../styles/blog.css';
 @plugin "@tailwindcss/typography";
 
 /*

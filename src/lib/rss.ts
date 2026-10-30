@@ -1,5 +1,6 @@
 import { posts } from '#site/content';
 import { metadata as siteMetadata } from '@/lib/data';
+
 import type { BlogPost } from './types/blog';
 
 export async function getBlogPosts(limit?: number): Promise<BlogPost[]> {

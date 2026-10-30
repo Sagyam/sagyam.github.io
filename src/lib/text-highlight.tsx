@@ -1,4 +1,5 @@
 import type React from 'react';
+
 import { ALL_TECH_KEYWORDS } from './data/tech-keywords';
 
 /**

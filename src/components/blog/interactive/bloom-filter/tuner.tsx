@@ -2,7 +2,9 @@
 
 import { Sparkles } from 'lucide-react';
 import { useMemo, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
+
 import { Range } from '../shared/controls';
 import { Demo } from '../shared/demo';
 import { bitsToSize, chance, compact, grouped } from '../shared/format';

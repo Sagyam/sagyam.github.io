@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import navigationData from './data.json';
 import { NavigationItemSchema } from './schema';
 

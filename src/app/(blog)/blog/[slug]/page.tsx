@@ -2,6 +2,7 @@ import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+
 import { posts } from '#site/content';
 import { MDXContent } from '@/components/blog/mdx-components';
 import { TableOfContents } from '@/components/blog/table-of-contents';

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import certificationsData from './data.json';
 import { CertificationSchema } from './schema';
 

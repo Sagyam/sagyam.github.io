@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+
 import { posts } from '#site/content';
 import { books, metadata as siteMetadata } from '@/lib/data';
 

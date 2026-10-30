@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+
 import { navigation, profile } from '@/lib/data';
 
 export const runtime = 'nodejs';

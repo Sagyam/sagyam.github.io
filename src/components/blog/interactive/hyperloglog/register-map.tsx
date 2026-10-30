@@ -1,6 +1,7 @@
 'use client';
 
 import { type PointerEvent, useEffect, useRef, useState } from 'react';
+
 import { useWidth } from '../shared/hooks';
 
 interface RegisterMapProps {

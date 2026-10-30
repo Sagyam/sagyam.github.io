@@ -7,7 +7,7 @@ A modern portfolio website built with Next.js 16, React 18, and TypeScript.
 - Built with Next.js 16 and Turbopack for fast development
 - UI components powered by Radix UI and Tailwind CSS
 - Form handling with React Hook Form and Zod validation
-- Analytics with Vercel Analytics and Speed Insights
+- Analytics with Vercel Analytics and Umami
 - Responsive design with Tailwind CSS
 
 ## Getting Started
@@ -45,8 +45,12 @@ bun start
 ### Code Quality
 
 ```bash
-# Run Biome and apply safe fixes
-bun run lint
+# Lint, and apply safe fixes (configured in bunfig.toml)
+bun lint
+bun lint --fix
+
+# Format
+bun fmt
 
 # Check formatting and linting without writing changes
 bun run check
@@ -62,7 +66,7 @@ bun run typecheck
 - **Styling:** Tailwind CSS 4
 - **UI Components:** Radix UI
 - **Forms:** React Hook Form + Zod
-- **Analytics:** Vercel Analytics & Speed Insights
+- **Analytics:** Vercel Analytics & Umami
 
 ## Design system
 

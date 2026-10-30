@@ -2,6 +2,7 @@ import { ArrowLeft, Calendar, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+
 import { Badge } from '@/components/ui/badge';
 import { books } from '@/lib/data';
 

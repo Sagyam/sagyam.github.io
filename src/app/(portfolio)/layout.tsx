@@ -1,7 +1,7 @@
 import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import { FileText, GithubIcon, Linkedin, Mail, Rss } from 'lucide-react';
 import type React from 'react';
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { navigation, profile, socialLinks } from '@/lib/data';
 
@@ -83,7 +83,6 @@ export default function PortfolioLayout({
         </div>
       </div>
       <Analytics />
-      <SpeedInsights />
     </TooltipProvider>
   );
 }

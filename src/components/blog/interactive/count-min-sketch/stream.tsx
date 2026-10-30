@@ -2,8 +2,10 @@
 
 import { Pause, Play } from 'lucide-react';
 import { useReducer, useRef, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+
 import { Eyebrow, Range, Stat } from '../shared/controls';
 import { Demo, useDemoVisible } from '../shared/demo';
 import { grouped } from '../shared/format';
