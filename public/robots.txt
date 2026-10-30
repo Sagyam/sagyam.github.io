@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://www.sagyamthapa.com.np/sitemap.xml
+Sitemap: https://sagyamthapa.com.np/sitemap.xml
 
 # Disallow crawling of API routes and build artifacts
 Disallow: /api/

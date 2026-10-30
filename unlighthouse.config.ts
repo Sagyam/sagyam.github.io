@@ -1,5 +1,5 @@
 export default {
-  site: process.env.UNLIGHTHOUSE_SITE_URL || 'https://www.sagyamthapa.com.np',
+  site: process.env.UNLIGHTHOUSE_SITE_URL || 'https://sagyamthapa.com.np',
   ci: {
     budget: {
       performance: 75,
