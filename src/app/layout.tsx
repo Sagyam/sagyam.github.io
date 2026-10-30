@@ -34,11 +34,6 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteMetadata.siteUrl),
   title: siteMetadata.siteTitle,
   description: siteMetadata.siteDescription,
-  icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
-  },
   openGraph: {
     title: siteMetadata.siteTitle,
     description: siteMetadata.siteDescription,
